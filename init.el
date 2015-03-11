@@ -13,9 +13,6 @@
 ;; ==============
 (setq core-packages
       '(
-        ;;ag
-        ;;org
-        ;;server
         use-package
         ))
 
@@ -98,6 +95,9 @@
 ;;   scroll-conservatively 10000
 ;;   scroll-preserve-screen-position 1)
 
+;; Change "yes or no" to "y or n"
+(fset 'yes-or-no-p 'y-or-n-p)
+
 ;; packages
 ;; ========
 ;; ag
@@ -134,13 +134,29 @@
 (helm-mode 1)
 
 
-;; tabbar
-;; ======
+;; multi-term
+;; ===========
 (use-package multi-term
   :ensure multi-term)
 (setq multi-term-program "/bin/bash")
-; (multi-term)
 (defalias 'term 'multi-term)
+
+
+;; projectile
+;; ===========
+(use-package projectile
+  :ensure t
+  :defer t
+  :diminish projectile-mode
+  :idle
+  (progn
+    (setq projectile-keymap-prefix (kbd "C-c p"))
+    (setq projectile-completion-system 'default)
+    (setq projectile-enable-caching t)
+    (projectile-global-mode)))
+(use-package helm-projectile
+   :defer t :ensure t
+   :ensure helm-projectile)
 
 
 ;; python-mode
