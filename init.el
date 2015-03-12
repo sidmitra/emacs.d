@@ -24,7 +24,8 @@
 (ensure-packages core-packages)
 (require 'use-package)
 
-; globals
+
+;; globals
 ;; ========
 ;; start server
 (use-package server
@@ -96,7 +97,17 @@
 ;;   scroll-preserve-screen-position 1)
 
 ;; Change "yes or no" to "y or n"
-(fset 'yes-or-no-p 'y-or-n-p)
+ (defalias 'yes-or-no-p 'y-or-n-p)
+
+;; buffers
+;; =======
+ (defun volatile-kill-buffer ()
+   "Kill current buffer unconditionally."
+   (interactive)
+   (let ((buffer-modified-p nil))
+     (kill-buffer (current-buffer))))
+
+ (global-set-key (kbd "C-x k") 'volatile-kill-buffer)
 
 ;; packages
 ;; ========
@@ -104,13 +115,13 @@
 ;; =========
 (use-package ag
   :ensure ag)
+(use-package helm-ag
+  :ensure helm-ag)
 
 ;; helm
 ;; =====
 (use-package helm
   :ensure helm)
-                                        ; (use-package helm-config
-                                        ;   :ensure helm-config)
 
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
@@ -170,6 +181,17 @@
             (setq indent-tabs-mode nil)
             (setq tab-width 4)
             (setq python-indent 4)))
+
+;; auto completion
+;; run M-x jedi:install-server
+(use-package jedi :defer t :ensure t
+  :init
+  (add-hook 'python-mode-hook 'jedi:setup)
+  ;;(add-hook 'python-mode-hook 'jedi:ac-setup)
+  (add-hook 'python-mode-hook 'auto-complete-mode))
+(setq jedi:setup-keys t)
+(setq jedi:complete-on-dot t)
+
 
 ;; pep8
 ;; first run
