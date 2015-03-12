@@ -2,3 +2,6 @@ elpa
 auto-save-list
 *.*~
 *.elc
+.python-environments
+ac-comphist.dat
+projectile-bookmarks.eld
