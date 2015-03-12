@@ -183,7 +183,7 @@
             (setq python-indent 4)))
 
 ;; auto completion
-;; run M-x jedi:install-server
+;; @manual: Run M-x jedi:install-server
 (use-package jedi :defer t :ensure t
   :init
   (add-hook 'python-mode-hook 'jedi:setup)
@@ -194,28 +194,31 @@
 
 
 ;; pep8
-;; first run
-;; sudo apt-get install pep8
-;;(use-package python-pep8
- ;; :ensure python-pep8)
-;; (when (load "flymake" t)
-;;  (defun flymake-pylint-init ()
-;;    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-;;                       'flymake-create-temp-inplace))
-;;           (local-file (file-relative-name
-;;                        temp-file
-;;                        (file-name-directory buffer-file-name))))
-;;          (list "pep8" (list "--repeat" local-file))))
+;; @manual: sudo apt-get install pep8 python-autopep8
+(use-package python-pep8
+ :ensure python-pep8)
+(use-package py-autopep8
+ :ensure py-autopep8)
 
-;;  (add-to-list 'flymake-allowed-file-name-masks
-;;               '("\\.py\\'" flymake-pylint-init)))
+(when (load "flymake" t)
+ (defun flymake-pylint-init ()
+   (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                      'flymake-create-temp-inplace))
+          (local-file (file-relative-name
+                       temp-file
+                       (file-name-directory buffer-file-name))))
+         (list "pep8" (list "--repeat" local-file))))
 
-;; (defun my-flymake-show-help ()
-;;   (when (get-char-property (point) 'flymake-overlay)
-;;     (let ((help (get-char-property (point) 'help-echo)))
-;;       (if help (message "%s" help)))))
+ (add-to-list 'flymake-allowed-file-name-masks
+              '("\\.py\\'" flymake-pylint-init)))
 
-;; (add-hook 'post-command-hook 'my-flymake-show-help)
+(defun my-flymake-show-help ()
+  (when (get-char-property (point) 'flymake-overlay)
+    (let ((help (get-char-property (point) 'help-echo)))
+      (if help (message "%s" help)))))
+
+(add-hook 'post-command-hook 'my-flymake-show-help)
+(add-hook 'python-mode-hook 'flymake-mode)
 
 
 ;; shortcuts
