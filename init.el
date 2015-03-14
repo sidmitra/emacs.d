@@ -117,6 +117,10 @@
   :ensure ag)
 (use-package helm-ag
   :ensure helm-ag)
+(defun projectile-helm-ag ()
+  (interactive)
+  (helm-ag (projectile-project-root)))
+
 
 ;; helm
 ;; =====
@@ -199,6 +203,8 @@
  :ensure python-pep8)
 (use-package py-autopep8
  :ensure py-autopep8)
+(setq py-autopep8-options '("--aggressive"))
+(setq py-autopep8-options '("--ignore=E309,"))
 
 (when (load "flymake" t)
  (defun flymake-pylint-init ()
@@ -281,6 +287,9 @@
 
 ;; html
 ;; ====
+(use-package web-mode
+  :mode (("\\.html$" . web-mode)))
+
 (add-hook 'sgml-mode-hook
           (lambda ()
             ;; Default indentation to 2, but let SGML mode guess, too.
