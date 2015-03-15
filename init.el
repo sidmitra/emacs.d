@@ -96,6 +96,9 @@
 ;;   scroll-conservatively 10000
 ;;   scroll-preserve-screen-position 1)
 
+;; overwrite active region
+(delete-selection-mode 1)
+
 ;; Change "yes or no" to "y or n"
  (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -120,6 +123,13 @@
 (defun projectile-helm-ag ()
   (interactive)
   (helm-ag (projectile-project-root)))
+
+
+;; auto-complete
+;; ============
+(use-package auto-complete
+  :ensure auto-complete)
+(global-auto-complete-mode t)
 
 
 ;; helm
@@ -276,6 +286,14 @@
 (setq tabbar-use-images t)
 
 
+;; visual-regexp
+;; =============
+;;(use-package visual-regexp
+;;   :ensure visual-regexp)
+;;(use-package visual-regexp-steroids
+;;   :ensure visual-regexp-steroids)
+
+
 ;; yasnippet
 ;; =========
 (use-package yasnippet
@@ -288,7 +306,16 @@
 ;; html
 ;; ====
 (use-package web-mode
+  :ensure web-mode
   :mode (("\\.html$" . web-mode)))
+
+(defun my-web-mode-hook ()
+  "Hooks for Web mode."
+  (setq web-mode-markup-indent-offset 4)
+  (setq web-mode-css-indent-offset 4)
+  (setq web-mode-code-indent-offset 4)
+)
+(add-hook 'web-mode-hook  'my-web-mode-hook)
 
 (add-hook 'sgml-mode-hook
           (lambda ()
