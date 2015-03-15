@@ -29,10 +29,14 @@
 ;; ========
 ;; start server
 (use-package server
-  :if window-system
-  :init
-  (unless (server-running-p)
-    (server-start)))
+  :defer t
+  :idle (server-start))
+
+;; (use-package server
+;;   :if window-system
+;;   :init
+;;   (unless (server-running-p)
+;;     (server-start)))
 
 ;; hide welcome message
 (setq inhibit-startup-message t)
