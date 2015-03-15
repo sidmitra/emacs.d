@@ -163,6 +163,28 @@
 (helm-mode 1)
 
 
+;; html
+;; ====
+(use-package web-mode
+  :ensure web-mode
+  :mode (("\\.html$" . web-mode)))
+
+(defun my-web-mode-hook ()
+  "Hooks for Web mode."
+  (setq web-mode-markup-indent-offset 4)
+  (setq web-mode-css-indent-offset 4)
+  (setq web-mode-code-indent-offset 4)
+)
+(add-hook 'web-mode-hook  'my-web-mode-hook)
+
+(add-hook 'sgml-mode-hook
+          (lambda ()
+            ;; Default indentation to 2, but let SGML mode guess, too.
+            (set (make-local-variable 'sgml-basic-offset) 4)
+            (setq indent-tabs-mode nil)
+            (sgml-guess-indent)))
+
+
 ;; multi-term
 ;; ===========
 (use-package multi-term
@@ -307,30 +329,7 @@
                             (setq yas-dont-activate t)))
 
 
-;; html
-;; ====
-(use-package web-mode
-  :ensure web-mode
-  :mode (("\\.html$" . web-mode)))
-
-(defun my-web-mode-hook ()
-  "Hooks for Web mode."
-  (setq web-mode-markup-indent-offset 4)
-  (setq web-mode-css-indent-offset 4)
-  (setq web-mode-code-indent-offset 4)
-)
-(add-hook 'web-mode-hook  'my-web-mode-hook)
-
-(add-hook 'sgml-mode-hook
-          (lambda ()
-            ;; Default indentation to 2, but let SGML mode guess, too.
-            (set (make-local-variable 'sgml-basic-offset) 4)
-            (setq indent-tabs-mode nil)
-            (sgml-guess-indent)))
-
-
 ;;;;; =============== EXPLORE ====================
-;(require 'graphene)
 ;(require 'discover)
 ;; (require 'tomatinho)
 ;; (global-set-key (kbd "<f6>") 'tomatinho)
