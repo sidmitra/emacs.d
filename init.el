@@ -30,13 +30,9 @@
 ;; start server
 (use-package server
   :defer t
-  :idle (server-start))
-
-;; (use-package server
-;;   :if window-system
-;;   :init
-;;   (unless (server-running-p)
-;;     (server-start)))
+  :config
+  (progn
+    (server-start)))
 
 ;; hide welcome message
 (setq inhibit-startup-message t)
@@ -51,7 +47,7 @@
 
 ;; twilight theme
 (use-package twilight-theme
-  :ensure twilight-theme)
+  :ensure t)
 (load-theme 'twilight t)
 
 ;; line-num-mode
@@ -121,9 +117,9 @@
 ;; ag
 ;; =========
 (use-package ag
-  :ensure ag)
+  :ensure t)
 (use-package helm-ag
-  :ensure helm-ag)
+  :ensure t)
 (defun projectile-helm-ag ()
   (interactive)
   (helm-ag (projectile-project-root)))
@@ -132,14 +128,14 @@
 ;; auto-complete
 ;; ============
 (use-package auto-complete
-  :ensure auto-complete)
+  :ensure t)
 (global-auto-complete-mode t)
 
 
 ;; helm
 ;; =====
 (use-package helm
-  :ensure helm)
+  :ensure t)
 
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
@@ -175,7 +171,7 @@
 ;; html
 ;; ====
 (use-package web-mode
-  :ensure web-mode
+  :ensure t
   :mode (("\\.html$" . web-mode)))
 
 (defun my-web-mode-hook ()
@@ -197,7 +193,7 @@
 ;; multi-term
 ;; ===========
 (use-package multi-term
-  :ensure multi-term)
+  :ensure t)
 (setq multi-term-program "/bin/bash")
 (defalias 'term 'multi-term)
 
@@ -208,21 +204,23 @@
   :ensure t
   :defer t
   :diminish projectile-mode
-  :idle
+  :config
   (progn
     (setq projectile-keymap-prefix (kbd "C-c p"))
     (setq projectile-completion-system 'default)
     (setq projectile-enable-caching t)
     (projectile-global-mode)))
+
 (use-package helm-projectile
-   :defer t :ensure t
+   :ensure t
+   :defer t
    :ensure helm-projectile)
 
 
 ;; python-mode
 ;; ============
 (use-package pony-mode
-  :ensure pony-mode)
+  :ensure t)
 (add-hook 'python-mode-hook 'pony-mode)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'python-mode-hook
@@ -233,7 +231,9 @@
 
 ;; auto completion
 ;; @manual: Run M-x jedi:install-server
-(use-package jedi :defer t :ensure t
+(use-package jedi
+  :ensure t
+  :defer t
   :init
   (add-hook 'python-mode-hook 'jedi:setup)
   ;;(add-hook 'python-mode-hook 'jedi:ac-setup)
@@ -245,9 +245,9 @@
 ;; pep8
 ;; @manual: sudo apt-get install pep8 python-autopep8
 (use-package python-pep8
- :ensure python-pep8)
+ :ensure t)
 (use-package py-autopep8
- :ensure py-autopep8)
+ :ensure t)
 (setq py-autopep8-options '("--aggressive"))
 (setq py-autopep8-options '("--ignore=E309,"))
 
@@ -274,12 +274,12 @@
 
 ;; R and ESS
 ;; ===========
-(use-package ess-site
-  :ensure ess
+(use-package ess
+  :ensure t
   :commands R
   :init (progn
           ;; TODO: why doesn't use-package require it for us?
-          (require 'ess-site)
+          (require 'ess)
 
           (setq ess-eval-visibly-p nil
                 ess-use-tracebug t
@@ -287,7 +287,8 @@
                 ess-help-own-frame 'one
                 ess-ask-for-ess-directory nil)
           (setq-default ess-dialect "R")
-          (ess-toggle-underscore t)))
+          ))
+          ;; (ess-toggle-underscore t)))
 
 
 ;; rainbow-mode
@@ -327,7 +328,7 @@
 ;; tabbar
 ;; ======
 (use-package tabbar
-  :ensure tabbar)
+  :ensure t)
 (tabbar-mode t)
 
 ;; define all tabs to be one of 3 possible groups: “Emacs Buffer”, “Dired”, “User Buffer”.
@@ -371,15 +372,15 @@
 ;; visual-regexp
 ;; =============
 ;;(use-package visual-regexp
-;;   :ensure visual-regexp)
+;;   :ensure t)
 ;;(use-package visual-regexp-steroids
-;;   :ensure visual-regexp-steroids)
+;;   :ensure t)
 
 
 ;; yasnippet
 ;; =========
 (use-package yasnippet
-  :ensure yasnippet)
+  :ensure t)
 (yas-global-mode 1)
 (add-hook 'term-mode-hook (lambda()
                             (setq yas-dont-activate t)))
