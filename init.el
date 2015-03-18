@@ -27,12 +27,11 @@
 
 ;; globals
 ;; ========
-;; start server
 (use-package server
-  :defer t
-  :config
-  (progn
-    (server-start)))
+  :if window-system
+  :init
+      (server-start))
+
 
 ;; hide welcome message
 (setq inhibit-startup-message t)
