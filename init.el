@@ -99,7 +99,7 @@
 (delete-selection-mode 1)
 
 ;; Change "yes or no" to "y or n"
- (defalias 'yes-or-no-p 'y-or-n-p)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; buffers
 ;; =======
@@ -293,6 +293,7 @@
 ;; rainbow-mode
 ;; =============
 (use-package rainbow-mode
+  :ensure t
   :defer t
   :init
   (setq rainbow-html-colors-major-mode-list '(css-mode
@@ -311,7 +312,7 @@
 ;; rainbow-delimiters
 ;; ===================
 (use-package rainbow-delimiters
-  :ensure
+  :ensure t
   :config
   (progn
     (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
