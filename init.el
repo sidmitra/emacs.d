@@ -47,10 +47,18 @@
 ;; twilight theme
 (use-package twilight-theme
   :ensure t)
-(load-theme 'twilight t)
+;; (load-theme 'twilight t)
+(use-package darktooth-theme
+  :ensure t)
+(load-theme 'darktooth t)
+
+;; Soft-wrap lines
+(global-visual-line-mode t)
 
 ;; line-num-mode
 (global-linum-mode t)
+;; Linum format to avoid graphics glitches in fringe
+(setq linum-format " %4d ")
 
 ;; show column number
 (setq-default column-number-mode t)
