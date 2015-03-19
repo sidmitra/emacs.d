@@ -100,7 +100,7 @@
 ;;   scroll-preserve-screen-position 1)
 
 ;; overwrite active region
-(delete-selection-mode 1)
+(delete-selection-mode t)
 
 ;; Change "yes or no" to "y or n"
 (defalias 'yes-or-no-p 'y-or-n-p)
