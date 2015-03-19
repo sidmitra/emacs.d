@@ -109,6 +109,19 @@
 (show-paren-mode 1)
 (setq show-paren-delay 0)
 
+;; indent new lines
+(global-set-key (kbd "RET") 'newline-and-indent)
+
+;; Character encodings default to utf-8.
+(prefer-coding-system 'utf-8)
+(set-language-environment 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+
+;; apply syntax highlighting to all buffers
+(global-font-lock-mode t)
+
 
 ;; buffers
 ;; =======
@@ -393,6 +406,16 @@
 ;; tramp
 ;; =======
 (setq tramp-default-method "ssh")
+
+
+;; uniquify
+;; =========================
+;; show unique buffer names
+; (use-package uniquify
+;   :ensure t
+;   :config
+;   (setq uniquify-buffer-name-style 'forward))
+
 
 
 ;; visual-regexp
