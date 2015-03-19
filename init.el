@@ -32,7 +32,6 @@
   :init
       (server-start))
 
-
 ;; hide welcome message
 (setq inhibit-startup-message t)
 
@@ -51,7 +50,7 @@
 (use-package darktooth-theme
   :ensure t)
 (load-theme 'darktooth t)
-(setq color-theme-is-global t)
+(setq-default color-theme-is-global t)
 
 ;; Soft-wrap lines
 (global-visual-line-mode t)
@@ -59,7 +58,7 @@
 ;; line-num-mode
 (global-linum-mode t)
 ;; Linum format to avoid graphics glitches in fringe
-(setq linum-format " %4d ")
+(setq-default linum-format " %4d ")
 
 ;; show column number
 (setq-default column-number-mode t)
@@ -133,6 +132,10 @@
      (kill-buffer (current-buffer))))
 
  (global-set-key (kbd "C-x k") 'volatile-kill-buffer)
+
+;; auto revert buffer every x seconds
+(global-auto-revert-mode t)
+
 
 ;; packages
 ;; ========
