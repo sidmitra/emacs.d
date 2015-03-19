@@ -75,19 +75,15 @@
 ;; set default tab char's display width to 4 spaces
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
-
 ;; make tab key always call a indent command.
 (setq-default tab-always-indent t)
-
 ;; make tab key call indent command or insert tab character, depending on cursor position
 (setq-default tab-always-indent nil)
-
 ;; make tab key do indent first then completion.
 (setq-default tab-always-indent 'complete)
 
 ;; set font and size
 (set-default-font "Inconsolata 14")
-
 ;; change font-size with ctrl + mouse wheel
 (global-set-key (vector (list 'control mouse-wheel-down-event)) 'text-scale-increase)
 (global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
