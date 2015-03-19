@@ -51,6 +51,7 @@
 (use-package darktooth-theme
   :ensure t)
 (load-theme 'darktooth t)
+(setq color-theme-is-global t)
 
 ;; Soft-wrap lines
 (global-visual-line-mode t)
