@@ -198,15 +198,12 @@
 ;; ====
 (use-package web-mode
   :ensure t
-  :mode (("\\.html$" . web-mode)))
-
-(defun my-web-mode-hook ()
-  "Hooks for Web mode."
+  :mode (("\\.html$" . web-mode))
+  :config
   (setq web-mode-markup-indent-offset 4)
   (setq web-mode-css-indent-offset 4)
   (setq web-mode-code-indent-offset 4)
-)
-(add-hook 'web-mode-hook  'my-web-mode-hook)
+  (setq web-mode-enable-current-element-highlight t))
 
 (add-hook 'sgml-mode-hook
           (lambda ()
@@ -233,6 +230,11 @@
   :ensure t)
 (setq multi-term-program "/bin/bash")
 (defalias 'term 'multi-term)
+
+
+;; org
+;; ====
+(setq-default org-support-shift-select t)
 
 
 ;; projectile
