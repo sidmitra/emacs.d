@@ -101,6 +101,11 @@
 ;; Change "yes or no" to "y or n"
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+;; Show matching parentheses with 0 delay
+(show-paren-mode 1)
+(setq show-paren-delay 0)
+
+
 ;; buffers
 ;; =======
  (defun volatile-kill-buffer ()
@@ -188,6 +193,17 @@
             (setq indent-tabs-mode nil)
             (sgml-guess-indent)))
 
+
+;; markdown
+;; =========
+(use-package markdown-mode
+  :ensure t)
+(add-hook 'markdown-mode-hook
+            (lambda ()
+              (when buffer-file-name
+                (add-hook 'after-save-hook
+                          'check-parens
+                          nil t))))
 
 ;; multi-term
 ;; ===========
@@ -367,6 +383,11 @@
 (setq tabbar-cycle-scope (quote tabs))
 (setq table-time-before-update 0.1)
 (setq tabbar-use-images t)
+
+
+;; tramp
+;; =======
+(setq tramp-default-method "ssh")
 
 
 ;; visual-regexp
