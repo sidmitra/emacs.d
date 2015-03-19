@@ -415,11 +415,8 @@
 ;; uniquify
 ;; =========================
 ;; show unique buffer names
-; (use-package uniquify
-;   :ensure t
-;   :config
-;   (setq uniquify-buffer-name-style 'forward))
-
+(use-package uniquify
+  :config (setq uniquify-buffer-name-style 'forward))
 
 
 ;; visual-regexp
