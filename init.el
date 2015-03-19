@@ -129,11 +129,12 @@
   (helm-ag (projectile-project-root)))
 
 
-;; auto-complete
-;; ============
-(use-package auto-complete
-  :ensure t)
-(global-auto-complete-mode t)
+;; company
+;; ========
+(use-package company
+  :ensure t
+  :config
+  (add-hook 'after-init-hook 'global-company-mode))
 
 
 ;; helm
