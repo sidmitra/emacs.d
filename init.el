@@ -34,6 +34,8 @@
 
 ;; hide welcome message
 (setq inhibit-startup-message t)
+;; no initial scratch message
+(setq initial-scratch-message nil)
 
 ;; switch window to fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -158,6 +160,22 @@
   (add-hook 'after-init-hook 'global-company-mode))
 
 
+;; emms
+;; =====
+(use-package emms
+  :ensure t
+  :config
+  (progn
+    (emms-standard)
+    (emms-default-players))
+  :bind (("<f5>" . emms-shuffle)
+         ("<f6>" . emms-pause)
+         ("<f7>" . emms-previous)
+         ("<f8>" . emms-next)
+         ("<f9>" . emms-volume-lower)
+         ("<f10>" . emms-volume-raise)))
+
+
 ;; flycheck
 ;; =========
 (use-package flycheck
@@ -165,7 +183,9 @@
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
   (setq-default flycheck-checker-error-threshold 2000)
-  (setq-default flycheck-highlighting-mode 'lines))
+  (setq-default flycheck-highlighting-mode 'lines)
+  (setq-default flycheck-display-errors-delay 0))
+
 
 ;; helm
 ;; =====
@@ -220,7 +240,11 @@
             (set (make-local-variable 'sgml-basic-offset) 4)
             (setq indent-tabs-mode nil)
             (sgml-guess-indent)))
-
+;; Forcing django mode on all html
+;; TODO: Better way to do this?
+(setq web-mode-engines-alist
+      '(("django"    . "\\.html\\'"))
+      )
 
 ;; markdown
 ;; =========
