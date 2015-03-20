@@ -158,6 +158,15 @@
   (add-hook 'after-init-hook 'global-company-mode))
 
 
+;; flycheck
+;; =========
+(use-package flycheck
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  (setq-default flycheck-checker-error-threshold 2000)
+  (setq-default flycheck-highlighting-mode 'lines))
+
 ;; helm
 ;; =====
 (use-package helm
@@ -280,35 +289,14 @@
 (setq jedi:setup-keys t)
 (setq jedi:complete-on-dot t)
 
-
 ;; pep8
-;; @manual: sudo apt-get install pep8 python-autopep8
+;; @manual: sudo apt-get install pep8 python-autopep8 python-flake8 pylint
 (use-package python-pep8
  :ensure t)
 (use-package py-autopep8
  :ensure t)
-(setq py-autopep8-options '("--aggressive"))
+;;(setq py-autopep8-options '("--aggressive"))
 (setq py-autopep8-options '("--ignore=E309,"))
-
-(when (load "flymake" t)
- (defun flymake-pylint-init ()
-   (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                      'flymake-create-temp-inplace))
-          (local-file (file-relative-name
-                       temp-file
-                       (file-name-directory buffer-file-name))))
-         (list "pep8" (list "--repeat" local-file))))
-
- (add-to-list 'flymake-allowed-file-name-masks
-              '("\\.py\\'" flymake-pylint-init)))
-
-(defun my-flymake-show-help ()
-  (when (get-char-property (point) 'flymake-overlay)
-    (let ((help (get-char-property (point) 'help-echo)))
-      (if help (message "%s" help)))))
-
-(add-hook 'post-command-hook 'my-flymake-show-help)
-(add-hook 'python-mode-hook 'flymake-mode)
 
 
 ;; R and ESS
