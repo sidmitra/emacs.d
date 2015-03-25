@@ -304,19 +304,6 @@
             (setq tab-width 4)
             (setq python-indent-offset 4)))
 
-;; auto completion
-;; @manual: Run M-x jedi:install-server
-;; (use-package jedi
-;;   :ensure t
-;;   :defer t
-;;   :config
-;;   (add-hook 'python-mode-hook 'jedi:setup)
-;;   ;;(add-hook 'python-mode-hook 'jedi:ac-setup)
-;;   ;;(add-hook 'python-mode-hook 'auto-complete-mode)
-;;   (setq jedi:setup-keys t)
-;;   (setq jedi:complete-on-dot t)
-;;  )
-
 ;; anaconda
 (use-package anaconda-mode
   :ensure t
@@ -326,7 +313,7 @@
   :ensure t
   :config
   (add-to-list 'company-backends 'company-anaconda))
-;; TODO: Figure out
+;; TODO: Figure out pyenv
 (use-package pyenv-mode
   :ensure t
   :config
@@ -345,9 +332,12 @@ Version must be already installed."
  :ensure t)
 (use-package py-autopep8
  :ensure t)
-;;(setq py-autopep8-options '("--aggressive"))
 (setq py-autopep8-options '("--ignore=E309,"))
 
+;; powerline
+(use-package powerline
+ :ensure t)
+(powerline-center-theme)
 
 ;; R and ESS
 ;; ===========
@@ -452,6 +442,12 @@ Version must be already installed."
 (setq tramp-default-method "ssh")
 
 
+;; undo-tree
+;; ==========
+(require 'undo-tree)
+(global-undo-tree-mode 1)
+
+
 ;; uniquify
 ;; =========================
 ;; show unique buffer names
@@ -478,6 +474,3 @@ Version must be already installed."
 
 ;;;;; =============== EXPLORE ====================
 ;(require 'discover)
-
-;; (require 'undo-tree)
-;; (global-undo-tree-mode 1)
