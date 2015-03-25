@@ -124,6 +124,8 @@
 ;; apply syntax highlighting to all buffers
 (global-font-lock-mode t)
 
+;; Enable copy/past-ing from clipboard
+(setq x-select-enable-clipboard t)
 
 ;; buffers
 ;; =======
@@ -184,6 +186,7 @@
   (add-hook 'after-init-hook #'global-flycheck-mode)
   (setq-default flycheck-checker-error-threshold 2000)
   (setq-default flycheck-highlighting-mode 'lines)
+  (setq-default flycheck-idle-change-delay 3)
   (setq-default flycheck-display-errors-delay 0))
 
 
@@ -299,19 +302,42 @@
           (lambda ()
             (setq indent-tabs-mode nil)
             (setq tab-width 4)
-            (setq python-indent 4)))
+            (setq python-indent-offset 4)))
 
 ;; auto completion
 ;; @manual: Run M-x jedi:install-server
-(use-package jedi
+;; (use-package jedi
+;;   :ensure t
+;;   :defer t
+;;   :config
+;;   (add-hook 'python-mode-hook 'jedi:setup)
+;;   ;;(add-hook 'python-mode-hook 'jedi:ac-setup)
+;;   ;;(add-hook 'python-mode-hook 'auto-complete-mode)
+;;   (setq jedi:setup-keys t)
+;;   (setq jedi:complete-on-dot t)
+;;  )
+
+;; anaconda
+(use-package anaconda-mode
   :ensure t
-  :defer t
-  :init
-  (add-hook 'python-mode-hook 'jedi:setup)
-  ;;(add-hook 'python-mode-hook 'jedi:ac-setup)
-  (add-hook 'python-mode-hook 'auto-complete-mode))
-(setq jedi:setup-keys t)
-(setq jedi:complete-on-dot t)
+  :config
+  (add-hook 'python-mode-hook 'anaconda-mode))
+(use-package company-anaconda
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-anaconda))
+;; TODO: Figure out
+(use-package pyenv-mode
+  :ensure t
+  :config
+  (add-hook 'python-mode-hook 'pyenv-mode))
+
+(defun projectile-pyenv-mode-set ()
+  "Set pyenv version matching project name.
+Version must be already installed."
+  (pyenv-mode-set (projectile-project-name)))
+(add-hook 'projectile-switch-project-hook 'projectile-pyenv-mode-set)
+
 
 ;; pep8
 ;; @manual: sudo apt-get install pep8 python-autopep8 python-flake8 pylint
@@ -334,7 +360,7 @@
 
           (setq ess-eval-visibly-p nil
                 ess-use-tracebug t
-                ess-use-auto-complete t
+                ;; ess-use-auto-complete t
                 ess-help-own-frame 'one
                 ess-ask-for-ess-directory nil)
           (setq-default ess-dialect "R")
@@ -452,5 +478,6 @@
 
 ;;;;; =============== EXPLORE ====================
 ;(require 'discover)
-;; (require 'tomatinho)
-;; (global-set-key (kbd "<f6>") 'tomatinho)
+
+;; (require 'undo-tree)
+;; (global-undo-tree-mode 1)
