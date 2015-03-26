@@ -341,9 +341,14 @@ Version must be already installed."
 (setq py-autopep8-options '("--ignore=E309,"))
 
 ;; powerline
+;; ==========
 (use-package powerline
- :ensure t)
-(powerline-center-theme)
+ :ensure t
+ :config
+ (powerline-center-theme)
+ (setq-default powerline-default-separator 'curve)
+ )
+
 
 ;; R and ESS
 ;; ===========
