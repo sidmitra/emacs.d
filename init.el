@@ -450,7 +450,8 @@ Version must be already installed."
 
 ;; undo-tree
 ;; ==========
-(require 'undo-tree)
+(use-package undo-tree
+  :ensure t)
 (global-undo-tree-mode 1)
 
 
@@ -471,20 +472,20 @@ Version must be already installed."
 
 ;; window-purpose
 ;; ===============
-(use-package window-purpose
-  :ensure t
-  :config
-  (purpose-mode 1)
-  (setq purpose-user-mode-purposes
-      '((term-mode . terminal)
-        (shell-mode . terminal)
-        (ansi-term-mode . terminal)
-        (multi-term . terminal)
-        (python-mode . coding)
-        (lisp-mode . coding)
-        (org-mode . coding)
-        (web-mode . coding)))
-  (purpose-compile-user-configuration)  )
+; (use-package window-purpose
+;   :ensure t
+;   :config
+;   (purpose-mode 1)
+;   (setq purpose-user-mode-purposes
+;       '((term-mode . terminal)
+;         (shell-mode . terminal)
+;         (ansi-term-mode . terminal)
+;         (multi-term . terminal)
+;         (python-mode . coding)
+;         (lisp-mode . coding)
+;         (org-mode . coding)
+;         (web-mode . coding)))
+;   (purpose-compile-user-configuration)  )
 
 
 ;; yasnippet
