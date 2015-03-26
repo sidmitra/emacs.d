@@ -319,17 +319,22 @@
   :ensure t
   :config
   (add-to-list 'company-backends 'company-anaconda))
-;; TODO: Figure out pyenv
-(use-package pyenv-mode
+
+
+;; virtualenv
+(use-package virtualenvwrapper
   :ensure t
   :config
-  (add-hook 'python-mode-hook 'pyenv-mode))
+  (venv-initialize-interactive-shells) ;; if you want interactive shell support
+  (venv-initialize-eshell) ;; if you want eshell support
+  (setq venv-location "~/.virtualenvs/"))
 
-(defun projectile-pyenv-mode-set ()
-  "Set pyenv version matching project name.
-Version must be already installed."
-  (pyenv-mode-set (projectile-project-name)))
-(add-hook 'projectile-switch-project-hook 'projectile-pyenv-mode-set)
+;; TODO: make it work with virtualenv
+;; (defun projectile-pyenv-mode-set ()
+;;   "Set pyenv version matching project name.
+;; Version must be already installed."
+;;   (pyenv-mode-set (projectile-project-name)))
+;; (add-hook 'projectile-switch-project-hook 'projectile-pyenv-mode-set)
 
 
 ;; pep8
