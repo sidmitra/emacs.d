@@ -463,6 +463,24 @@ Version must be already installed."
 ;;   :ensure t)
 
 
+;; window-purpose
+;; ===============
+(use-package window-purpose
+  :ensure t
+  :config
+  (purpose-mode 1)
+  (setq purpose-user-mode-purposes
+      '((term-mode . terminal)
+        (shell-mode . terminal)
+        (ansi-term-mode . terminal)
+        (multi-term . terminal)
+        (python-mode . coding)
+        (lisp-mode . coding)
+        (org-mode . coding)
+        (web-mode . coding)))
+  (purpose-compile-user-configuration)  )
+
+
 ;; yasnippet
 ;; =========
 (use-package yasnippet
@@ -470,7 +488,6 @@ Version must be already installed."
 (yas-global-mode 1)
 (add-hook 'term-mode-hook (lambda()
                             (setq yas-dont-activate t)))
-
 
 ;;;;; =============== EXPLORE ====================
 ;(require 'discover)
