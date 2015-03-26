@@ -249,6 +249,12 @@
       '(("django"    . "\\.html\\'"))
       )
 
+
+;; magit
+;; ======
+(use-package magit
+  :ensure t)
+
 ;; markdown
 ;; =========
 (use-package markdown-mode
