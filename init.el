@@ -322,6 +322,7 @@
 
 
 ;; virtualenv
+;; @manual: sudo apt-get install python-virtualenv virtualenvwrapper
 (use-package virtualenvwrapper
   :ensure t
   :config
