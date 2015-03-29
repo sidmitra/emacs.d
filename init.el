@@ -127,6 +127,10 @@
 ;; Enable copy/past-ing from clipboard
 (setq x-select-enable-clipboard t)
 
+;; https://www.reddit.com/r/emacs/comments/30g5wo/the_kill_ring_and_the_clipboard/
+(setq save-interprogram-paste-before-kill t)
+
+
 ;; buffers
 ;; =======
  (defun volatile-kill-buffer ()
@@ -160,6 +164,10 @@
   :ensure t
   :config
   (add-hook 'after-init-hook 'global-company-mode))
+;; 0.1 second delay before the pop-up appears
+(setq company-idle-delay 0.1)
+;; you only need to enter one character in a buffer before auto-completion starts
+(setq company-minimum-prefix-length 1)
 
 
 ;; emms
@@ -373,6 +381,7 @@
           (setq-default ess-dialect "R")
           ))
           ;; (ess-toggle-underscore t)))
+(add-to-list 'company-backends 'company-ess)
 
 
 ;; rainbow-mode
