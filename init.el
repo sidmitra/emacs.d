@@ -234,6 +234,15 @@
     (set-face-attribute 'helm-source-header nil :height 1.0)))
 (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)
 
+;; helm-company
+;; (use-package helm-company
+;;   :ensure t)
+;; (eval-after-load 'company
+;;   '(progn
+;;      (define-key company-mode-map (kbd "C-:") 'helm-company)
+;;      (define-key company-active-map (kbd "C-:") 'helm-company)))
+
+
 ;; html
 ;; ====
 (use-package web-mode
@@ -425,6 +434,7 @@
   :ensure t)
 (tabbar-mode t)
 
+
 ;; define all tabs to be one of 3 possible groups: “Emacs Buffer”, “Dired”, “User Buffer”.
 (defun tabbar-buffer-groups ()
   (list
@@ -439,6 +449,16 @@
      "User Buffer"
      )
     )))
+
+;; ignore all buffers starting with *
+;; TODO: remove cl package stuff, remove-if and find
+(setq tabbar-buffer-list-function
+      (lambda ()
+        (remove-if
+         (lambda(buffer)
+           (find (aref (buffer-name buffer) 0) " *"))
+         (buffer-list))))
+
 
 (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 (global-set-key (vector (list 'control `tab)) 'tabbar-forward-tab)
@@ -460,7 +480,7 @@
 
 (setq tabbar-cycle-scope (quote tabs))
 (setq table-time-before-update 0.1)
-(setq tabbar-use-images t)
+(setq tabbar-use-images nil)
 
 
 ;; tramp
