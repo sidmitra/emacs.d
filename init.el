@@ -144,6 +144,15 @@
 ;; auto revert buffer every x seconds
 (global-auto-revert-mode t)
 
+;; backup
+(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
+  backup-by-copying t    ; Don't delink hardlinks
+  version-control t      ; Use version numbers on backups
+  delete-old-versions t  ; Automatically delete excess backups
+  kept-new-versions 20   ; how many of the newest versions to keep
+  kept-old-versions 5    ; and how many of the old
+  )
+
 
 ;; packages
 ;; ========
@@ -270,7 +279,11 @@
 ;; magit
 ;; ======
 (use-package magit
-  :ensure t)
+  :ensure t
+  :config
+  (setq magit-auto-revert-mode nil)
+  (setq magit-last-seen-setup-instructions "1.4.0"))
+
 
 ;; markdown
 ;; =========
