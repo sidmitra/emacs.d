@@ -145,13 +145,20 @@
 (global-auto-revert-mode t)
 
 ;; backup
-(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
-  backup-by-copying t    ; Don't delink hardlinks
-  version-control t      ; Use version numbers on backups
-  delete-old-versions t  ; Automatically delete excess backups
-  kept-new-versions 20   ; how many of the newest versions to keep
-  kept-old-versions 5    ; and how many of the old
-  )
+;; (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
+;;   backup-by-copying t    ; Don't delink hardlinks
+;;   version-control t      ; Use version numbers on backups
+;;   delete-old-versions t  ; Automatically delete excess backups
+;;   kept-new-versions 20   ; how many of the newest versions to keep
+;;   kept-old-versions 5    ; and how many of the old
+;;   )
+
+;; show current file path
+(defun show-file-name ()
+  "Show the full path file name in the minibuffer."
+  (interactive)
+  (message (buffer-file-name)))
+(global-set-key [C-f1] 'show-file-name)
 
 
 ;; packages
@@ -376,6 +383,7 @@
  :ensure t)
 (setq py-autopep8-options '("--ignore=E309,"))
 
+
 ;; powerline
 ;; ==========
 (use-package powerline
@@ -497,7 +505,7 @@
 
 
 ;; tramp
-;; =======
+;; ======
 (setq tramp-default-method "ssh")
 
 
@@ -509,14 +517,14 @@
 
 
 ;; uniquify
-;; =========================
+;; =========
 ;; show unique buffer names
 (use-package uniquify
   :config (setq uniquify-buffer-name-style 'forward))
 
 
 ;; visual-regexp
-;; =============
+;; ==============
 ;;(use-package visual-regexp
 ;;   :ensure t)
 ;;(use-package visual-regexp-steroids
