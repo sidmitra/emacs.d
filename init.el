@@ -351,7 +351,8 @@
 (use-package anaconda-mode
   :ensure t
   :config
-  (add-hook 'python-mode-hook 'anaconda-mode))
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  (add-hook 'python-mode-hook 'eldoc-mode))
 (use-package company-anaconda
   :ensure t
   :config
@@ -447,7 +448,7 @@
 ;; shortcuts
 ;; ==========
 (set-register ?t (cons 'file "~/Sync/Notes/todo.txt"))
-
+(set-register ?p (cons 'file "~/Sync/Notes/pw/permanent.txt"))
 
 ;; tabbar
 ;; ======
