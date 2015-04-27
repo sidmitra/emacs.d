@@ -303,6 +303,24 @@
                           'check-parens
                           nil t))))
 
+
+;; modeline
+;; ==========
+(use-package powerline
+ :ensure t
+ :config
+ (powerline-center-theme)
+ (setq-default powerline-default-separator 'curve)
+ )
+
+;; svg-mode-line-themes
+;; (require 'svg-mode-line-themes)
+;; (smt/enable)
+;; (smt/set-theme 'black-crystal)
+;; (set-face-attribute 'mode-line nil :box nil)
+;; (set-face-attribute 'mode-line-inactive nil :box nil)
+
+
 ;; multi-term
 ;; ===========
 (use-package multi-term
@@ -385,16 +403,6 @@
 (setq py-autopep8-options '("--ignore=E309,"))
 
 
-;; powerline
-;; ==========
-(use-package powerline
- :ensure t
- :config
- (powerline-center-theme)
- (setq-default powerline-default-separator 'curve)
- )
-
-
 ;; R and ESS
 ;; ===========
 (use-package ess
@@ -447,8 +455,8 @@
 
 ;; shortcuts
 ;; ==========
-(set-register ?t (cons 'file "~/Sync/Notes/todo.txt"))
-(set-register ?p (cons 'file "~/Sync/Notes/pw/permanent.txt"))
+(set-register ?t (cons 'file "~/Documents/Notes/todo.txt"))
+(set-register ?p (cons 'file "~/Documents/Notes/pw/permanent.txt"))
 
 ;; tabbar
 ;; ======
