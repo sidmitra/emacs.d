@@ -259,30 +259,6 @@
 ;;      (define-key company-active-map (kbd "C-:") 'helm-company)))
 
 
-;; html
-;; ====
-(use-package web-mode
-  :ensure t
-  :mode (("\\.html$" . web-mode))
-  :config
-  (setq web-mode-markup-indent-offset 4)
-  (setq web-mode-css-indent-offset 4)
-  (setq web-mode-code-indent-offset 4)
-  (setq web-mode-enable-current-element-highlight t))
-
-(add-hook 'sgml-mode-hook
-          (lambda ()
-            ;; Default indentation to 2, but let SGML mode guess, too.
-            (set (make-local-variable 'sgml-basic-offset) 4)
-            (setq indent-tabs-mode nil)
-            (sgml-guess-indent)))
-;; Forcing django mode on all html
-;; TODO: Better way to do this?
-(setq web-mode-engines-alist
-      '(("django"    . "\\.html\\'"))
-      )
-
-
 ;; magit
 ;; ======
 (use-package magit
@@ -532,6 +508,44 @@
   :config (setq uniquify-buffer-name-style 'forward))
 
 
+;; web
+;; ====
+(use-package web-mode
+  :ensure t
+  :mode (("\\.html$" . web-mode))
+  :config
+  (setq web-mode-markup-indent-offset 4)
+  (setq web-mode-css-indent-offset 4)
+  (setq web-mode-code-indent-offset 4)
+  (setq web-mode-enable-current-element-highlight t))
+
+(add-hook 'sgml-mode-hook
+          (lambda ()
+            ;; Default indentation to 2, but let SGML mode guess, too.
+            (set (make-local-variable 'sgml-basic-offset) 4)
+            (setq indent-tabs-mode nil)
+            (sgml-guess-indent)))
+;; Forcing django mode on all html
+;; TODO: Better way to do this?
+(setq web-mode-engines-alist
+      '(("django"    . "\\.html\\'"))
+      )
+
+(use-package scss-mode
+  :ensure t
+  :mode (("\\.scss$" . scss-mode))
+  :config
+  )
+
+
+;; yaml-mode
+;; =========
+(use-package yaml-mode
+  :ensure t
+  :mode (("\\.yaml$" . yaml-mode))
+  :config
+  )
+
 ;; visual-regexp
 ;; ==============
 ;;(use-package visual-regexp
@@ -565,6 +579,3 @@
 (yas-global-mode 1)
 (add-hook 'term-mode-hook (lambda()
                             (setq yas-dont-activate t)))
-
-;;;;; =============== EXPLORE ====================
-;(require 'discover)
