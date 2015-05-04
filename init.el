@@ -71,6 +71,9 @@
 ;; simplify whitespace style
 (setq-default whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
 
+;; delete trailing whitespace before saving
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 ;; do not treat _ as word delimiter
 (modify-syntax-entry ?_ "w")
 
@@ -331,15 +334,16 @@
 
 ;; python-mode
 ;; ============
-(use-package pony-mode
-  :ensure t)
-(add-hook 'python-mode-hook 'pony-mode)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'python-mode-hook
           (lambda ()
             (setq indent-tabs-mode nil)
             (setq tab-width 4)
             (setq python-indent-offset 4)))
+
+;; pony
+;; (use-package pony-mode
+;;   :ensure t)
+;; (add-hook 'python-mode-hook 'pony-mode)
 
 ;; anaconda
 (use-package anaconda-mode
@@ -536,6 +540,11 @@
   :mode (("\\.scss$" . scss-mode))
   :config
   )
+
+;; emmet
+(use-package emmet-mode
+  :ensure t
+  :mode (("\\.html$" . web-mode)))
 
 
 ;; yaml-mode
