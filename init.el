@@ -334,16 +334,19 @@
 
 ;; python-mode
 ;; ============
+;; pre-requisites on ubuntu
+;; sudo apt-get install -y python-dev python-setuptools python-pip python-virtualenv virtualenvwrapper
+;; sudo apt-get install -y python-flake8 pylint pep8 python-autopep8 python-jedi python-six
+
+;; Experimenting with python3, but not gotten it working yet
+;; (setq python-python-command "/home/sid/.virtualenvs/emacs/bin/python")
+;; (setq python-shell-interpreter "/usr/bin/python3")
+
 (add-hook 'python-mode-hook
           (lambda ()
             (setq indent-tabs-mode nil)
             (setq tab-width 4)
             (setq python-indent-offset 4)))
-
-;; pony
-;; (use-package pony-mode
-;;   :ensure t)
-;; (add-hook 'python-mode-hook 'pony-mode)
 
 ;; anaconda
 (use-package anaconda-mode
@@ -356,9 +359,7 @@
   :config
   (add-to-list 'company-backends 'company-anaconda))
 
-
 ;; virtualenv
-;; @manual: sudo apt-get install python-virtualenv virtualenvwrapper
 (use-package virtualenvwrapper
   :ensure t
   :config
@@ -375,12 +376,17 @@
 
 
 ;; pep8
-;; @manual: sudo apt-get install pep8 python-autopep8 python-flake8 pylint
 (use-package python-pep8
  :ensure t)
 (use-package py-autopep8
  :ensure t)
 (setq py-autopep8-options '("--ignore=E309,"))
+
+
+;; pony
+;; (use-package pony-mode
+;;   :ensure t)
+;; (add-hook 'python-mode-hook 'pony-mode)
 
 
 ;; R and ESS
