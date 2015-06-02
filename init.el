@@ -1,7 +1,7 @@
 (setq package-archives
       '(("gnu"         . "http://elpa.gnu.org/packages/")
         ("org"         . "http://orgmode.org/elpa/")
-        ("marmalade"   . "http://marmalade-repo.org/packages/")
+        ;;("marmalade"   . "http://marmalade-repo.org/packages/")
         ("melpa"       . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
 
@@ -252,6 +252,9 @@
       (set-face-attribute 'helm-source-header nil :height 0.1)
     (set-face-attribute 'helm-source-header nil :height 1.0)))
 (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)
+
+;; Use helm-M-x instead, shows keybindings for commands
+(global-set-key (kbd "M-x") 'helm-M-x)
 
 ;; helm-company
 ;; (use-package helm-company
