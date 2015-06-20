@@ -134,6 +134,33 @@
 (setq save-interprogram-paste-before-kill t)
 
 
+;; backup
+;; =======
+(setq backup-directory-alist '(("." . "~/.emacs.d/backup/per-save"))
+  backup-by-copying t    ; Don't delink hardlinks
+  version-control t      ; Use version numbers on backups
+  delete-old-versions t  ; Automatically delete excess backups
+  kept-new-versions 20   ; how many of the newest versions to keep
+  kept-old-versions 5    ; and how many of the old
+  )
+
+(defun force-backup-of-buffer ()
+  ;; Make a special "per session" backup at the first save of each
+  ;; emacs session.
+  (when (not buffer-backed-up)
+    ;; Override the default parameters for per-session backups.
+    (let ((backup-directory-alist '(("" . "~/.emacs.d/backup/per-session")))
+          (kept-new-versions 3))
+      (backup-buffer)))
+  ;; Make a "per save" backup on each save.  The first save results in
+  ;; both a per-session and a per-save backup, to keep the numbering
+  ;; of per-save backups consistent.
+  (let ((buffer-backed-up nil))
+    (backup-buffer)))
+
+(add-hook 'before-save-hook  'force-backup-of-buffer)
+
+
 ;; buffers
 ;; =======
  (defun volatile-kill-buffer ()
@@ -146,15 +173,6 @@
 
 ;; auto revert buffer every x seconds
 (global-auto-revert-mode t)
-
-;; backup
-;; (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
-;;   backup-by-copying t    ; Don't delink hardlinks
-;;   version-control t      ; Use version numbers on backups
-;;   delete-old-versions t  ; Automatically delete excess backups
-;;   kept-new-versions 20   ; how many of the newest versions to keep
-;;   kept-old-versions 5    ; and how many of the old
-;;   )
 
 ;; show current file path
 (defun show-file-name ()
@@ -446,6 +464,29 @@
 ;; ==========
 (set-register ?t (cons 'file "~/Documents/Notes/todo.txt"))
 (set-register ?p (cons 'file "~/Documents/Notes/pw/permanent.txt"))
+
+
+;; sr-speedbar
+;; ===========
+(use-package sr-speedbar
+  :ensure t
+  :requires speedbar
+  :config
+  (progn
+    (setq speedbar-hide-button-brackets-flag t
+          speedbar-show-unknown-files t
+          speedbar-smart-directory-expand-flag t
+          speedbar-directory-button-trim-method 'trim
+          speedbar-use-images nil
+          speedbar-indentation-width 2
+          speedbar-use-imenu-flag t
+          speedbar-file-unshown-regexp "flycheck-.*"
+          sr-speedbar-width 40
+          sr-speedbar-width-x 40
+          sr-speedbar-auto-refresh nil
+          sr-speedbar-skip-other-window-p t
+          sr-speedbar-right-side nil)))
+
 
 ;; tabbar
 ;; ======
