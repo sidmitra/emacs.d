@@ -329,6 +329,10 @@
 (defalias 'term 'multi-term)
 
 
+;; neotree
+(use-package neotree
+  :ensure t)
+
 ;; org
 ;; ====
 (setq-default org-support-shift-select t)
