@@ -89,20 +89,21 @@
 
 ;; set font and size
 (set-default-font "Inconsolata 14")
+(set-frame-font "Inconsolata 14")
 ;; change font-size with ctrl + mouse wheel
 (global-set-key (vector (list 'control mouse-wheel-down-event)) 'text-scale-increase)
 (global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
 
 ;; smooth scrolling
-;;(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
-;;(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-;;(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-(setq scroll-step 1) ;; keyboard scroll one line at a time
-;; (setq redisplay-dont-pause t
-;;   scroll-margin 1
-;;   scroll-step 1
-;;   scroll-conservatively 10000
-;;   scroll-preserve-screen-position 1)
+(setq mouse-wheel-scroll-amount '(5 ((shift) . 5))) ;; one line at a time
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+(setq scroll-step 2) ;; keyboard scroll one line at a time
+(setq redisplay-dont-pause t
+  scroll-margin 1
+  scroll-step 1
+  scroll-conservatively 10000
+  scroll-preserve-screen-position 1)
 
 ;; overwrite active region
 (delete-selection-mode t)
@@ -112,7 +113,7 @@
 
 ;; Show matching parentheses with 0 delay
 (show-paren-mode 1)
-(setq show-paren-delay 0)
+(setq-default show-paren-delay 0)
 
 ;; indent new lines
 (global-set-key (kbd "RET") 'newline-and-indent)
@@ -133,6 +134,8 @@
 ;; https://www.reddit.com/r/emacs/comments/30g5wo/the_kill_ring_and_the_clipboard/
 (setq save-interprogram-paste-before-kill t)
 
+;; disable emacs window disappearing on Ctrl-z
+(global-unset-key (kbd "C-z"))
 
 ;; backup
 ;; =======
@@ -248,7 +251,7 @@
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+;; (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
 (when (executable-find "curl")
   (setq helm-google-suggest-use-curl-p t))
@@ -360,9 +363,12 @@
 ;; python-mode
 ;; ============
 ;; pre-requisites on ubuntu
+;; sudo pip install --upgrade pip
+;; sudo pip install jedi json-rpc --upgrade
+
+;; Deprecate these and try on a fresh machine new.
 ;; sudo apt-get install -y python-dev python-setuptools python-pip python-virtualenv virtualenvwrapper
 ;; sudo apt-get install -y python-flake8 pylint pep8 python-autopep8 python-jedi python-six
-
 ;; Experimenting with python3, but not gotten it working yet
 ;; (setq python-python-command "/home/sid/.virtualenvs/emacs/bin/python")
 ;; (setq python-shell-interpreter "/usr/bin/python3")
@@ -391,27 +397,14 @@
   (venv-initialize-interactive-shells) ;; if you want interactive shell support
   (venv-initialize-eshell) ;; if you want eshell support
   (setq venv-location "~/.virtualenvs/"))
-
-;; TODO: make it work with virtualenv
-;; (defun projectile-pyenv-mode-set ()
-;;   "Set pyenv version matching project name.
-;; Version must be already installed."
-;;   (pyenv-mode-set (projectile-project-name)))
-;; (add-hook 'projectile-switch-project-hook 'projectile-pyenv-mode-set)
-
+;; (setq python-shell-virtualenv-path "~/.virtualenvs/default")
 
 ;; pep8
-(use-package python-pep8
- :ensure t)
-(use-package py-autopep8
- :ensure t)
-(setq py-autopep8-options '("--ignore=E309,"))
-
-
-;; pony
-;; (use-package pony-mode
-;;   :ensure t)
-;; (add-hook 'python-mode-hook 'pony-mode)
+;; (use-package python-pep8
+;;  :ensure t)
+;; (use-package py-autopep8
+;;  :ensure t)
+;; (setq py-autopep8-options '("--ignore=E309,"))
 
 
 ;; R and ESS
