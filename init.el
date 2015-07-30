@@ -333,6 +333,7 @@
 
 
 ;; neotree
+;; ========
 (use-package neotree
   :ensure t
   :config
@@ -628,6 +629,13 @@
 ;         (org-mode . coding)
 ;         (web-mode . coding)))
 ;   (purpose-compile-user-configuration)  )
+
+
+;; winner-mode
+;; ============
+(use-package winner
+  :init
+  (winner-mode))
 
 
 ;; yasnippet
