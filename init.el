@@ -44,14 +44,21 @@
 (if window-system
     (tool-bar-mode -1)
   )
+(if window-system
+    (menu-bar-mode -1)
+  )
+
 
 ;; twilight theme
-(use-package twilight-theme
-  :ensure t)
-;; (load-theme 'twilight t)
 (use-package darktooth-theme
-  :ensure t)
-(load-theme 'darktooth t)
+  :ensure t
+  :config
+  (load-theme 'darktooth t))
+;; (use-package material-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'material t))
+
 (setq-default color-theme-is-global t)
 
 ;; Soft-wrap lines
@@ -71,7 +78,7 @@
 ;; simplify whitespace style
 (setq-default whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
 
-;; delete trailing whitespace before saving
+;; Delete trailing whitespace before saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; do not treat _ as word delimiter
@@ -226,6 +233,12 @@
          ("<f10>" . emms-volume-raise)))
 
 
+;; eyebrowse
+;; ==================
+(use-package eyebrowse
+  :ensure t)
+
+
 ;; flycheck
 ;; =========
 (use-package flycheck
@@ -285,6 +298,12 @@
 ;;      (define-key company-mode-map (kbd "C-:") 'helm-company)
 ;;      (define-key company-active-map (kbd "C-:") 'helm-company)))
 
+
+;; javascript
+;; ===========
+(use-package jade-mode
+  :ensure t)
+(setq js-indent-level 2)
 
 ;; magit
 ;; ======
@@ -462,8 +481,9 @@
 
 ;; shortcuts
 ;; ==========
-(set-register ?t (cons 'file "~/Documents/Notes/todo.txt"))
-(set-register ?p (cons 'file "~/Documents/Notes/pw/permanent.txt"))
+(set-register ?t (cons 'file "~/Projects/Notes/todo.txt"))
+(set-register ?s (cons 'file "~/Projects/Notes/shortcuts.txt"))
+(set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.txt"))
 
 
 ;; sr-speedbar
@@ -530,9 +550,13 @@
 ;; https://zhangda.wordpress.com/2012/09/21/tabbar-mode-rocks-with-customization/
 (setq tabbar-background-color "#959A79") ;; the color of the tabbar background
 (custom-set-faces
- '(tabbar-default ((t (:inherit variable-pitch :background "#959A79" :foreground "black" :weight bold))))
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(tabbar-button ((t (:inherit tabbar-default :foreground "dark red"))))
  '(tabbar-button-highlight ((t (:inherit tabbar-default))))
+ '(tabbar-default ((t (:inherit variable-pitch :background "#959A79" :foreground "black" :weight bold))))
  '(tabbar-highlight ((t (:underline t))))
  '(tabbar-selected ((t (:inherit tabbar-default :background "#95CA59"))))
  '(tabbar-separator ((t (:inherit tabbar-default :background "#95CA59"))))
@@ -633,9 +657,9 @@
 
 ;; winner-mode
 ;; ============
-(use-package winner
-  :init
-  (winner-mode))
+;; (use-package winner
+;;   :init
+;;   (winner-mode))
 
 
 ;; yasnippet
@@ -645,3 +669,11 @@
 (yas-global-mode 1)
 (add-hook 'term-mode-hook (lambda()
                             (setq yas-dont-activate t)))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("21c149e080d562fe9169c8abda51c2f1f9b0a12c89cc2c7a4d9998a758e1cfbd" "d1dbb3c37e11ae8f986ca2d4b6a9d78bb1915fe66f3a6ffab1397cc746c18cba" default))))
