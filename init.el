@@ -95,6 +95,8 @@
 (setq-default tab-always-indent 'complete)
 
 ;; set font and size
+;; (set-default-font "SourceCodePro 14")
+;; (set-frame-font "SourceCodePro 14")
 (set-default-font "Inconsolata 14")
 (set-frame-font "Inconsolata 14")
 ;; change font-size with ctrl + mouse wheel
@@ -236,7 +238,9 @@
 ;; eyebrowse
 ;; ==================
 (use-package eyebrowse
-  :ensure t)
+  :ensure t
+  :config
+  (eyebrowse-mode t))
 
 
 ;; flycheck
@@ -303,7 +307,7 @@
 ;; ===========
 (use-package jade-mode
   :ensure t)
-(setq js-indent-level 2)
+(setq js-indent-level 4)
 
 ;; magit
 ;; ======
@@ -419,14 +423,7 @@
   (venv-initialize-interactive-shells) ;; if you want interactive shell support
   (venv-initialize-eshell) ;; if you want eshell support
   (setq venv-location "~/.virtualenvs/"))
-;; (setq python-shell-virtualenv-path "~/.virtualenvs/default")
-
-;; pep8
-;; (use-package python-pep8
-;;  :ensure t)
-;; (use-package py-autopep8
-;;  :ensure t)
-;; (setq py-autopep8-options '("--ignore=E309,"))
+;;(setq python-shell-virtualenv-path "~/.virtualenvs/myvenv")
 
 
 ;; R and ESS
@@ -477,6 +474,15 @@
     (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
     )
   )
+
+
+;; shell
+;; =======
+(defun term-bash (buffer-name)
+  "Start a terminal and rename buffer."
+  (interactive "sbuffer name: ")
+  (ansi-term "/bin/bash")
+  (rename-buffer buffer-name t))
 
 
 ;; shortcuts
@@ -639,20 +645,20 @@
 
 ;; window-purpose
 ;; ===============
-; (use-package window-purpose
-;   :ensure t
-;   :config
-;   (purpose-mode 1)
-;   (setq purpose-user-mode-purposes
-;       '((term-mode . terminal)
-;         (shell-mode . terminal)
-;         (ansi-term-mode . terminal)
-;         (multi-term . terminal)
-;         (python-mode . coding)
-;         (lisp-mode . coding)
-;         (org-mode . coding)
-;         (web-mode . coding)))
-;   (purpose-compile-user-configuration)  )
+;; (use-package window-purpose
+;;   :ensure t
+;;   :config
+;;   (purpose-mode 1)
+;;   (setq purpose-user-mode-purposes
+;;       '((term-mode . terminal)
+;;         (shell-mode . terminal)
+;;         (ansi-term-mode . terminal)
+;;         (multi-term . terminal)
+;;         (python-mode . coding)
+;;         (lisp-mode . coding)
+;;         (org-mode . coding)
+;;         (web-mode . coding)))
+;;   (purpose-compile-user-configuration)  )
 
 
 ;; winner-mode
@@ -676,4 +682,4 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("21c149e080d562fe9169c8abda51c2f1f9b0a12c89cc2c7a4d9998a758e1cfbd" "d1dbb3c37e11ae8f986ca2d4b6a9d78bb1915fe66f3a6ffab1397cc746c18cba" default))))
+    ("a444b2e10bedc64e4c7f312a737271f9a2f2542c67caa13b04d525196562bf38" "51e228ffd6c4fff9b5168b31d5927c27734e82ec61f414970fc6bcce23bc140d" "baec1c1685293d66ec4c623683ed87bbf7fc3ce4ccbaeca878c9b8ac8c3ab7b3" "21c149e080d562fe9169c8abda51c2f1f9b0a12c89cc2c7a4d9998a758e1cfbd" "d1dbb3c37e11ae8f986ca2d4b6a9d78bb1915fe66f3a6ffab1397cc746c18cba" default))))
