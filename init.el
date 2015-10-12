@@ -492,28 +492,6 @@
 (set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.txt"))
 
 
-;; sr-speedbar
-;; ===========
-(use-package sr-speedbar
-  :ensure t
-  :requires speedbar
-  :config
-  (progn
-    (setq speedbar-hide-button-brackets-flag t
-          speedbar-show-unknown-files t
-          speedbar-smart-directory-expand-flag t
-          speedbar-directory-button-trim-method 'trim
-          speedbar-use-images nil
-          speedbar-indentation-width 2
-          speedbar-use-imenu-flag t
-          speedbar-file-unshown-regexp "flycheck-.*"
-          sr-speedbar-width 40
-          sr-speedbar-width-x 40
-          sr-speedbar-auto-refresh nil
-          sr-speedbar-skip-other-window-p t
-          sr-speedbar-right-side nil)))
-
-
 ;; tabbar
 ;; ======
 (use-package tabbar
@@ -643,24 +621,6 @@
 ;;   :ensure t)
 
 
-;; window-purpose
-;; ===============
-;; (use-package window-purpose
-;;   :ensure t
-;;   :config
-;;   (purpose-mode 1)
-;;   (setq purpose-user-mode-purposes
-;;       '((term-mode . terminal)
-;;         (shell-mode . terminal)
-;;         (ansi-term-mode . terminal)
-;;         (multi-term . terminal)
-;;         (python-mode . coding)
-;;         (lisp-mode . coding)
-;;         (org-mode . coding)
-;;         (web-mode . coding)))
-;;   (purpose-compile-user-configuration)  )
-
-
 ;; winner-mode
 ;; ============
 ;; (use-package winner
@@ -675,6 +635,9 @@
 (yas-global-mode 1)
 (add-hook 'term-mode-hook (lambda()
                             (setq yas-dont-activate t)))
+
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
