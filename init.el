@@ -1,7 +1,7 @@
 (setq package-archives
       '(("gnu"         . "http://elpa.gnu.org/packages/")
+        ;; ("marmalade" . "http://marmalade-repo.org/packages/")
         ("org"         . "http://orgmode.org/elpa/")
-        ;;("marmalade"   . "http://marmalade-repo.org/packages/")
         ("melpa"       . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
 
@@ -207,6 +207,14 @@
   (helm-ag (projectile-project-root)))
 
 
+;; beacon
+;; ========
+(use-package beacon
+  :ensure t
+  :config
+  (beacon-mode t))
+
+
 ;; company
 ;; ========
 (use-package company
@@ -235,16 +243,10 @@
          ("<f10>" . emms-volume-raise)))
 
 
-;; eyebrowse
-;; ==================
-(use-package eyebrowse
-  :ensure t
-  :config
-  (eyebrowse-mode t))
-
-
 ;; flycheck
 ;; =========
+(use-package let-alist
+  :ensure t)
 (use-package flycheck
   :ensure t
   :config
@@ -253,6 +255,12 @@
   (setq-default flycheck-highlighting-mode 'lines)
   (setq-default flycheck-idle-change-delay 3)
   (setq-default flycheck-display-errors-delay 0))
+
+
+;; golang
+;; =======
+(use-package go-mode
+  :ensure t)
 
 
 ;; helm
@@ -362,6 +370,7 @@
   :config
   (global-set-key [f8] 'neotree-toggle))
 
+
 ;; org
 ;; ====
 (setq-default org-support-shift-select t)
@@ -424,6 +433,24 @@
   (venv-initialize-eshell) ;; if you want eshell support
   (setq venv-location "~/.virtualenvs/"))
 ;;(setq python-shell-virtualenv-path "~/.virtualenvs/myvenv")
+
+
+
+;; Layout
+;; ========
+(use-package 0blayout
+  :ensure t
+  :config
+  (0blayout-mode 1))
+
+;; (use-package perspective
+;;   :ensure t
+;;   :config
+;;   (persp-mode 1))
+;; (use-package eyebrowse
+;;   :ensure t
+;;   :config
+;;   (eyebrowse-mode t))
 
 
 ;; R and ESS
