@@ -243,6 +243,14 @@
          ("<f10>" . emms-volume-raise)))
 
 
+;; exec-path-from-shell
+;; ====================
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize))
+
+
 ;; flycheck
 ;; =========
 (use-package let-alist
@@ -310,12 +318,22 @@
 ;;      (define-key company-mode-map (kbd "C-:") 'helm-company)
 ;;      (define-key company-active-map (kbd "C-:") 'helm-company)))
 
+;; (use-package flx
+;;   :ensure t)
+;; (use-package helm-flx
+;;   :ensure t)
+;; (use-package helm-fuzzier
+;;   :ensure t
+;;   :config
+;;   (helm-fuzzier-mode 1))
+
 
 ;; javascript
 ;; ===========
 (use-package jade-mode
   :ensure t)
 (setq js-indent-level 4)
+
 
 ;; magit
 ;; ======
@@ -346,13 +364,6 @@
  (powerline-center-theme)
  (setq-default powerline-default-separator 'curve)
  )
-
-;; svg-mode-line-themes
-;; (require 'svg-mode-line-themes)
-;; (smt/enable)
-;; (smt/set-theme 'black-crystal)
-;; (set-face-attribute 'mode-line nil :box nil)
-;; (set-face-attribute 'mode-line-inactive nil :box nil)
 
 
 ;; multi-term
@@ -397,14 +408,7 @@
 
 ;; python-mode
 ;; ============
-;; pre-requisites on ubuntu
-;; sudo pip install --upgrade pip
-;; sudo pip install jedi json-rpc --upgrade
-
-;; Deprecate these and try on a fresh machine new.
-;; sudo apt-get install -y python-dev python-setuptools python-pip python-virtualenv virtualenvwrapper
-;; sudo apt-get install -y python-flake8 pylint pep8 python-autopep8 python-jedi python-six
-;; Experimenting with python3, but not gotten it working yet
+(setq py-python-command "python3")
 ;; (setq python-python-command "/home/sid/.virtualenvs/emacs/bin/python")
 ;; (setq python-shell-interpreter "/usr/bin/python3")
 
@@ -425,15 +429,11 @@
   :config
   (add-to-list 'company-backends 'company-anaconda))
 
-;; virtualenv
-(use-package virtualenvwrapper
+
+(use-package pyenv-mode
   :ensure t
   :config
-  (venv-initialize-interactive-shells) ;; if you want interactive shell support
-  (venv-initialize-eshell) ;; if you want eshell support
-  (setq venv-location "~/.virtualenvs/"))
-;;(setq python-shell-virtualenv-path "~/.virtualenvs/myvenv")
-
+  (pyenv-mode t))
 
 
 ;; Layout
