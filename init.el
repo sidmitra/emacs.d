@@ -146,6 +146,7 @@
 ;; disable emacs window disappearing on Ctrl-z
 (global-unset-key (kbd "C-z"))
 
+
 ;; backup
 ;; =======
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup/per-save"))
@@ -221,10 +222,22 @@
   :ensure t
   :config
   (add-hook 'after-init-hook 'global-company-mode))
-;; 0.1 second delay before the pop-up appears
-(setq company-idle-delay 0.1)
+;; weight by frequency
+(setq company-transformers '(company-sort-by-occurrence))
+;; delay in seconds before the pop-up appears
+(setq company-idle-delay 0.5)
 ;; you only need to enter one character in a buffer before auto-completion starts
 (setq company-minimum-prefix-length 1)
+
+;; Add yasnippet support for all company backends
+;; https://github.com/syl20bnr/spacemacs/pull/179
+(defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+
+(defun company-mode/backend-with-yas (backend)
+  (if (or (not company-mode/enable-yas) (and (listp backend)    (member 'company-yasnippet backend)))
+  backend
+(append (if (consp backend) backend (list backend))
+        '(:with company-yasnippet))))
 
 
 ;; emms
@@ -408,9 +421,12 @@
 
 ;; python-mode
 ;; ============
-(setq py-python-command "python3")
-;; (setq python-python-command "/home/sid/.virtualenvs/emacs/bin/python")
-;; (setq python-shell-interpreter "/usr/bin/python3")
+;; exec-path-from-shell fixes command not found for pyenv
+(use-package pyenv-mode
+  :ensure t
+  :config
+  (pyenv-mode t)
+  (pyenv-mode-set "3.5.0"))
 
 (add-hook 'python-mode-hook
           (lambda ()
@@ -428,12 +444,6 @@
   :ensure t
   :config
   (add-to-list 'company-backends 'company-anaconda))
-
-
-(use-package pyenv-mode
-  :ensure t
-  :config
-  (pyenv-mode t))
 
 
 ;; Layout
