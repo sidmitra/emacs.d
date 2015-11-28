@@ -93,6 +93,11 @@
 (setq-default tab-always-indent nil)
 ;; make tab key do indent first then completion.
 (setq-default tab-always-indent 'complete)
+(use-package highlight-indent-guides
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+  (add-hook 'scss-mode-hook 'highlight-indent-guides-mode))
 
 ;; set font and size
 ;; (set-default-font "SourceCodePro 14")
@@ -345,7 +350,10 @@
 ;; ===========
 (use-package jade-mode
   :ensure t)
-(setq js-indent-level 4)
+(setq js-indent-level 2)
+
+;; (use-package angularjs-mode
+;;   :ensure t)
 
 
 ;; magit
