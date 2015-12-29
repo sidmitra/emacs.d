@@ -93,11 +93,11 @@
 (setq-default tab-always-indent nil)
 ;; make tab key do indent first then completion.
 (setq-default tab-always-indent 'complete)
-(use-package highlight-indent-guides
-  :ensure t
-  :config
-  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-  (add-hook 'scss-mode-hook 'highlight-indent-guides-mode))
+;; (use-package highlight-indent-guides
+;;   :ensure t
+;;   :config
+;;   (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+;;   (add-hook 'scss-mode-hook 'highlight-indent-guides-mode))
 
 ;; set font and size
 ;; (set-default-font "SourceCodePro 14")
@@ -261,12 +261,20 @@
          ("<f10>" . emms-volume-raise)))
 
 
+;; shell
+;; =====
 ;; exec-path-from-shell
-;; ====================
 (use-package exec-path-from-shell
   :ensure t
   :config
   (exec-path-from-shell-initialize))
+
+;; Bash autocompletion
+(add-hook
+ 'eshell-mode-hook
+ (lambda ()
+   (setq pcomplete-cycle-completions nil)))
+(setq eshell-cmpl-cycle-completions nil)
 
 
 ;; flycheck
@@ -281,6 +289,7 @@
   (setq-default flycheck-highlighting-mode 'lines)
   (setq-default flycheck-idle-change-delay 3)
   (setq-default flycheck-display-errors-delay 0))
+  ;;(setq-default flycheck-flake8-maximum-line-length 120))
 
 
 ;; golang
@@ -348,11 +357,10 @@
 
 ;; javascript
 ;; ===========
-(use-package jade-mode
-  :ensure t)
 (setq js-indent-level 2)
-
-;; (use-package angularjs-mode
+;; (use-package jade-mode
+;;   :ensure t)
+;; (use-package angular-mode
 ;;   :ensure t)
 
 
@@ -460,15 +468,6 @@
   :ensure t
   :config
   (0blayout-mode 1))
-
-;; (use-package perspective
-;;   :ensure t
-;;   :config
-;;   (persp-mode 1))
-;; (use-package eyebrowse
-;;   :ensure t
-;;   :config
-;;   (eyebrowse-mode t))
 
 
 ;; R and ESS
@@ -690,4 +689,5 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("a444b2e10bedc64e4c7f312a737271f9a2f2542c67caa13b04d525196562bf38" "51e228ffd6c4fff9b5168b31d5927c27734e82ec61f414970fc6bcce23bc140d" "baec1c1685293d66ec4c623683ed87bbf7fc3ce4ccbaeca878c9b8ac8c3ab7b3" "21c149e080d562fe9169c8abda51c2f1f9b0a12c89cc2c7a4d9998a758e1cfbd" "d1dbb3c37e11ae8f986ca2d4b6a9d78bb1915fe66f3a6ffab1397cc746c18cba" default))))
+    ("a444b2e10bedc64e4c7f312a737271f9a2f2542c67caa13b04d525196562bf38" "51e228ffd6c4fff9b5168b31d5927c27734e82ec61f414970fc6bcce23bc140d" "baec1c1685293d66ec4c623683ed87bbf7fc3ce4ccbaeca878c9b8ac8c3ab7b3" "21c149e080d562fe9169c8abda51c2f1f9b0a12c89cc2c7a4d9998a758e1cfbd" "d1dbb3c37e11ae8f986ca2d4b6a9d78bb1915fe66f3a6ffab1397cc746c18cba" default)))
+ '(safe-local-variable-values (quote ((engine . jsx)))))
