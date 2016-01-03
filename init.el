@@ -30,7 +30,7 @@
 (use-package server
   :if window-system
   :init
-      (server-start))
+  (server-start))
 
 ;; hide welcome message
 (setq inhibit-startup-message t)
@@ -54,10 +54,6 @@
   :ensure t
   :config
   (load-theme 'darktooth t))
-;; (use-package material-theme
-;;   :ensure t
-;;   :config
-;;   (load-theme 'material t))
 
 (setq-default color-theme-is-global t)
 
@@ -100,9 +96,7 @@
 ;;   (add-hook 'scss-mode-hook 'highlight-indent-guides-mode))
 
 ;; set font and size
-;; (set-default-font "SourceCodePro 14")
-;; (set-frame-font "SourceCodePro 14")
-(set-default-font "Inconsolata 14")
+;; (set-default-font "Inconsolata 14")
 (set-frame-font "Inconsolata 14")
 ;; change font-size with ctrl + mouse wheel
 (global-set-key (vector (list 'control mouse-wheel-down-event)) 'text-scale-increase)
@@ -113,11 +107,10 @@
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 (setq scroll-step 2) ;; keyboard scroll one line at a time
-(setq redisplay-dont-pause t
-  scroll-margin 1
-  scroll-step 1
-  scroll-conservatively 10000
-  scroll-preserve-screen-position 1)
+(setq scroll-margin 1
+      scroll-step 1
+      scroll-conservatively 10000
+      scroll-preserve-screen-position 1)
 
 ;; overwrite active region
 (delete-selection-mode t)
@@ -155,12 +148,12 @@
 ;; backup
 ;; =======
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup/per-save"))
-  backup-by-copying t    ; Don't delink hardlinks
-  version-control t      ; Use version numbers on backups
-  delete-old-versions t  ; Automatically delete excess backups
-  kept-new-versions 20   ; how many of the newest versions to keep
-  kept-old-versions 5    ; and how many of the old
-  )
+      backup-by-copying t    ; Don't delink hardlinks
+      version-control t      ; Use version numbers on backups
+      delete-old-versions t  ; Automatically delete excess backups
+      kept-new-versions 20   ; how many of the newest versions to keep
+      kept-old-versions 5    ; and how many of the old
+      )
 
 (defun force-backup-of-buffer ()
   ;; Make a special "per session" backup at the first save of each
@@ -181,13 +174,12 @@
 
 ;; buffers
 ;; =======
- (defun volatile-kill-buffer ()
-   "Kill current buffer unconditionally."
-   (interactive)
-   (let ((buffer-modified-p nil))
-     (kill-buffer (current-buffer))))
-
- (global-set-key (kbd "C-x k") 'volatile-kill-buffer)
+(defun volatile-kill-buffer ()
+  "Kill current buffer unconditionally."
+  (interactive)
+  (let ((buffer-modified-p nil))
+    (kill-buffer (current-buffer))))
+(global-set-key (kbd "C-x k") 'volatile-kill-buffer)
 
 ;; auto revert buffer every x seconds
 (global-auto-revert-mode t)
@@ -240,25 +232,9 @@
 
 (defun company-mode/backend-with-yas (backend)
   (if (or (not company-mode/enable-yas) (and (listp backend)    (member 'company-yasnippet backend)))
-  backend
-(append (if (consp backend) backend (list backend))
-        '(:with company-yasnippet))))
-
-
-;; emms
-;; =====
-(use-package emms
-  :ensure t
-  :config
-  (progn
-    (emms-standard)
-    (emms-default-players))
-  :bind (("<f5>" . emms-shuffle)
-         ("<f6>" . emms-pause)
-         ("<f7>" . emms-previous)
-         ("<f8>" . emms-next)
-         ("<f9>" . emms-volume-lower)
-         ("<f10>" . emms-volume-raise)))
+      backend
+    (append (if (consp backend) backend (list backend))
+            '(:with company-yasnippet))))
 
 
 ;; shell
@@ -268,13 +244,6 @@
   :ensure t
   :config
   (exec-path-from-shell-initialize))
-
-;; Bash autocompletion
-(add-hook
- 'eshell-mode-hook
- (lambda ()
-   (setq pcomplete-cycle-completions nil)))
-(setq eshell-cmpl-cycle-completions nil)
 
 
 ;; flycheck
@@ -289,7 +258,7 @@
   (setq-default flycheck-highlighting-mode 'lines)
   (setq-default flycheck-idle-change-delay 3)
   (setq-default flycheck-display-errors-delay 0))
-  ;;(setq-default flycheck-flake8-maximum-line-length 120))
+;;(setq-default flycheck-flake8-maximum-line-length 120))
 
 
 ;; golang
@@ -357,7 +326,6 @@
 
 ;; javascript
 ;; ===========
-(setq js-indent-level 2)
 ;; (use-package jade-mode
 ;;   :ensure t)
 ;; (use-package angular-mode
@@ -378,21 +346,21 @@
 (use-package markdown-mode
   :ensure t)
 (add-hook 'markdown-mode-hook
-            (lambda ()
-              (when buffer-file-name
-                (add-hook 'after-save-hook
-                          'check-parens
-                          nil t))))
+          (lambda ()
+            (when buffer-file-name
+              (add-hook 'after-save-hook
+                        'check-parens
+                        nil t))))
 
 
 ;; modeline
 ;; ==========
 (use-package powerline
- :ensure t
- :config
- (powerline-center-theme)
- (setq-default powerline-default-separator 'curve)
- )
+  :ensure t
+  :config
+  (powerline-center-theme)
+  (setq-default powerline-default-separator 'curve)
+  )
 
 
 ;; multi-term
@@ -430,9 +398,9 @@
     (projectile-global-mode)))
 
 (use-package helm-projectile
-   :ensure t
-   :defer t
-   :ensure helm-projectile)
+  :ensure t
+  :defer t
+  :ensure helm-projectile)
 
 
 ;; python-mode
@@ -486,7 +454,7 @@
                 ess-ask-for-ess-directory nil)
           (setq-default ess-dialect "R")
           ))
-          ;; (ess-toggle-underscore t)))
+;; (ess-toggle-underscore t)))
 (add-to-list 'company-backends 'company-ess)
 
 
@@ -515,9 +483,7 @@
   :ensure t
   :config
   (progn
-    (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-    )
-  )
+    (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
 
 
 ;; shell
@@ -597,7 +563,7 @@
 
 ;; tramp
 ;; ======
-(setq tramp-default-method "ssh")
+;; (setq tramp-default-method "ssh")
 
 
 ;; undo-tree
@@ -620,22 +586,17 @@
   :ensure t
   :mode (("\\.html$" . web-mode))
   :config
-  (setq web-mode-markup-indent-offset 4)
-  (setq web-mode-css-indent-offset 4)
-  (setq web-mode-code-indent-offset 4)
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
   (setq web-mode-enable-current-element-highlight t))
 
 (add-hook 'sgml-mode-hook
           (lambda ()
             ;; Default indentation to 2, but let SGML mode guess, too.
-            (set (make-local-variable 'sgml-basic-offset) 4)
+            (set (make-local-variable 'sgml-basic-offset) 2)
             (setq indent-tabs-mode nil)
             (sgml-guess-indent)))
-;; Forcing django mode on all html
-;; TODO: Better way to do this?
-(setq web-mode-engines-alist
-      '(("django"    . "\\.html\\'"))
-      )
 
 (use-package scss-mode
   :ensure t
@@ -680,6 +641,18 @@
 (add-hook 'term-mode-hook (lambda()
                             (setq yas-dont-activate t)))
 
+
+
+;; My Projects
+;; =========
+;; Forcing django mode on all html
+;; TODO: Better way to do this?
+(setq web-mode-engines-alist
+      '(("django"    . "\\.html\\'")))
+
+(add-to-list 'auto-mode-alist '("/home/sid/Projects/reactjs-native/stopwatch.*\\.js[x]?\\'" . web-mode))
+(setq web-mode-content-types-alist
+'(("jsx"  . "/home/sid/Projects/reactjs-native/stopwatch/.*\\.js[x]?\\'")))
 
 
 (custom-set-variables
