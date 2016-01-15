@@ -103,14 +103,17 @@
 (global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
 
 ;; smooth scrolling
-(setq mouse-wheel-scroll-amount '(5 ((shift) . 5))) ;; one line at a time
-(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-(setq scroll-step 2) ;; keyboard scroll one line at a time
-(setq scroll-margin 1
-      scroll-step 1
-      scroll-conservatively 10000
-      scroll-preserve-screen-position 1)
+(use-package smooth-scrolling
+  :ensure t)
+;; (setq mouse-wheel-scroll-amount '(5 ((shift) . 5))) ;; one line at a time
+;; (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+;; (setq scroll-step 2) ;; keyboard scroll one line at a time
+;; (setq scroll-margin 1
+;;       scroll-step 1
+;;       scroll-conservatively 10000
+;;       scroll-preserve-screen-position 1)
+
 
 ;; overwrite active region
 (delete-selection-mode t)
@@ -126,11 +129,16 @@
 (global-set-key (kbd "RET") 'newline-and-indent)
 
 ;; Character encodings default to utf-8.
-(prefer-coding-system 'utf-8)
-(set-language-environment 'utf-8)
 (set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-language-environment 'utf-8)
+(setq locale-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+(when (display-graphic-p)
+  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+
 
 ;; apply syntax highlighting to all buffers
 (global-font-lock-mode t)
@@ -330,6 +338,12 @@
 ;;   :ensure t)
 ;; (use-package angular-mode
 ;;   :ensure t)
+(use-package tern
+  :ensure t)
+(use-package company-tern
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-tern))
 
 
 ;; magit
