@@ -105,15 +105,7 @@
 ;; smooth scrolling
 (use-package smooth-scrolling
   :ensure t)
-;; (setq mouse-wheel-scroll-amount '(5 ((shift) . 5))) ;; one line at a time
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-;; (setq scroll-step 2) ;; keyboard scroll one line at a time
-;; (setq scroll-margin 1
-;;       scroll-step 1
-;;       scroll-conservatively 10000
-;;       scroll-preserve-screen-position 1)
-
 
 ;; overwrite active region
 (delete-selection-mode t)
@@ -226,23 +218,23 @@
 (use-package company
   :ensure t
   :config
-  (add-hook 'after-init-hook 'global-company-mode))
-;; weight by frequency
-(setq company-transformers '(company-sort-by-occurrence))
-;; delay in seconds before the pop-up appears
-(setq company-idle-delay 0.5)
-;; you only need to enter one character in a buffer before auto-completion starts
-(setq company-minimum-prefix-length 1)
+  (add-hook 'after-init-hook 'global-company-mode)
+  ;; weight by frequency
+  (setq company-transformers '(company-sort-by-occurrence))
+  ;; delay in seconds before the pop-up appears
+  (setq company-idle-delay 0.5)
+  ;; you only need to enter one character in a buffer before auto-completion starts
+  (setq company-minimum-prefix-length 1)
 
-;; Add yasnippet support for all company backends
-;; https://github.com/syl20bnr/spacemacs/pull/179
-(defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
-
-(defun company-mode/backend-with-yas (backend)
+  ;; Add yasnippet support for all company backends
+  ;; https://github.com/syl20bnr/spacemacs/pull/179
+  (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+  (defun company-mode/backend-with-yas (backend)
   (if (or (not company-mode/enable-yas) (and (listp backend)    (member 'company-yasnippet backend)))
       backend
     (append (if (consp backend) backend (list backend))
             '(:with company-yasnippet))))
+  )
 
 
 ;; shell
@@ -278,72 +270,55 @@
 ;; helm
 ;; =====
 (use-package helm
-  :ensure t)
+  :ensure t
+  :config
+  ;; replace default find file
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+  ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+  ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+  (global-set-key (kbd "C-c h") 'helm-command-prefix)
+  (global-unset-key (kbd "C-x c"))
+  ;; Use helm-M-x instead, shows keybindings for commands
+  (global-set-key (kbd "M-x") 'helm-M-x)
 
-;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-(global-set-key (kbd "C-c h") 'helm-command-prefix)
-(global-unset-key (kbd "C-x c"))
+  ;; rebind tab to run persistent action
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  ;; make TAB works in terminal
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+  ;; list actions using C-z
+  ;; (define-key helm-map (kbd "C-z")  'helm-select-action)
 
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-;; (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+  (when (executable-find "curl")
+    (setq helm-google-suggest-use-curl-p t))
 
-(when (executable-find "curl")
-  (setq helm-google-suggest-use-curl-p t))
+  ; open helm buffer inside current window, not occupy whole other window
+  (setq helm-split-window-in-side-p t)
+  ; move to end or beginning of source when reaching top or bottom of source.
+  (setq helm-move-to-line-cycle-in-source t)
+  ; search for library in `require' and `declare-function' sexp.
+  (setq helm-ff-search-library-in-sexp  t)
+  ; scroll 8 lines other window using M-<next>/M-<prior>
+  (setq helm-scroll-amount 8)
+  (setq helm-ff-file-name-history-use-recentf t)
 
-(setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-      helm-ff-file-name-history-use-recentf t)
+  ;; Make helm window lean
+  ;; https://www.reddit.com/r/emacs/comments/2z7nbv/lean_helm_window/
+  (setq helm-display-header-line nil) ;; t by default
+  (set-face-attribute 'helm-source-header nil :height 0.1)
+  (helm-autoresize-mode 1)
+  (defun helm-toggle-header-line ()
+    (if (= (length helm-sources) 1)
+        (set-face-attribute 'helm-source-header nil :height 0.1)
+      (set-face-attribute 'helm-source-header nil :height 1.0)))
+  (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)
 
-(helm-mode 1)
-
-;; https://www.reddit.com/r/emacs/comments/2z7nbv/lean_helm_window/
-(setq helm-display-header-line nil) ;; t by default
-(set-face-attribute 'helm-source-header nil :height 0.1)
-(helm-autoresize-mode 1)
-(defun helm-toggle-header-line ()
-  (if (= (length helm-sources) 1)
-      (set-face-attribute 'helm-source-header nil :height 0.1)
-    (set-face-attribute 'helm-source-header nil :height 1.0)))
-(add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)
-
-;; Use helm-M-x instead, shows keybindings for commands
-(global-set-key (kbd "M-x") 'helm-M-x)
-
-;; helm-company
-;; (use-package helm-company
-;;   :ensure t)
-;; (eval-after-load 'company
-;;   '(progn
-;;      (define-key company-mode-map (kbd "C-:") 'helm-company)
-;;      (define-key company-active-map (kbd "C-:") 'helm-company)))
-
-;; (use-package flx
-;;   :ensure t)
-;; (use-package helm-flx
-;;   :ensure t)
-;; (use-package helm-fuzzier
-;;   :ensure t
-;;   :config
-;;   (helm-fuzzier-mode 1))
+  ;; Enable helm
+  (helm-mode 1))
 
 
 ;; javascript
 ;; ===========
-;; (use-package jade-mode
-;;   :ensure t)
-;; (use-package angular-mode
-;;   :ensure t)
-(use-package tern
-  :ensure t)
-(use-package company-tern
-  :ensure t
-  :config
-  (add-to-list 'company-backends 'company-tern))
 
 
 ;; magit
@@ -518,11 +493,6 @@
 
 ;; tabbar
 ;; ======
-(use-package tabbar
-  :ensure t)
-(tabbar-mode t)
-
-
 ;; define all tabs to be one of 3 possible groups: “Emacs Buffer”, “Dired”, “User Buffer”.
 (defun tabbar-buffer-groups ()
   (list
@@ -548,31 +518,40 @@
          (buffer-list))))
 
 
-(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
-(global-set-key (vector (list 'control `tab)) 'tabbar-forward-tab)
-(global-set-key (kbd "C-S-p") 'tabbar-backward-group)
-(global-set-key (kbd "C-S-n") 'tabbar-forward-group)
-(global-set-key (kbd "C-<") 'tabbar-backward)
-(global-set-key (kbd "C->") 'tabbar-forward)
+(use-package tabbar
+  :ensure t
+  :config
+  (tabbar-mode t)
+  (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
-;; https://zhangda.wordpress.com/2012/09/21/tabbar-mode-rocks-with-customization/
-(setq tabbar-background-color "#959A79") ;; the color of the tabbar background
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(tabbar-button ((t (:inherit tabbar-default :foreground "dark red"))))
- '(tabbar-button-highlight ((t (:inherit tabbar-default))))
- '(tabbar-default ((t (:inherit variable-pitch :background "#959A79" :foreground "black" :weight bold))))
- '(tabbar-highlight ((t (:underline t))))
- '(tabbar-selected ((t (:inherit tabbar-default :background "#95CA59"))))
- '(tabbar-separator ((t (:inherit tabbar-default :background "#95CA59"))))
- '(tabbar-unselected ((t (:inherit tabbar-default)))))
+  ;; keybindings
+  (global-set-key (vector (list 'control `tab)) 'tabbar-forward-tab)
+  (global-set-key (kbd "C-S-p") 'tabbar-backward-group)
+  (global-set-key (kbd "C-S-n") 'tabbar-forward-group)
+  (global-set-key (kbd "C-<") 'tabbar-backward)
+  (global-set-key (kbd "C->") 'tabbar-forward)
 
-(setq tabbar-cycle-scope (quote tabs))
-(setq table-time-before-update 0.1)
-(setq tabbar-use-images nil)
+  ;; styling
+  ;; https://zhangda.wordpress.com/2012/09/21/tabbar-mode-rocks-with-customization/
+  (setq tabbar-background-color "#959A79") ;; the color of the tabbar background
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(tabbar-button ((t (:inherit tabbar-default :foreground "dark red"))))
+   '(tabbar-button-highlight ((t (:inherit tabbar-default))))
+   '(tabbar-default ((t (:inherit variable-pitch :background "#959A79" :foreground "black" :weight bold))))
+   '(tabbar-highlight ((t (:underline t))))
+   '(tabbar-selected ((t (:inherit tabbar-default :background "#95CA59"))))
+   '(tabbar-separator ((t (:inherit tabbar-default :background "#95CA59"))))
+   '(tabbar-unselected ((t (:inherit tabbar-default)))))
+
+  ;; misc
+  (setq tabbar-cycle-scope (quote tabs))
+  (setq table-time-before-update 0.1)
+  (setq tabbar-use-images nil)
+  )
 
 
 ;; tramp
@@ -600,17 +579,17 @@
   :ensure t
   :mode (("\\.html$" . web-mode))
   :config
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-markup-indent-offset 4)
+  (setq web-mode-css-indent-offset 4)
+  (setq web-mode-code-indent-offset 4)
   (setq web-mode-enable-current-element-highlight t)
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-current-column-highlight t))
 
 (add-hook 'sgml-mode-hook
           (lambda ()
-            ;; Default indentation to 2, but let SGML mode guess, too.
-            (set (make-local-variable 'sgml-basic-offset) 2)
+            ;; Default indentation to 4, but let SGML mode guess, too.
+            (set (make-local-variable 'sgml-basic-offset) 4)
             (setq indent-tabs-mode nil)
             (sgml-guess-indent)))
 
@@ -632,20 +611,6 @@
   :config
   )
 
-;; visual-regexp
-;; ==============
-;;(use-package visual-regexp
-;;   :ensure t)
-;;(use-package visual-regexp-steroids
-;;   :ensure t)
-
-
-;; winner-mode
-;; ============
-;; (use-package winner
-;;   :init
-;;   (winner-mode))
-
 
 ;; yasnippet
 ;; =========
@@ -664,9 +629,9 @@
 (setq web-mode-engines-alist
       '(("django"    . "\\.html\\'")))
 
-(add-to-list 'auto-mode-alist '("/home/sid/Projects/reactjs-native/stopwatch.*\\.js[x]?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("/home/sid/Projects/reactjs-native/.*/.*\\.js[x]?\\'" . web-mode))
 (setq web-mode-content-types-alist
-'(("jsx"  . "/home/sid/Projects/reactjs-native/stopwatch/.*\\.js[x]?\\'")))
+'(("jsx"  . "/home/sid/Projects/reactjs-native/.*/.*\\.js[x]?\\'")))
 
 
 (custom-set-variables
