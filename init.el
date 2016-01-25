@@ -1,6 +1,6 @@
 (setq package-archives
       '(("gnu"         . "http://elpa.gnu.org/packages/")
-        ;; ("marmalade" . "http://marmalade-repo.org/packages/")
+        ("marmalade" . "http://marmalade-repo.org/packages/")
         ("org"         . "http://orgmode.org/elpa/")
         ("melpa"       . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
@@ -106,7 +106,7 @@
 (use-package smooth-scrolling
   :ensure t)
 ;; (setq mouse-wheel-scroll-amount '(5 ((shift) . 5))) ;; one line at a time
-;; (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 ;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 ;; (setq scroll-step 2) ;; keyboard scroll one line at a time
 ;; (setq scroll-margin 1
