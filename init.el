@@ -493,65 +493,44 @@
 
 ;; tabbar
 ;; ======
-;; define all tabs to be one of 3 possible groups: “Emacs Buffer”, “Dired”, “User Buffer”.
-(defun tabbar-buffer-groups ()
-  (list
-   (cond
-    ((string-equal "*" (substring (buffer-name) 0 1))
-     "Emacs Buffer"
-     )
-    ((eq major-mode 'dired-mode)
-     "Dired"
-     )
-    (t
-     "User Buffer"
-     )
-    )))
-
-;; ignore all buffers starting with *
-;; TODO: remove cl package stuff, remove-if and find
-(setq tabbar-buffer-list-function
-      (lambda ()
-        (remove-if
-         (lambda(buffer)
-           (find (aref (buffer-name buffer) 0) " *"))
-         (buffer-list))))
-
-
 (use-package tabbar
   :ensure t
   :config
   (tabbar-mode t)
-  (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
-  ;; keybindings
+  (setq tabbar-cycle-scope (quote tabs))
+  (setq table-time-before-update 0.1)
+  (setq tabbar-use-images nil)
+
+  ;; define all tabs to be one of 3 possible groups: “Emacs Buffer”, “Dired”, “User Buffer”.
+  (defun tabbar-buffer-groups ()
+    (list
+     (cond
+      ((string-equal "*" (substring (buffer-name) 0 1))
+       "Emacs Buffer"
+       )
+      ((eq major-mode 'dired-mode)
+       "Dired"
+       )
+      (t
+       "User Buffer"
+       )
+      )))
+
+  ;; ignore all buffers starting with *
+  (setq tabbar-buffer-list-function
+        (lambda ()
+          (remove-if
+           (lambda(buffer)
+             (find (aref (buffer-name buffer) 0) " *"))
+           (buffer-list))))
+
+  (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
   (global-set-key (vector (list 'control `tab)) 'tabbar-forward-tab)
   (global-set-key (kbd "C-S-p") 'tabbar-backward-group)
   (global-set-key (kbd "C-S-n") 'tabbar-forward-group)
   (global-set-key (kbd "C-<") 'tabbar-backward)
-  (global-set-key (kbd "C->") 'tabbar-forward)
-
-  ;; styling
-  ;; https://zhangda.wordpress.com/2012/09/21/tabbar-mode-rocks-with-customization/
-  (setq tabbar-background-color "#959A79") ;; the color of the tabbar background
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(tabbar-button ((t (:inherit tabbar-default :foreground "dark red"))))
-   '(tabbar-button-highlight ((t (:inherit tabbar-default))))
-   '(tabbar-default ((t (:inherit variable-pitch :background "#959A79" :foreground "black" :weight bold))))
-   '(tabbar-highlight ((t (:underline t))))
-   '(tabbar-selected ((t (:inherit tabbar-default :background "#95CA59"))))
-   '(tabbar-separator ((t (:inherit tabbar-default :background "#95CA59"))))
-   '(tabbar-unselected ((t (:inherit tabbar-default)))))
-
-  ;; misc
-  (setq tabbar-cycle-scope (quote tabs))
-  (setq table-time-before-update 0.1)
-  (setq tabbar-use-images nil)
-  )
+  (global-set-key (kbd "C->") 'tabbar-forward))
 
 
 ;; tramp
@@ -585,6 +564,8 @@
   (setq web-mode-enable-current-element-highlight t)
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-current-column-highlight t))
+(use-package company-web
+  :ensure t)
 
 (add-hook 'sgml-mode-hook
           (lambda ()
