@@ -49,7 +49,7 @@
   )
 
 
-;; twilight theme
+;; Color theme
 (use-package darktooth-theme
   :ensure t
   :config
