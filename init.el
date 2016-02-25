@@ -371,6 +371,8 @@
 ;; org
 ;; ====
 (setq-default org-support-shift-select t)
+(use-package org-pomodoro
+  :ensure t)
 
 
 ;; projectile
@@ -610,9 +612,9 @@
 (setq web-mode-engines-alist
       '(("django"    . "\\.html\\'")))
 
-(add-to-list 'auto-mode-alist '("/home/sid/Projects/reactjs-native/.*/.*\\.js[x]?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("/home/sid/Projects/reactjs/.*/.*\\.js[x]?\\'" . web-mode))
 (setq web-mode-content-types-alist
-'(("jsx"  . "/home/sid/Projects/reactjs-native/.*/.*\\.js[x]?\\'")))
+'(("jsx"  . "/home/sid/Projects/reactjs/.*/.*\\.js[x]?\\'")))
 
 
 (custom-set-variables
