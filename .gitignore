@@ -10,3 +10,4 @@ tramp
 anaconda-mode/*
 eshell/*
 projectile.cache
+request/*
