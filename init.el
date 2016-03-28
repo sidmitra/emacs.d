@@ -401,7 +401,7 @@
   :ensure t
   :config
   (pyenv-mode t)
-  (pyenv-mode-set "3.5.0"))
+  (pyenv-mode-set "3.5.1"))
 
 (add-hook 'python-mode-hook
           (lambda ()
