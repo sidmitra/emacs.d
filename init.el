@@ -348,8 +348,15 @@
   :ensure t
   :config
   (powerline-center-theme)
-  (setq-default powerline-default-separator 'curve)
-  )
+  (setq-default powerline-default-separator 'curve))
+
+
+;; mode-icons
+;; ===========
+(use-package mode-icons
+  :ensure t
+  :config
+  (mode-icons-mode))
 
 
 ;; multi-term
@@ -488,8 +495,8 @@
 
 ;; shortcuts
 ;; ==========
-(set-register ?t (cons 'file "~/Projects/Notes/todo.txt"))
-(set-register ?s (cons 'file "~/Projects/Notes/shortcuts.txt"))
+(set-register ?s (cons 'file "~/Projects/Notes/scratch.txt"))
+(set-register ?c (cons 'file "~/Projects/Notes/shortcuts.txt"))
 (set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.txt"))
 
 
@@ -579,6 +586,8 @@
 (use-package scss-mode
   :ensure t
   :mode (("\\.scss$" . scss-mode)))
+(use-package helm-css-scss
+  :ensure t)
 
 ;; emmet
 (use-package emmet-mode
