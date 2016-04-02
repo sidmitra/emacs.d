@@ -222,7 +222,7 @@
   ;; weight by frequency
   (setq company-transformers '(company-sort-by-occurrence))
   ;; delay in seconds before the pop-up appears
-  (setq company-idle-delay 0.5)
+  (setq company-idle-delay 0.1)
   ;; you only need to enter one character in a buffer before auto-completion starts
   (setq company-minimum-prefix-length 1)
 
@@ -378,8 +378,6 @@
 ;; org
 ;; ====
 (setq-default org-support-shift-select t)
-(use-package org-pomodoro
-  :ensure t)
 
 
 ;; projectile
@@ -495,7 +493,7 @@
 
 ;; shortcuts
 ;; ==========
-(set-register ?s (cons 'file "~/Projects/Notes/scratch.txt"))
+(set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
 (set-register ?c (cons 'file "~/Projects/Notes/shortcuts.txt"))
 (set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.txt"))
 
