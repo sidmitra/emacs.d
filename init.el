@@ -563,14 +563,18 @@
 ;; ====
 (use-package web-mode
   :ensure t
-  :mode (("\\.html$" . web-mode))
+  :mode (
+         ("\\.jsx$" . web-mode)
+         ("\\.html$" . web-mode))
   :config
   (setq web-mode-markup-indent-offset 4)
   (setq web-mode-css-indent-offset 4)
   (setq web-mode-code-indent-offset 4)
   (setq web-mode-enable-current-element-highlight t)
   (setq web-mode-enable-auto-pairing t)
-  (setq web-mode-enable-current-column-highlight t))
+  (setq web-mode-enable-current-column-highlight t)
+  (setq js-indent-level 4))
+
 (use-package company-web
   :ensure t)
 
@@ -586,6 +590,7 @@
   :mode (("\\.scss$" . scss-mode)))
 (use-package helm-css-scss
   :ensure t)
+
 
 ;; emmet
 (use-package emmet-mode
