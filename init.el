@@ -237,6 +237,13 @@
   )
 
 
+;; Docker
+;; ========
+(use-package dockerfile-mode
+  :ensure t
+  :mode "Dockerfile$")
+
+
 ;; shell
 ;; =====
 ;; exec-path-from-shell
@@ -402,11 +409,11 @@
 ;; python-mode
 ;; ============
 ;; exec-path-from-shell fixes command not found for pyenv
-(use-package pyenv-mode
-  :ensure t
-  :config
-  (pyenv-mode t)
-  (pyenv-mode-set "3.5.1"))
+;; (use-package pyenv-mode
+;;   :ensure t
+;;   :config
+;;   (pyenv-mode t)
+;;   (pyenv-mode-set "3.5.1"))
 
 (add-hook 'python-mode-hook
           (lambda ()
@@ -414,12 +421,18 @@
             (setq tab-width 4)
             (setq python-indent-offset 4)))
 
+;; virtualenv WIP
+;; for igrow
+(setq flycheck-python-pylint-executable "~/Projects/igrow/igrowfit/env/bin/pylint")
+(setq flycheck-python-flake8-executable "~/Projects/igrow/igrowfit/env/bin/flake8")
+(pythonic-activate "~/Projects/igrow/igrowfit/env")
+
 ;; anaconda
 (use-package anaconda-mode
   :ensure t
   :config
   (add-hook 'python-mode-hook 'anaconda-mode)
-  (add-hook 'python-mode-hook 'eldoc-mode))
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
 (use-package company-anaconda
   :ensure t
   :config
