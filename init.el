@@ -421,12 +421,6 @@
             (setq tab-width 4)
             (setq python-indent-offset 4)))
 
-;; virtualenv WIP
-;; for igrow
-(setq flycheck-python-pylint-executable "~/Projects/igrow/igrowfit/env/bin/pylint")
-(setq flycheck-python-flake8-executable "~/Projects/igrow/igrowfit/env/bin/flake8")
-(pythonic-activate "~/Projects/igrow/igrowfit/env")
-
 ;; anaconda
 (use-package anaconda-mode
   :ensure t
@@ -437,6 +431,15 @@
   :ensure t
   :config
   (add-to-list 'company-backends 'company-anaconda))
+
+;; virtualenv WIP
+;; sudo apt-install python3-virtualenv
+;; cd ~/Projects/igrow/igrowfit/ && pyenv env && source env/bin/activate
+;; pip install pylint flake8
+
+(setq flycheck-python-pylint-executable "~/Projects/igrow/igrowfit/env/bin/pylint")
+(setq flycheck-python-flake8-executable "~/Projects/igrow/igrowfit/env/bin/flake8")
+(pythonic-activate "~/Projects/igrow/igrowfit/env")
 
 
 ;; Layout

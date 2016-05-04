@@ -11,3 +11,4 @@ anaconda-mode/*
 eshell/*
 projectile.cache
 request/*
+abbrev_defs
