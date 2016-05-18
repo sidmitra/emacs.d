@@ -590,23 +590,23 @@
          ("\\.jsx$" . web-mode)
          ("\\.html$" . web-mode))
   :config
-  (setq web-mode-markup-indent-offset 4)
-  (setq web-mode-css-indent-offset 4)
-  (setq web-mode-code-indent-offset 4)
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
   (setq web-mode-enable-current-element-highlight t)
   (setq web-mode-enable-auto-pairing t)
-  (setq web-mode-enable-current-column-highlight t)
-  (setq js-indent-level 4))
+  (setq web-mode-enable-current-column-highlight t))
+;;  (setq js-indent-level 2)
 
 (use-package company-web
   :ensure t)
 
-(add-hook 'sgml-mode-hook
-          (lambda ()
-            ;; Default indentation to 4, but let SGML mode guess, too.
-            (set (make-local-variable 'sgml-basic-offset) 4)
-            (setq indent-tabs-mode nil)
-            (sgml-guess-indent)))
+;; (add-hook 'sgml-mode-hook
+;;           (lambda ()
+;;             ;; Default indentation to 4, but let SGML mode guess, too.
+;;             (set (make-local-variable 'sgml-basic-offset) 2)
+;;             (setq indent-tabs-mode nil)
+;;             (sgml-guess-indent)))
 
 (use-package scss-mode
   :ensure t
