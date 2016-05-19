@@ -12,9 +12,7 @@
 ;; core packages
 ;; ==============
 (setq core-packages
-      '(
-        use-package
-        ))
+      '(use-package))
 
 (defun ensure-packages (packages)
   (dolist (package packages)
@@ -42,11 +40,9 @@
 
 ;; hide toolbar
 (if window-system
-    (tool-bar-mode -1)
-  )
+    (tool-bar-mode -1))
 (if window-system
-    (menu-bar-mode -1)
-  )
+    (menu-bar-mode -1))
 
 
 ;; Color theme
@@ -67,9 +63,6 @@
 
 ;; show column number
 (setq-default column-number-mode t)
-
-;; change cursor from box to bar
-(setq-default cursor-type 'bar)
 
 ;; simplify whitespace style
 (setq-default whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
@@ -131,7 +124,6 @@
 (when (display-graphic-p)
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 
-
 ;; apply syntax highlighting to all buffers
 (global-font-lock-mode t)
 
@@ -143,6 +135,15 @@
 
 ;; disable emacs window disappearing on Ctrl-z
 (global-unset-key (kbd "C-z"))
+
+;; change cursor from box to bar
+(setq-default cursor-type 'bar)
+
+;; move cursor in brackets
+(use-package cursor-in-brackets
+  :ensure t
+  :config
+  (cursor-in-brackets-mode t))
 
 
 ;; backup
