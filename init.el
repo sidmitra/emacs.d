@@ -143,7 +143,7 @@
 (use-package cursor-in-brackets
   :ensure t
   :config
-  (cursor-in-brackets-mode t))
+  (add-hook 'prog-mode-hook 'cursor-in-brackets-mode))
 
 
 ;; backup
