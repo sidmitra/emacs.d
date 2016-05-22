@@ -145,6 +145,9 @@
   :config
   (add-hook 'prog-mode-hook 'cursor-in-brackets-mode))
 
+;; turn off ad-handle-definition: `tramp-read-passwd' got redefined
+(setq ad-redefinition-action 'accept)
+
 
 ;; backup
 ;; =======
