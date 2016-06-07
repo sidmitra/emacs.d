@@ -591,8 +591,12 @@
 (use-package web-mode
   :ensure t
   :mode (
+         ("\\.css$" . web-mode)
+         ("\\.html$" . web-mode)
+         ("\\.js$" . web-mode)
+         ("\\.json$" . web-mode)
          ("\\.jsx$" . web-mode)
-         ("\\.html$" . web-mode))
+         ("\\.scss$" . web-mode))
   :config
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-css-indent-offset 2)
@@ -603,19 +607,6 @@
 ;;  (setq js-indent-level 2)
 
 (use-package company-web
-  :ensure t)
-
-;; (add-hook 'sgml-mode-hook
-;;           (lambda ()
-;;             ;; Default indentation to 4, but let SGML mode guess, too.
-;;             (set (make-local-variable 'sgml-basic-offset) 2)
-;;             (setq indent-tabs-mode nil)
-;;             (sgml-guess-indent)))
-
-(use-package scss-mode
-  :ensure t
-  :mode (("\\.scss$" . scss-mode)))
-(use-package helm-css-scss
   :ensure t)
 
 
