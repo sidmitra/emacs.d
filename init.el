@@ -278,6 +278,12 @@
   :ensure t)
 
 
+;; habitica
+;; =========
+(setq habitica-uid "15b3bc17-1d12-4b14-8289-419c0ddd67a0")
+(setq habitica-token "073ba175-ae71-4526-80ea-c69fd55fc7e7")
+
+
 ;; helm
 ;; =====
 (use-package helm
@@ -596,7 +602,8 @@
          ("\\.js$" . web-mode)
          ("\\.json$" . web-mode)
          ("\\.jsx$" . web-mode)
-         ("\\.scss$" . web-mode))
+         ("\\.scss$" . web-mode)
+         ("\\.less$" . web-mode))
   :config
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-css-indent-offset 2)
