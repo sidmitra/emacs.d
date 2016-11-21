@@ -1,3 +1,4 @@
+.#*
 *.*~
 *.elc
 elpa
@@ -12,3 +13,4 @@ eshell/*
 projectile.cache
 request/*
 abbrev_defs
+session.*
