@@ -282,12 +282,6 @@
   :ensure t)
 
 
-;; habitica
-;; =========
-(setq habitica-uid "15b3bc17-1d12-4b14-8289-419c0ddd67a0")
-(setq habitica-token "073ba175-ae71-4526-80ea-c69fd55fc7e7")
-
-
 ;; helm
 ;; =====
 (use-package helm
@@ -407,10 +401,6 @@
 ;; ====
 (setq-default org-support-shift-select t)
 (setq-default org-agenda-files '("~/Projects/Notes/todo.org"))
-(setq-default org-habit-preceding-days 7)
-(setq-default org-habit-following-days 2)
-;;(add-to-list 'org-modules 'org-habit)
-;;(require 'org-habit)
 
 
 ;; projectile
@@ -463,9 +453,9 @@
 ;; cd ~/Projects/igrow/igrowfit/ && pyenv env && source env/bin/activate
 ;; pip install pylint flake8
 
-(setq flycheck-python-pylint-executable "~/Projects/igrow/igrowfit/env/bin/pylint")
-(setq flycheck-python-flake8-executable "~/Projects/igrow/igrowfit/env/bin/flake8")
-(pythonic-activate "~/Projects/igrow/igrowfit/env")
+;; (setq flycheck-python-pylint-executable "~/Projects/igrow/igrowfit/env/bin/pylint")
+;; (setq flycheck-python-flake8-executable "~/Projects/igrow/igrowfit/env/bin/flake8")
+;; (pythonic-activate "~/Projects/igrow/igrowfit/env")
 
 
 ;; TODO: configure conda environments
@@ -648,14 +638,15 @@
   :config
   )
 
+
 ;; skewer-mode
 ;; TODO: Move httpd-root to config per project
+;; ============
 (use-package simple-httpd
   :ensure t
   :config
   (add-hook 'html-mode-hook 'skewer-html-mode)
   (setq httpd-root "/home/sid/Projects/datascience/data-visualization/week2"))
-
 
 
 ;; yasnippet
@@ -675,26 +666,7 @@
 (setq web-mode-engines-alist
       '(("django"    . "\\.html\\'")))
 
+;; activate web-mode for jsx
 (add-to-list 'auto-mode-alist '("/home/sid/Projects/reactjs/.*/.*\\.js[x]?\\'" . web-mode))
 (setq web-mode-content-types-alist
 '(("jsx"  . "/home/sid/Projects/reactjs/.*/.*\\.js[x]?\\'")))
-
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("a444b2e10bedc64e4c7f312a737271f9a2f2542c67caa13b04d525196562bf38" "51e228ffd6c4fff9b5168b31d5927c27734e82ec61f414970fc6bcce23bc140d" "baec1c1685293d66ec4c623683ed87bbf7fc3ce4ccbaeca878c9b8ac8c3ab7b3" "21c149e080d562fe9169c8abda51c2f1f9b0a12c89cc2c7a4d9998a758e1cfbd" "d1dbb3c37e11ae8f986ca2d4b6a9d78bb1915fe66f3a6ffab1397cc746c18cba" default)))
- '(org-modules
-   (quote
-    (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
- '(safe-local-variable-values (quote ((engine . jsx)))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
