@@ -429,13 +429,6 @@
 
 ;; python-mode
 ;; ============
-;; exec-path-from-shell fixes command not found for pyenv
-;; (use-package pyenv-mode
-;;   :ensure t
-;;   :config
-;;   (pyenv-mode t)
-;;   (pyenv-mode-set "3.5.1"))
-
 (add-hook 'python-mode-hook
           (lambda ()
             (setq indent-tabs-mode nil)
@@ -453,15 +446,8 @@
   :config
   (add-to-list 'company-backends 'company-anaconda))
 
-;; virtualenv WIP
-;; sudo apt-install python3-virtualenv
-;; cd ~/Projects/igrow/igrowfit/ && pyenv env && source env/bin/activate
-;; pip install pylint flake8
-
-;; (setq flycheck-python-pylint-executable "~/Projects/igrow/igrowfit/env/bin/pylint")
-;; (setq flycheck-python-flake8-executable "~/Projects/igrow/igrowfit/env/bin/flake8")
-;; (pythonic-activate "~/Projects/igrow/igrowfit/env")
-
+;; apt install python3-setuptools python3-flake8
+(setq-default python-shell-interpreter "python3")
 
 ;; TODO: configure conda environments
 ;; https://github.com/necaris/conda.el
@@ -670,8 +656,3 @@
 ;; TODO: Better way to do this?
 (setq web-mode-engines-alist
       '(("django"    . "\\.html\\'")))
-
-;; activate web-mode for jsx
-(add-to-list 'auto-mode-alist '("/home/sid/Projects/reactjs/.*/.*\\.js[x]?\\'" . web-mode))
-(setq web-mode-content-types-alist
-'(("jsx"  . "/home/sid/Projects/reactjs/.*/.*\\.js[x]?\\'")))
