@@ -525,8 +525,7 @@
 ;; ==========
 (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
 (set-register ?j (cons 'file "~/Projects/Notes/journal.org"))
-(set-register ?c (cons 'file "~/Projects/Notes/shortcuts.txt"))
-(set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.txt"))
+(set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.md"))
 
 
 ;; tabbar
