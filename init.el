@@ -619,6 +619,15 @@
   :ensure t
   :mode (("\\.html$" . web-mode)))
 
+;; js-auto-beautify
+(use-package js-auto-beautify
+  :ensure t
+  :config
+  (add-hook 'web-mode 'js-auto-beautify-mode)
+  (add-hook 'web-mode (lambda ()
+                        (web-mode-set-content-type "jsx"))))
+
+
 
 ;; yaml-mode
 ;; =========
