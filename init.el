@@ -90,7 +90,8 @@
 
 ;; set font and size
 ;; (set-default-font "Inconsolata 14")
-(set-frame-font "Inconsolata 14")
+;; (set-default-font "Inconsolata")
+(set-frame-font "Hack 14")
 ;; change font-size with ctrl + mouse wheel
 (global-set-key (vector (list 'control mouse-wheel-down-event)) 'text-scale-increase)
 (global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
