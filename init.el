@@ -659,8 +659,8 @@
 (use-package simple-httpd
   :ensure t
   :config
-  (add-hook 'html-mode-hook 'skewer-html-mode)
-  (setq httpd-root "/home/sid/Projects/datascience/data-visualization/week2"))
+  (add-hook 'html-mode-hook 'skewer-html-mode))
+  ;; (setq httpd-root "/home/sid/Projects/datascience/data-visualization/week2"))
 
 
 ;; yasnippet
@@ -669,7 +669,7 @@
   :ensure t)
 (yas-global-mode 1)
 (add-hook 'term-mode-hook (lambda()
-                            (setq yas-dont-activate t)))
+                            (setq yas-dont-activate-functions t)))
 (add-to-list 'yas-snippet-dirs "~/.emacs/yasnippet-snippets")
 
 
@@ -677,5 +677,7 @@
 ;; =========
 ;; Forcing django mode on all html
 ;; TODO: Better way to do this?
-(setq web-mode-engines-alist
-      '(("django"    . "\\.html\\'")))
+(setq-default web-mode-engines-alist
+              '(("django"    . "\\.html\\'")))
+(setq-default web-mode-content-types-alist
+              '(("jsx" . "\\.js[x]?\\'")))
