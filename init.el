@@ -536,6 +536,8 @@
 (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
 (set-register ?j (cons 'file "~/Projects/Notes/journal.org"))
 (set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.md"))
+(set-register ?i (cons 'file "~/.emacs/init.el"))
+
 
 
 ;; tabbar
