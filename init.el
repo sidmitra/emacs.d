@@ -546,7 +546,6 @@
   :ensure t
   :config
   (tabbar-mode t)
-
   (setq tabbar-cycle-scope (quote tabs))
   (setq table-time-before-update 0.1)
   (setq tabbar-use-images nil)
@@ -630,7 +629,6 @@
 (use-package company-web
   :ensure t)
 
-
 ;; emmet
 (use-package emmet-mode
   :ensure t
@@ -662,7 +660,6 @@
   :ensure t
   :config
   (add-hook 'html-mode-hook 'skewer-html-mode))
-  ;; (setq httpd-root "/home/sid/Projects/datascience/data-visualization/week2"))
 
 
 ;; yasnippet
