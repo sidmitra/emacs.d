@@ -468,10 +468,10 @@
 
 ;; Layout
 ;; ========
-(use-package 0blayout
-  :ensure t
-  :config
-  (0blayout-mode 1))
+;; (use-package 0blayout
+;;   :ensure t
+;;   :config
+;;   (0blayout-mode 1))
 
 
 ;; R and ESS
