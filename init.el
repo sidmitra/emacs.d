@@ -392,7 +392,9 @@
 (use-package neotree
   :ensure t
   :config
-  (global-set-key [f8] 'neotree-toggle))
+  (global-set-key [f8] 'neotree-toggle)
+  (setq neo-smart-open t)
+  )
 
 
 ;; org
