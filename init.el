@@ -50,8 +50,8 @@
   :ensure t
   :config
   (load-theme 'darktooth t))
-
 (setq-default color-theme-is-global t)
+
 
 ;; Soft-wrap lines
 (global-visual-line-mode t)
@@ -82,11 +82,6 @@
 (setq-default tab-always-indent nil)
 ;; make tab key do indent first then completion.
 (setq-default tab-always-indent 'complete)
-;; (use-package highlight-indent-guides
-;;   :ensure t
-;;   :config
-;;   (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-;;   (add-hook 'scss-mode-hook 'highlight-indent-guides-mode))
 
 ;; set font and size
 ;; (set-default-font "Inconsolata 14")
