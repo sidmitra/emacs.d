@@ -446,7 +446,8 @@
   :config
   (add-to-list 'company-backends 'company-anaconda))
 
-;; apt install python3-setuptools python3-flake8
+;; sudo apt install python3-setuptools python3-flake8
+;; sudo apt install python3-jedi
 (setq-default python-shell-interpreter "python3")
 
 ;; TODO: configure conda environments
@@ -668,7 +669,7 @@
 (yas-global-mode 1)
 (add-hook 'term-mode-hook (lambda()
                             (setq yas-dont-activate-functions t)))
-(add-to-list 'yas-snippet-dirs "~/.emacs/yasnippet-snippets")
+(add-to-list 'yas-snippet-dirs "~/.emacs.d/yasnippet-snippets")
 
 
 ;; My Projects
