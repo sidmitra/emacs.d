@@ -219,26 +219,28 @@
   :ensure t
   :config
   (add-hook 'after-init-hook 'global-company-mode)
-  ;; weight by frequency
-  (setq company-transformers '(company-sort-by-occurrence))
-  ;; delay in seconds before the pop-up appears
-  (setq company-idle-delay 0.1)
-  ;; you only need to enter one character in a buffer before auto-completion starts
-  (setq company-minimum-prefix-length 1)
+  (setq company-idle-delay 0.2
+        company-minimum-prefix-length 1
+        company-selection-wrap-around t
+        company-tooltip-align-annotations t
+        company-tooltip-flip-when-above nil
+        company-tooltip-limit 10
+        company-tooltip-minimum 3
+        company-tooltip-margin 1
+        company-transformers '(company-sort-by-occurrence)
+
+        company-dabbrev-downcase nil
+        )
 
   ;; Add yasnippet support for all company backends
   ;; https://github.com/syl20bnr/spacemacs/pull/179
   (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
   (defun company-mode/backend-with-yas (backend)
-  (if (or (not company-mode/enable-yas) (and (listp backend)    (member 'company-yasnippet backend)))
-      backend
-    (append (if (consp backend) backend (list backend))
-            '(:with company-yasnippet))))
+    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+        backend
+      (append (if (consp backend) backend (list backend))
+              '(:with company-yasnippet))))
   )
-
-;; fix lowercase options in autocomplete
-;; https://github.com/company-mode/company-mode/issues/14
-;;(add-to-list 'company-dabbrev-code-modes 'web-mode)
 
 
 ;; Docker
