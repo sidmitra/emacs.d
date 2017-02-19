@@ -305,13 +305,13 @@
   (when (executable-find "curl")
     (setq helm-google-suggest-use-curl-p t))
 
-  ; open helm buffer inside current window, not occupy whole other window
+  ;; open helm buffer inside current window, not occupy whole other window
   (setq helm-split-window-in-side-p t)
-  ; move to end or beginning of source when reaching top or bottom of source.
+  ;; move to end or beginning of source when reaching top or bottom of source.
   (setq helm-move-to-line-cycle-in-source t)
-  ; search for library in `require' and `declare-function' sexp.
+  ;; search for library in `require' and `declare-function' sexp.
   (setq helm-ff-search-library-in-sexp  t)
-  ; scroll 8 lines other window using M-<next>/M-<prior>
+  ;; scroll 8 lines other window using M-<next>/M-<prior>
   (setq helm-scroll-amount 8)
   (setq helm-ff-file-name-history-use-recentf t)
 
