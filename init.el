@@ -47,10 +47,13 @@
 
 ;; Color theme
 (use-package darktooth-theme
-  :ensure t
-  :config
-  (load-theme 'darktooth t))
-(setq-default color-theme-is-global t)
+  :ensure t)
+(load-theme 'darktooth t)
+
+(use-package color-theme-sanityinc-tomorrow
+   :ensure t)
+;; (load-theme 'sanityinc-tomorrow-day t)
+;;(load-theme 'sanityinc-tomorrow-night t)
 
 
 ;; Soft-wrap lines
