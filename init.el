@@ -485,6 +485,10 @@
 ;;   ;; (setq ein:use-auto-complete-superpack t)
 ;;   (setq ein:use-smartrep t))
 
+(use-package py-isort
+  :ensure t
+  :init
+  (add-hook 'before-save-hook 'py-isort-before-save))
 
 
 ;; Layout
