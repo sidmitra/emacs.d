@@ -651,8 +651,13 @@
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-current-column-highlight t)
   (setq web-mode-enable-current-element-highlight t)
-  (setq web-mode-enable-css-colorization t))
+  (setq web-mode-enable-css-colorization t)
+  (add-hook 'web-mode-hook
+            (lambda ()
+                (add-to-list 'company-dabbrev-code-modes 'web-mode)))
+  )
 ;;  (setq js-indent-level 2)
+
 
 (use-package company-web
   :ensure t)
