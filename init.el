@@ -147,6 +147,9 @@
 ;; turn off ad-handle-definition: `tramp-read-passwd' got redefined
 (setq ad-redefinition-action 'accept)
 
+;; duplicate line
+(global-set-key "\C-c\C-d" "\C-a\C- \C-n\M-w\C-y")
+
 
 ;; backup
 ;; =======
