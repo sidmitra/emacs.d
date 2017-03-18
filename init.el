@@ -162,8 +162,7 @@
       )
 
 (defun force-backup-of-buffer ()
-  ;; Make a special "per session" backup at the first save of each
-  ;; emacs session.
+  "Make a special 'per session' backup at the first save of each Emacs session."
   (when (not buffer-backed-up)
     ;; Override the default parameters for per-session backups.
     (let ((backup-directory-alist '(("" . "~/.emacs.d/backup/per-session")))
@@ -336,10 +335,6 @@
   (helm-mode 1))
 
 
-;; javascript
-;; ===========
-
-
 ;; magit
 ;; ======
 (use-package magit
@@ -464,7 +459,11 @@
   :ensure t
   :config
   (add-hook 'python-mode-hook 'anaconda-mode)
-  (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+  ;; Not sure this works yet
+  ;; (when (projectile-project-p)
+  ;;   (setenv "PYTHONPATH" (projectile-project-root)))
+  )
 (use-package company-anaconda
   :ensure t
   :config
@@ -473,20 +472,6 @@
 ;; sudo apt install python3-setuptools python3-flake8
 ;; sudo apt install python3-jedi
 (setq-default python-shell-interpreter "python3")
-
-;; TODO: configure conda environments
-;; https://github.com/necaris/conda.el
-;; (use-package conda
-;;   :ensure t
-;;   :config)
-
-;; (use-package ein
-;;   :ensure t
-;;   :config
-;;   (setq ein:use-auto-complete t)
-;;   ;; Or, to enable "superpack" (a little bit hacky improvements):
-;;   ;; (setq ein:use-auto-complete-superpack t)
-;;   (setq ein:use-smartrep t))
 
 (use-package py-isort
   :ensure t
