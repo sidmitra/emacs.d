@@ -652,6 +652,12 @@
   :ensure t
   :mode (("\\.html$" . web-mode)))
 
+;; Javascript
+;; use eslint with web-mode for jsx files
+;; See http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html#emacs_configuration_for_eslint_and_jsx
+;; npm install -g eslint babel-eslint eslint-plugin-react
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+
 ;; js-auto-beautify
 (use-package js-auto-beautify
   :ensure t
