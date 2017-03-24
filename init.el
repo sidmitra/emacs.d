@@ -30,13 +30,14 @@
   :init
   (server-start))
 
+
+;; appearence
+;; ===========
 ;; hide welcome message
 (setq inhibit-startup-message t)
+
 ;; no initial scratch message
 (setq initial-scratch-message nil)
-
-;; switch window to fullscreen
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; hide toolbar
 (if window-system
@@ -44,73 +45,8 @@
 (if window-system
     (menu-bar-mode -1))
 
-
-;; Color theme
-(use-package darktooth-theme
-  :ensure t)
-(load-theme 'darktooth t)
-
-(use-package color-theme-sanityinc-tomorrow
-   :ensure t)
-;; (load-theme 'sanityinc-tomorrow-day t)
-;;(load-theme 'sanityinc-tomorrow-night t)
-
-
-;; Soft-wrap lines
-(global-visual-line-mode t)
-
-;; line-num-mode
-(global-linum-mode t)
-;; Linum format to avoid graphics glitches in fringe
-(setq-default linum-format " %4d ")
-
-;; show column number
-(setq-default column-number-mode t)
-
-;; simplify whitespace style
-(setq-default whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
-
-;; Delete trailing whitespace before saving
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-;; do not treat _ as word delimiter
-(modify-syntax-entry ?_ "w")
-
-;; set default tab char's display width to 4 spaces
-(setq-default tab-width 4)
-(setq-default indent-tabs-mode nil)
-;; make tab key always call a indent command.
-(setq-default tab-always-indent t)
-;; make tab key call indent command or insert tab character, depending on cursor position
-(setq-default tab-always-indent nil)
-;; make tab key do indent first then completion.
-(setq-default tab-always-indent 'complete)
-
-;; set font and size
-;; (set-default-font "Inconsolata 14")
-;; (set-default-font "Inconsolata")
-(set-frame-font "Hack 14")
-;; change font-size with ctrl + mouse wheel
-(global-set-key (vector (list 'control mouse-wheel-down-event)) 'text-scale-increase)
-(global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
-
-;; smooth scrolling
-(use-package smooth-scrolling
-  :ensure t)
-(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-
-;; overwrite active region
-(delete-selection-mode t)
-
-;; Change "yes or no" to "y or n"
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-;; Show matching parentheses with 0 delay
-(show-paren-mode 1)
-(setq-default show-paren-delay 0)
-
-;; indent new lines
-(global-set-key (kbd "RET") 'newline-and-indent)
+;; switch window to fullscreen
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; Character encodings default to utf-8.
 (set-default-coding-systems 'utf-8)
@@ -123,32 +59,100 @@
 (when (display-graphic-p)
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 
+;; Color theme
+(use-package darktooth-theme
+  :ensure t)
+(load-theme 'darktooth t)
+
+(use-package color-theme-sanityinc-tomorrow
+   :ensure t)
+;; (load-theme 'sanityinc-tomorrow-day t)
+;; (load-theme 'sanityinc-tomorrow-night t)
+
+;; Soft-wrap lines
+(global-visual-line-mode t)
+
+;; line-num-mode
+(global-linum-mode t)
+;; Linum format to avoid graphics glitches in fringe
+(setq-default linum-format " %4d ")
+
+;; show column number
+(setq-default column-number-mode t)
+
+;; set font and size
+(set-frame-font "Hack 14")
+;; change font-size with ctrl + mouse wheel
+(global-set-key (vector (list 'control mouse-wheel-down-event)) 'text-scale-increase)
+(global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
+
 ;; apply syntax highlighting to all buffers
 (global-font-lock-mode t)
 
-;; Enable copy/past-ing from clipboard
-(setq x-select-enable-clipboard t)
+;; change cursor from box to bar
+(setq-default cursor-type 'bar)
 
-;; https://www.reddit.com/r/emacs/comments/30g5wo/the_kill_ring_and_the_clipboard/
-(setq save-interprogram-paste-before-kill t)
+;; smooth scrolling
+(use-package smooth-scrolling
+  :ensure t)
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+
+;; Show matching parentheses with 0 delay
+(show-paren-mode 1)
+(setq-default show-paren-delay 0)
+
+;; Change "yes or no" to "y or n"
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; disable emacs window disappearing on Ctrl-z
 (global-unset-key (kbd "C-z"))
 
-;; change cursor from box to bar
-(setq-default cursor-type 'bar)
+;; turn off ad-handle-definition: `tramp-read-passwd' got redefined
+(setq ad-redefinition-action 'accept)
+
+
+;; Editing
+;; ========
+;; Enable copy/past-ing from clipboard
+(setq select-enable-clipboard t)
+
+;; https://www.reddit.com/r/emacs/comments/30g5wo/the_kill_ring_and_the_clipboard/
+(setq save-interprogram-paste-before-kill t)
+
+;; overwrite active region
+(delete-selection-mode t)
+
+;; indent new lines
+(global-set-key (kbd "RET") 'newline-and-indent)
+
+;; duplicate line
+(global-set-key "\C-c\C-d" "\C-a\C- \C-n\M-w\C-y")
+
+
+;; simplify whitespace style
+(setq-default whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
+
+;; Delete trailing whitespace before saving
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; do not treat _ as word delimiter
+;; (modify-syntax-entry ?_ "w")
+
+;; set default tab char's display width to 4 spaces
+(setq-default tab-width 4)
+(setq-default indent-tabs-mode nil)
+;; make tab key always call a indent command.
+(setq-default tab-always-indent t)
+;; make tab key call indent command or insert tab character, depending on cursor position
+(setq-default tab-always-indent nil)
+;; make tab key do indent first then completion.
+(setq-default tab-always-indent 'complete)
 
 ;; move cursor in brackets
 (use-package cursor-in-brackets
   :ensure t
   :config
   (add-hook 'prog-mode-hook 'cursor-in-brackets-mode))
-
-;; turn off ad-handle-definition: `tramp-read-passwd' got redefined
-(setq ad-redefinition-action 'accept)
-
-;; duplicate line
-(global-set-key "\C-c\C-d" "\C-a\C- \C-n\M-w\C-y")
 
 
 ;; backup
@@ -233,9 +237,7 @@
         company-tooltip-minimum 3
         company-tooltip-margin 1
         company-transformers '(company-sort-by-occurrence)
-
-        company-dabbrev-downcase nil
-        )
+        company-dabbrev-downcase nil)
 
   ;; Add yasnippet support for all company backends
   ;; https://github.com/syl20bnr/spacemacs/pull/179
@@ -387,7 +389,8 @@
     (spaceline-toggle-battery-on)
     (spaceline-toggle-hud-on)
     (spaceline-toggle-projectile-root-on)
-    (spaceline-emacs-theme)))
+    (spaceline-emacs-theme)
+    ))
 
 
 ;; mode-icons
@@ -438,7 +441,7 @@
     (setq projectile-keymap-prefix (kbd "C-c p"))
     (setq projectile-completion-system 'default)
     (setq projectile-enable-caching t)
-    (projectile-global-mode)))
+    (projectile-mode)))
 
 (use-package helm-projectile
   :ensure t
@@ -630,19 +633,20 @@
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
-  ;; (setq web-mode-commet-style 2)
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-auto-closing t)
   (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-auto-quoting nil)
   (setq web-mode-enable-current-column-highlight t)
   (setq web-mode-enable-current-element-highlight t)
   (setq web-mode-enable-css-colorization t)
+  (setq web-mode-enable-auto-expanding t)
+
+  (add-to-list 'web-mode-comment-formats '("jsx" . "// "))
   (add-hook 'web-mode-hook
             (lambda ()
-                (add-to-list 'company-dabbrev-code-modes 'web-mode)))
-  )
-;;  (setq js-indent-level 2)
-
+              (add-to-list 'company-dabbrev-code-modes 'web-mode)))
+  (add-hook 'web-mode-hook #'(lambda () (modify-syntax-entry ?_ "w"))))
 
 (use-package company-web
   :ensure t)
@@ -704,3 +708,17 @@
               '(("django"    . "\\.html\\'")))
 (setq-default web-mode-content-types-alist
               '(("jsx" . "\\.js[x]?\\'")))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (yasnippet yaml-mode use-package undo-tree twilight-bright-theme tabbar spaceline soothe-theme solarized-theme smooth-scrolling simple-httpd rainbow-mode rainbow-delimiters py-isort neotree multi-term molokai-theme mode-icons minimap markdown-mode magit js-auto-beautify helm-projectile helm-ag go-mode flymd flycheck exec-path-from-shell ess espresso-theme eslintd-fix eslint-fix emmet-mode dockerfile-mode darktooth-theme cursor-in-brackets company-web company-anaconda color-theme-solarized color-theme-sanityinc-tomorrow color-theme-github beacon anti-zenburn-theme ample-theme ag))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
