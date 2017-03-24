@@ -154,6 +154,16 @@
   :config
   (add-hook 'prog-mode-hook 'cursor-in-brackets-mode))
 
+;; move-text
+;; (use-package move-line
+;;   :ensure t
+;;   :config
+;;   (move-text-default-bindings))
+(use-package move-text
+  :ensure t
+  :config
+  (move-text-default-bindings))
+
 
 ;; backup
 ;; =======
