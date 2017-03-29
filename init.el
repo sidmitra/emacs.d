@@ -665,11 +665,6 @@
 (use-package company-web
   :ensure t)
 
-;; emmet
-(use-package emmet-mode
-  :ensure t
-  :mode (("\\.html$" . web-mode)))
-
 ;; Javascript
 ;; use eslint with web-mode for jsx files
 ;; See http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html#emacs_configuration_for_eslint_and_jsx
@@ -677,13 +672,16 @@
 (flycheck-add-mode 'javascript-eslint 'web-mode)
 
 ;; js-auto-beautify
-(use-package js-auto-beautify
-  :ensure t
-  :config
-  (add-hook 'web-mode 'js-auto-beautify-mode)
-  (add-hook 'web-mode (lambda ()
-                        (web-mode-set-content-type "jsx"))))
+;; (use-package js-auto-beautify
+;;   :ensure t
+;;   :config
+;;   (add-hook 'web-mode 'js-auto-beautify-mode))
 
+
+;; emmet
+(use-package emmet-mode
+  :ensure t
+  :mode (("\\.html$" . web-mode)))
 
 
 ;; yaml-mode
