@@ -645,6 +645,7 @@
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-auto-opening t)
   (setq web-mode-enable-auto-closing t)
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-auto-quoting nil)
@@ -652,12 +653,14 @@
   (setq web-mode-enable-current-element-highlight t)
   (setq web-mode-enable-css-colorization t)
   (setq web-mode-enable-auto-expanding t)
-
-  (add-to-list 'web-mode-comment-formats '("jsx" . "// "))
+  (setq web-mode-content-types-alist
+        '(("jsx" . "\\.js[x]?\\'")))
+  ;; (add-to-list 'web-mode-comment-formats '("jsx" . "// "))
   (add-hook 'web-mode-hook
             (lambda ()
               (add-to-list 'company-dabbrev-code-modes 'web-mode)))
-  (add-hook 'web-mode-hook #'(lambda () (modify-syntax-entry ?_ "w"))))
+  )
+
 
 (use-package company-web
   :ensure t)
@@ -717,8 +720,6 @@
 ;; TODO: Better way to do this?
 (setq-default web-mode-engines-alist
               '(("django"    . "\\.html\\'")))
-(setq-default web-mode-content-types-alist
-              '(("jsx" . "\\.js[x]?\\'")))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
