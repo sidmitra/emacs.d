@@ -155,14 +155,15 @@
   (add-hook 'prog-mode-hook 'cursor-in-brackets-mode))
 
 ;; move-text
-;; (use-package move-line
-;;   :ensure t
-;;   :config
-;;   (move-text-default-bindings))
 (use-package move-text
   :ensure t
   :config
   (move-text-default-bindings))
+
+(use-package multiple-cursors
+  :ensure t
+  :config
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines))
 
 
 ;; backup
