@@ -503,22 +503,22 @@
 
 ;; R and ESS
 ;; ===========
-(use-package ess
-  :ensure t
-  :commands R
-  :init (progn
-          ;; TODO: why doesn't use-package require it for us?
-          (require 'ess)
+;; (use-package ess
+;;   :ensure t
+;;   :commands R
+;;   :init (progn
+;;           ;; TODO: why doesn't use-package require it for us?
+;;           (require 'ess)
 
-          (setq ess-eval-visibly-p nil
-                ess-use-tracebug t
-                ;; ess-use-auto-complete t
-                ess-help-own-frame 'one
-                ess-ask-for-ess-directory nil)
-          (setq-default ess-dialect "R")
-          ))
-;; (ess-toggle-underscore t)))
-(add-to-list 'company-backends 'company-ess)
+;;           (setq ess-eval-visibly-p nil
+;;                 ess-use-tracebug t
+;;                 ;; ess-use-auto-complete t
+;;                 ess-help-own-frame 'one
+;;                 ess-ask-for-ess-directory nil)
+;;           (setq-default ess-dialect "R")
+;;           ))
+;; ;; (ess-toggle-underscore t)))
+;; (add-to-list 'company-backends 'company-ess)
 
 
 ;; rainbow-mode
