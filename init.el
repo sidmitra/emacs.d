@@ -93,9 +93,9 @@
 (setq-default cursor-type 'bar)
 
 ;; smooth scrolling
-;; (use-package smooth-scrolling
-;;   :ensure t)
-;; (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+(use-package smooth-scrolling
+  :ensure t)
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 
 ;; Show matching parentheses with 0 delay
 (show-paren-mode 1)
