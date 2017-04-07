@@ -128,15 +128,11 @@
 ;; duplicate line
 (global-set-key "\C-c\C-d" "\C-a\C- \C-n\M-w\C-y")
 
-
 ;; simplify whitespace style
 (setq-default whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
 
 ;; Delete trailing whitespace before saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-;; do not treat _ as word delimiter
-;; (modify-syntax-entry ?_ "w")
 
 ;; set default tab char's display width to 4 spaces
 (setq-default tab-width 4)
