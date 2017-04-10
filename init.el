@@ -161,6 +161,13 @@
   :config
   (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines))
 
+;; origami - code-folding
+(use-package origami
+  :ensure t
+  :config
+  (global-origami-mode 1)
+  (global-set-key (kbd "<C-return>") 'origami-forward-toggle-node)
+  )
 
 ;; backup
 ;; =======
