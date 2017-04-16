@@ -486,8 +486,7 @@
   :config
   (add-to-list 'company-backends 'company-anaconda))
 
-;; sudo apt install python3-setuptools python3-flake8
-;; sudo apt install python3-jedi
+;; sudo apt install python3-setuptools python3-flake8 python3-jedi
 (setq-default python-shell-interpreter "python3")
 
 (use-package py-isort
