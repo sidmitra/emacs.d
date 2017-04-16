@@ -674,6 +674,14 @@
 ;; npm install -g eslint babel-eslint eslint-plugin-react
 (flycheck-add-mode 'javascript-eslint 'web-mode)
 
+;; TODO: Install just prettier?
+;; npm install -g prettier prettier-eslint
+;; (use-package prettier-eslint
+;;   :ensure t
+;;   :config
+;;   ;; (add-hook 'web-mode-hook (lambda () (add-hook 'after-save-hook 'prettier-eslint nil t)))
+;;   )
+
 (use-package eslint-fix
   :ensure t
   :config
@@ -682,10 +690,10 @@
   )
 
 ;; TODO: Does this do anything different than eslint-fix
-(use-package js-auto-beautify
-  :ensure t
-  :config
-  (add-hook 'web-mode 'js-auto-beautify-mode))
+;; (use-package js-auto-beautify
+;;   :ensure t
+;;   :config
+;;   (add-hook 'web-mode 'js-auto-beautify-mode))
 
 
 ;; emmet
