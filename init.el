@@ -699,19 +699,16 @@
   :defer t
   :mode "\\.vue\\'")
 
-;; emmet
+;; emmet-mode
 (use-package emmet-mode
-  :ensure t
-  :mode (("\\.html$" . web-mode)))
+  :defer t)
 
 
 ;; yaml-mode
 ;; =========
 (use-package yaml-mode
   :ensure t
-  :mode (("\\.yaml$" . yaml-mode))
-  :config
-  )
+  :mode (("\\.yaml$" . yaml-mode)))
 
 
 ;; skewer-mode
