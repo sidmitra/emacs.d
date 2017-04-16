@@ -694,6 +694,10 @@
 ;;   :config
 ;;   (add-hook 'web-mode 'js-auto-beautify-mode))
 
+;; vuejs
+(use-package vue-mode
+  :defer t
+  :mode "\\.vue\\'")
 
 ;; emmet
 (use-package emmet-mode
