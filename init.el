@@ -126,7 +126,16 @@
 (global-set-key (kbd "RET") 'newline-and-indent)
 
 ;; duplicate line
-(global-set-key "\C-c\C-d" "\C-a\C- \C-n\M-w\C-y")
+(defun duplicate-line()
+  (interactive)
+  (move-beginning-of-line 1)
+  (kill-line)
+  (yank)
+  (open-line 1)
+  (next-line 1)
+  (yank)
+)
+(global-set-key (kbd "C-c d") 'duplicate-line)
 
 ;; simplify whitespace style
 (setq-default whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
