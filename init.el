@@ -720,15 +720,6 @@
   :mode (("\\.yaml$" . yaml-mode)))
 
 
-;; skewer-mode
-;; TODO: Move httpd-root to config per project
-;; ============
-(use-package simple-httpd
-  :ensure t
-  :config
-  (add-hook 'html-mode-hook 'skewer-html-mode))
-
-
 ;; yasnippet
 ;; =========
 (use-package yasnippet
