@@ -60,9 +60,13 @@
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 
 ;; Color theme
+(use-package dracula-theme
+  :ensure t)
+(load-theme 'dracula t)
+
 (use-package darktooth-theme
   :ensure t)
-(load-theme 'darktooth t)
+;; (load-theme 'darktooth t)
 
 (use-package color-theme-sanityinc-tomorrow
    :ensure t)
