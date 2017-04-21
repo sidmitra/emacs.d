@@ -397,8 +397,9 @@
 ** Make buffer names unique
 
 #+BEGIN_SRC emacs-lisp
-;; (use-package uniquify
-;;   :config (setq uniquify-buffer-name-style 'forward))
+  (use-package uniquify
+    :ensure nil
+    :config (setq uniquify-buffer-name-style 'forward))
   #+END_SRC
 
 * Global Packages
