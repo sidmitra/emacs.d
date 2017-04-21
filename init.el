@@ -722,7 +722,12 @@
 ;; vuejs
 (use-package vue-mode
   :defer t
-  :mode "\\.vue\\'")
+  :mode "\\.vue\\'"
+  :config
+  (add-hook 'vue-mode-hook
+            (lambda () (setq js-indent-level 2
+                             comment-start "// "
+                             comment-end   ""))))
 
 ;; emmet-mode
 (use-package emmet-mode
