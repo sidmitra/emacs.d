@@ -233,7 +233,11 @@
 ;; ag
 ;; =========
 (use-package ag
-  :ensure t)
+  :ensure t
+  :config
+  (customize-set-variable 'ag-arguments
+   (quote
+    ("--ignore-dir" "node_modules" "--ignore-dir" "elpa"))))
 (use-package helm-ag
   :ensure t)
 (defun projectile-helm-ag ()
