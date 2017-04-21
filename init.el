@@ -452,13 +452,19 @@
 
 ;; org
 ;; ====
-(setq-default org-support-shift-select t)
-(setq-default org-agenda-files '("~/Projects/Notes/todo.org"))
-(global-set-key (kbd "C-c a") 'org-agenda)
-(setq org-todo-keyword-faces
-      '(("TODO" . (:foreground "yellow" :weight bold))
-        ("DONE" . "green")
-        ))
+(use-package org
+  :ensure t
+  :config
+  (setq org-agenda-files '("~/Projects/Notes/todo.org"))
+  (setq org-ellipsis "⤵")
+  (setq org-hide-leading-stars t)
+  (setq org-support-shift-select t)
+  (setq org-todo-keyword-faces
+        '(("TODO" . (:foreground "yellow" :weight bold))
+          ("DONE" . "green")
+          ))
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  )
 
 
 ;; projectile
