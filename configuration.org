@@ -1,7 +1,8 @@
-#+BEGIN_SRC emacs-lisp
+#+TITLE: Emacs configuration
 
-;; core packages
-;; ==============
+* Setup package system
+** Install use-package
+  #+BEGIN_SRC emacs-lisp
 (setq core-packages
       '(use-package))
 
@@ -11,48 +12,123 @@
       (package-install package))))
 
 (ensure-packages core-packages)
+  #+END_SRC
 
+** Enable auto-installing of packages using use-package
+  #+BEGIN_SRC emacs-lisp
 (setq use-package-always-ensure t)
 (require 'use-package)
+  #+END_SRC
 
+* Server
+  Start server automatically. Use emacsclient to associate/open files.
 
-;; globals
-;; ========
+  #+BEGIN_SRC emacs-lisp
 (use-package server
   :if window-system
   :init
   (server-start))
+  #+END_SRC
 
+* Appearance/UI
+** Hide welcome message
 
-;; appearence
-;; ===========
-;; hide welcome message
+   #+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-message t)
+   #+END_SRC
 
-;; no initial scratch message
+** Hide initial scratch buffer message
+
+   #+BEGIN_SRC emacs-lisp
 (setq initial-scratch-message nil)
+   #+END_SRC
 
-;; hide toolbar
+** Hide toolbar
+
+   #+BEGIN_SRC emacs-lisp
 (if window-system
     (tool-bar-mode -1))
 (if window-system
     (menu-bar-mode -1))
+   #+END_SRC
 
-;; switch window to fullscreen
+** Switch window to fullscreen
+
+   #+BEGIN_SRC emacs-lisp
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+   #+END_SRC
 
-;; Character encodings default to utf-8.
-(set-default-coding-systems 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-language-environment 'utf-8)
-(setq locale-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-(when (display-graphic-p)
-  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+** Disable emacs window disappearing on Ctrl-z
 
-;; Color theme
+   #+BEGIN_SRC emacs-lisp
+(global-unset-key (kbd "C-z"))
+   #+END_SRC
+
+** Turn off ad-handle-definition: `tramp-read-passwd' got redefined
+
+   #+BEGIN_SRC emacs-lisp
+(setq ad-redefinition-action 'accept)
+   #+END_SRC
+
+** Change "yes or no" to "y or n"
+
+   #+BEGIN_SRC emacs-lisp
+(defalias 'yes-or-no-p 'y-or-n-p)
+   #+END_SRC
+
+** Change cursor from box to bar
+
+   #+BEGIN_SRC emacs-lisp
+(setq-default cursor-type 'bar)
+   #+END_SRC
+
+** Show matching parentheses with 0 delay
+
+   #+BEGIN_SRC emacs-lisp
+(show-paren-mode 1)
+(setq-default show-paren-delay 0)
+   #+END_SRC
+
+** Show line numbers
+
+   #+BEGIN_SRC emacs-lisp
+(global-linum-mode t)
+   #+END_SRC
+
+** Update line numbers format to avoid graphics glitches in fringe
+
+   #+BEGIN_SRC emacs-lisp
+(setq-default linum-format " %4d ")
+   #+END_SRC
+
+** Show column numbers
+
+   #+BEGIN_SRC emacs-lisp
+;; show column number
+(setq-default column-number-mode t)
+   #+END_SRC
+
+** Set font and size
+
+   #+BEGIN_SRC emacs-lisp
+(set-frame-font "Hack 14")
+   #+END_SRC
+
+** Change font-size with ctrl + mouse wheel
+
+   #+BEGIN_SRC emacs-lisp
+(global-set-key (vector (list 'control mouse-wheel-down-event)) 'text-scale-increase)
+(global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
+   #+END_SRC
+
+** Apply syntax highlighting to all buffers
+
+   #+BEGIN_SRC emacs-lisp
+(global-font-lock-mode t)
+   #+END_SRC
+
+** Load Colour theme
+   #+BEGIN_SRC emacs-lisp
 (use-package dracula-theme
   :ensure t)
 (load-theme 'dracula t)
@@ -65,64 +141,118 @@
 ;;    :ensure t)
 ;; (load-theme 'sanityinc-tomorrow-day t)
 ;; (load-theme 'sanityinc-tomorrow-night t)
+   #+END_SRC
 
-;; Soft-wrap lines
+** Enable Soft-wrap lines
+
+   #+BEGIN_SRC emacs-lisp
 (global-visual-line-mode t)
+   #+END_SRC
 
-;; line-num-mode
-(global-linum-mode t)
-;; Linum format to avoid graphics glitches in fringe
-(setq-default linum-format " %4d ")
+** Enable Smooth scrolling
 
-;; show column number
-(setq-default column-number-mode t)
-
-;; set font and size
-(set-frame-font "Hack 14")
-;; change font-size with ctrl + mouse wheel
-(global-set-key (vector (list 'control mouse-wheel-down-event)) 'text-scale-increase)
-(global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
-
-;; apply syntax highlighting to all buffers
-(global-font-lock-mode t)
-
-;; change cursor from box to bar
-(setq-default cursor-type 'bar)
-
-;; smooth scrolling
+   #+BEGIN_SRC emacs-lisp
 (use-package smooth-scrolling
   :ensure t)
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+   #+END_SRC
 
-;; Show matching parentheses with 0 delay
-(show-paren-mode 1)
-(setq-default show-paren-delay 0)
+   #+BEGIN_SRC emacs-lisp
+   #+END_SRC
 
-;; Change "yes or no" to "y or n"
-(defalias 'yes-or-no-p 'y-or-n-p)
+   #+BEGIN_SRC emacs-lisp
+   #+END_SRC
 
-;; disable emacs window disappearing on Ctrl-z
-(global-unset-key (kbd "C-z"))
+** Show beacon on cursor
 
-;; turn off ad-handle-definition: `tramp-read-passwd' got redefined
-(setq ad-redefinition-action 'accept)
+   A light that follows your cursor around so you don't lose it!
 
+   #+BEGIN_SRC emacs-lisp
+(use-package beacon
+  :ensure t
+  :config
+  (beacon-mode t))
+   #+END_SRC
 
-;; Editing
-;; ========
-;; Enable copy/past-ing from clipboard
+** Show Tabs for buffers
+   #+BEGIN_SRC emacs-lisp
+(use-package tabbar
+  :config
+  (tabbar-mode t)
+  (setq tabbar-cycle-scope (quote tabs))
+  (setq tabbar-use-images nil)
+  (setq table-time-before-update 0.1)
+
+  ;; define all tabs to be one of 3 possible groups: “Emacs Buffer”, “Dired”, “User Buffer”.
+  (defun tabbar-buffer-groups ()
+    (list
+     (cond
+      ((string-equal "*" (substring (buffer-name) 0 1))
+       "Emacs Buffer"
+       )
+      ((eq major-mode 'dired-mode)
+       "Dired"
+       )
+      (t
+       "User Buffer"
+       )
+      )))
+
+  ;; ignore all buffers starting with *
+  (setq tabbar-buffer-list-function
+        (lambda ()
+          (remove-if
+           (lambda(buffer)
+             (find (aref (buffer-name buffer) 0) " *"))
+           (buffer-list))))
+
+  (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+  (global-set-key (vector (list 'control `tab)) 'tabbar-forward-tab)
+  (global-set-key (kbd "C-S-p") 'tabbar-backward-group)
+  (global-set-key (kbd "C-S-n") 'tabbar-forward-group)
+  (global-set-key (kbd "C-<") 'tabbar-backward)
+  (global-set-key (kbd "C->") 'tabbar-forward))
+   #+END_SRC
+
+* Editing
+** Character encodings default to utf-8.
+
+   #+BEGIN_SRC emacs-lisp
+(set-default-coding-systems 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-language-environment 'utf-8)
+(setq locale-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+(when (display-graphic-p)
+  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+   #+END_SRC
+
+** Enable copy/paste from clipboard
+   #+BEGIN_SRC emacs-lisp
 (setq select-enable-clipboard t)
+   #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
 ;; https://www.reddit.com/r/emacs/comments/30g5wo/the_kill_ring_and_the_clipboard/
 (setq save-interprogram-paste-before-kill t)
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp
 ;; overwrite active region
 (delete-selection-mode t)
+#+END_SRC
 
-;; indent new lines
+** Indent new line automatically on ENTER
+
+#+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "RET") 'newline-and-indent)
+#+END_SRC
 
-;; duplicate line
+** Duplicate current line
+
+#+BEGIN_SRC emacs-lisp
 (defun duplicate-line()
   (interactive)
   (move-beginning-of-line 1)
@@ -133,14 +263,23 @@
   (yank)
 )
 (global-set-key (kbd "C-c d") 'duplicate-line)
+#+END_SRC
 
-;; simplify whitespace style
+** Simplify whitespace style
+
+#+BEGIN_SRC emacs-lisp
 (setq-default whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
+#+END_SRC
 
-;; Delete trailing whitespace before saving
+** Delete trailing whitespace before saving
+
+#+BEGIN_SRC emacs-lisp
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+END_SRC
 
-;; set default tab char's display width to 4 spaces
+** Set default tab char's display width to 4 spaces
+
+#+BEGIN_SRC emacs-lisp
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 ;; make tab key always call a indent command.
@@ -149,34 +288,57 @@
 (setq-default tab-always-indent nil)
 ;; make tab key do indent first then completion.
 (setq-default tab-always-indent 'complete)
+#+END_SRC
 
-;; move cursor in brackets
+** Move cursor inside brackets after adding
+
+#+BEGIN_SRC emacs-lisp
 (use-package cursor-in-brackets
-  :ensure t
   :config
   (add-hook 'prog-mode-hook 'cursor-in-brackets-mode))
+#+END_SRC
 
-;; move-text
+** Enable moving line or region, up or down
+
+#+BEGIN_SRC emacs-lisp
 (use-package move-text
   :ensure t
   :config
   (move-text-default-bindings))
+#+END_SRC
 
+** Multiple Cursors
+
+#+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors
   :ensure t
   :config
   (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines))
+#+END_SRC
 
+** Enable code folding
+
+#+BEGIN_SRC emacs-lisp
 ;; origami - code-folding
 (use-package origami
   :ensure t
   :config
   (global-origami-mode 1)
-  (global-set-key (kbd "<C-return>") 'origami-forward-toggle-node)
-  )
+  (global-set-key (kbd "<C-return>") 'origami-forward-toggle-node))
+#+END_SRC
 
-;; backup
-;; =======
+** undo-tree
+
+   #+BEGIN_SRC emacs-lisp
+(use-package undo-tree)
+(global-undo-tree-mode 1)
+   #+END_SRC
+
+* Buffers
+** Backup
+   Force emacs to save backups to a specific directory.
+
+   #+BEGIN_SRC emacs-lisp
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup/per-save"))
       backup-by-copying t    ; Don't delink hardlinks
       version-control t      ; Use version numbers on backups
@@ -197,39 +359,52 @@
   ;; of per-save backups consistent.
   (let ((buffer-backed-up nil))
     (backup-buffer)))
+   #+END_SRC
 
+   Force backup of buffer before saving.
+
+#+BEGIN_SRC emacs-lisp
 (add-hook 'before-save-hook  'force-backup-of-buffer)
+#+END_SRC
 
-;; make buffer names unique
-;; (use-package uniquify
-;;   :config (setq uniquify-buffer-name-style 'forward))
+** Kill buffer without confirmation
 
-
-;; buffers
-;; =======
+  #+BEGIN_SRC emacs-lisp
 (defun volatile-kill-buffer ()
   "Kill current buffer unconditionally."
   (interactive)
   (let ((buffer-modified-p nil))
     (kill-buffer (current-buffer))))
 (global-set-key (kbd "C-x k") 'volatile-kill-buffer)
+  #+END_SRC
 
-;; auto revert buffer every x seconds
+** Refresh buffer from filesystem periodically
+
+#+BEGIN_SRC emacs-lisp
 (global-auto-revert-mode t)
+#+END_SRC
 
-;; show current file path
+** Show current file path
+
+#+BEGIN_SRC emacs-lisp
 (defun show-file-name ()
   "Show the full path file name in the minibuffer."
   (interactive)
   (message (buffer-file-name)))
 (global-set-key [C-f1] 'show-file-name)
+  #+END_SRC
 
+** Make buffer names unique
 
-;; packages
-;; ========
-;; ag
-;; =========
-(use-package ag
+#+BEGIN_SRC emacs-lisp
+;; (use-package uniquify
+;;   :config (setq uniquify-buffer-name-style 'forward))
+  #+END_SRC
+
+* Global Packages
+** ag
+   #+BEGIN_SRC emacs-lisp
+   (use-package ag
   :ensure t
   :config
   (customize-set-variable 'ag-arguments
@@ -240,18 +415,11 @@
 (defun projectile-helm-ag ()
   (interactive)
   (helm-ag (projectile-project-root)))
+   #+END_SRC
 
+** company
 
-;; beacon
-;; ========
-(use-package beacon
-  :ensure t
-  :config
-  (beacon-mode t))
-
-
-;; company
-;; ========
+   #+BEGIN_SRC emacs-lisp
 (use-package company
   :ensure t
   :config
@@ -276,49 +444,36 @@
       (append (if (consp backend) backend (list backend))
               '(:with company-yasnippet))))
   )
+   #+END_SRC
 
-
-;; Docker
-;; ========
-(use-package dockerfile-mode
-  :ensure t
-  :mode "Dockerfile$")
-
-
-;; shell
-;; =====
+** Shell/exec-path-from-shell
+   #+BEGIN_SRC emacs-lisp
 ;; exec-path-from-shell
 (use-package exec-path-from-shell
   :ensure t
   :config
   (exec-path-from-shell-initialize))
+   #+END_SRC
 
+** Terminal
 
-;; flycheck
-;; =========
-(use-package let-alist
-  :ensure t)
-(use-package flycheck
-  :ensure t
-  :config
-  (add-hook 'after-init-hook #'global-flycheck-mode)
-  (setq-default flycheck-checker-error-threshold 2000)
-  (setq-default flycheck-highlighting-mode 'lines)
-  (setq-default flycheck-idle-change-delay 3)
-  (setq-default flycheck-display-errors-delay 0))
-;;(setq-default flycheck-flake8-maximum-line-length 120))
+   #+BEGIN_SRC emacs-lisp
+(use-package multi-term)
+(setq multi-term-program "/bin/bash")
+(defalias 'term 'multi-term)
+   #+END_SRC
 
+   #+BEGIN_SRC emacs-lisp
+(defun term-bash (buffer-name)
+  "Start a terminal and rename buffer."
+  (interactive "sbuffer name: ")
+  (ansi-term "/bin/bash")
+  (rename-buffer buffer-name t))
+   #+END_SRC
 
-;; golang
-;; =======
-(use-package go-mode
-  :ensure t)
-
-
-;; helm
-;; =====
+** helm
+   #+BEGIN_SRC emacs-lisp
 (use-package helm
-  :ensure t
   :config
   ;; replace default find file
   (global-set-key (kbd "C-x C-f") 'helm-find-files)
@@ -363,46 +518,28 @@
 
   ;; Enable helm
   (helm-mode 1))
+   #+END_SRC
 
+** magit
 
-;; magit
-;; ======
+   #+BEGIN_SRC emacs-lisp
 (use-package magit
-  :ensure t
   :config
   (setq magit-auto-revert-mode nil)
   (setq magit-last-seen-setup-instructions "1.4.0"))
+   #+END_SRC
 
-
-;; markdown
-;; =========
-(use-package markdown-mode
-  :ensure t)
-(add-hook 'markdown-mode-hook
-          (lambda ()
-            (when buffer-file-name
-              (add-hook 'after-save-hook
-                        'check-parens
-                        nil t))))
-
-(use-package flymd
-  :ensure t)
-(defun my-flymd-browser-function (url)
-  (let ((browse-url-browser-function 'browse-url-firefox))
-    (browse-url url)))
-(setq flymd-browser-open-function 'my-flymd-browser-function)
-
-
-;; modeline
-;; ==========
+** Modeline
+   #+BEGIN_SRC emacs-lisp
 (use-package powerline
-  :ensure t
   :config
   ;;(powerline-center-theme)
   ;;(setq-default powerline-default-separator 'curve)
   )
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
 (use-package spaceline
-  :ensure t
   :config
   (progn
     (require 'spaceline-config)
@@ -419,56 +556,37 @@
     (spaceline-toggle-projectile-root-on)
     (spaceline-emacs-theme)
     ))
+   #+END_SRC
 
-
-;; mode-icons
-;; ===========
+   #+BEGIN_SRC emacs-lisp
 (use-package mode-icons
-  :ensure t
   :config
   (mode-icons-mode))
+   #+END_SRC
 
+** SSH
+   #+BEGIN_SRC emacs-lisp
+;; (setq tramp-default-method "ssh")
+   #+END_SRC
 
-;; multi-term
-;; ===========
-(use-package multi-term
-  :ensure t)
-(setq multi-term-program "/bin/bash")
-(defalias 'term 'multi-term)
-
-
-;; neotree
-;; ========
+** neotree
+   #+BEGIN_SRC emacs-lisp
 (use-package neotree
-  :ensure t
   :config
   (global-set-key [f8] 'neotree-toggle)
-  (setq neo-smart-open t)
-  )
+  (setq neo-smart-open t))
+   #+END_SRC
 
+** Layout
+   #+BEGIN_SRC emacs-lisp
+;; (use-package 0blayout
+;;   :config
+;;   (0blayout-mode 1))
+   #+END_SRC
+** projectile
 
-;; org
-;; ====
-(use-package org
-  :ensure t
-  :config
-  (setq org-agenda-files '("~/Projects/Notes/todo.org"))
-  (setq org-ellipsis "⤵")
-  (setq org-hide-leading-stars t)
-  (setq org-support-shift-select t)
-  (setq org-todo-keyword-faces
-        '(("TODO" . (:foreground "yellow" :weight bold))
-          ("DONE" . "green")
-          ))
-  (global-set-key (kbd "C-c a") 'org-agenda)
-  )
-
-
-;; projectile
-;; ===========
+   #+BEGIN_SRC emacs-lisp
 (use-package projectile
-  :ensure t
-  :defer t
   :diminish projectile-mode
   :config
   (progn
@@ -477,23 +595,79 @@
     (setq projectile-enable-caching t)
     (projectile-mode)))
 
-(use-package helm-projectile
+(use-package helm-projectile)
+   #+END_SRC
+* Programming
+** org
+   #+BEGIN_SRC emacs-lisp
+(use-package org
+  :config
+  (setq org-agenda-files '("~/Projects/Notes/todo.org"))
+  ;;(setq org-ellipsis "⤵")
+  (setq org-hide-leading-stars t)
+  (setq org-support-shift-select t)
+  (setq org-todo-keyword-faces
+        '(("TODO" . (:foreground "yellow" :weight bold))
+          ("DONE" . "green")
+          ))
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  )
+   #+END_SRC
+
+** dockerfile-mode
+
+   #+BEGIN_SRC emacs-lisp
+(use-package dockerfile-mode
   :ensure t
-  :defer t
-  :ensure helm-projectile)
+  :mode "Dockerfile$")
+   #+END_SRC
 
+** flycheck
+   #+BEGIN_SRC emacs-lisp
+(use-package let-alist)
+(use-package flycheck
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  (setq-default flycheck-checker-error-threshold 2000)
+  (setq-default flycheck-highlighting-mode 'lines)
+  (setq-default flycheck-idle-change-delay 3)
+  (setq-default flycheck-display-errors-delay 0))
+;;(setq-default flycheck-flake8-maximum-line-length 120))
 
-;; python-mode
-;; ============
+   #+END_SRC
+** Golang
+   #+BEGIN_SRC emacs-lisp
+(use-package go-mode)
+   #+END_SRC
+
+** Markdown
+   #+BEGIN_SRC emacs-lisp
+(use-package markdown-mode)
+(add-hook 'markdown-mode-hook
+          (lambda ()
+            (when buffer-file-name
+              (add-hook 'after-save-hook
+                        'check-parens
+                        nil t))))
+
+(use-package flymd)
+(defun my-flymd-browser-function (url)
+  (let ((browse-url-browser-function 'browse-url-firefox))
+    (browse-url url)))
+(setq flymd-browser-open-function 'my-flymd-browser-function)
+   #+END_SRC
+
+** Python
+   #+BEGIN_SRC emacs-lisp
 (add-hook 'python-mode-hook
           (lambda ()
             (setq indent-tabs-mode nil)
             (setq tab-width 4)
             (setq python-indent-offset 4)))
-
+   #+END_SRC
+   #+BEGIN_SRC emacs-lisp
 ;; anaconda
 (use-package anaconda-mode
-  :ensure t
   :config
   (add-hook 'python-mode-hook 'anaconda-mode)
   (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
@@ -501,34 +675,28 @@
   ;; (when (projectile-project-p)
   ;;   (setenv "PYTHONPATH" (projectile-project-root)))
   )
+   #+END_SRC
+   #+BEGIN_SRC emacs-lisp
 (use-package company-anaconda
-  :ensure t
   :config
   (add-to-list 'company-backends 'company-anaconda))
-
+   #+END_SRC
+   #+BEGIN_SRC emacs-lisp
 ;; python3
 ;; sudo apt install python3-setuptools python3-flake8 python3-jedi
 (setq-default python-shell-interpreter "python3")
-
+   #+END_SRC
+   #+BEGIN_SRC emacs-lisp
 ;;; sudo apt install python3-isort
 (use-package py-isort
-  :ensure t
   :init
-  (add-hook 'before-save-hook 'py-isort-before-save))
+  (add-hook 'before-save-hook 'py-isort-before-save)
+)
+   #+END_SRC
 
-
-;; Layout
-;; ========
-;; (use-package 0blayout
-;;   :ensure t
-;;   :config
-;;   (0blayout-mode 1))
-
-
-;; R and ESS
-;; ===========
+** R/ESS
+   #+BEGIN_SRC emacs-lisp
 ;; (use-package ess
-;;   :ensure t
 ;;   :commands R
 ;;   :init (progn
 ;;           ;; TODO: why doesn't use-package require it for us?
@@ -543,12 +711,11 @@
 ;;           ))
 ;; ;; (ess-toggle-underscore t)))
 ;; (add-to-list 'company-backends 'company-ess)
+   #+END_SRC
 
-
-;; rainbow-mode
-;; =============
+** rainbow-mode
+   #+BEGIN_SRC emacs-lisp
 (use-package rainbow-mode
-  :defer t
   :init
   (setq rainbow-html-colors-major-mode-list '(css-mode
                                               html-mode
@@ -561,87 +728,19 @@
                                               xml-mode))
   (dolist (mode rainbow-html-colors-major-mode-list)
     (add-hook (intern (format "%s-hook" mode)) 'rainbow-mode)))
+   #+END_SRC
 
-
-;; rainbow-delimiters
-;; ===================
+** rainbow-delimiters
+   #+BEGIN_SRC emacs-lisp
 (use-package rainbow-delimiters
   :config
   (progn
     (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
+   #+END_SRC
 
-
-;; shell
-;; =======
-(defun term-bash (buffer-name)
-  "Start a terminal and rename buffer."
-  (interactive "sbuffer name: ")
-  (ansi-term "/bin/bash")
-  (rename-buffer buffer-name t))
-
-
-;; shortcuts
-;; ==========
-(set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
-(set-register ?j (cons 'file "~/Projects/Notes/journal.org"))
-(set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.md"))
-(set-register ?i (cons 'file "~/.emacs.d/init.el"))
-
-
-
-;; tabbar
-;; ======
-(use-package tabbar
-  :config
-  (tabbar-mode t)
-  (setq tabbar-cycle-scope (quote tabs))
-  (setq tabbar-use-images nil)
-  (setq table-time-before-update 0.1)
-
-  ;; define all tabs to be one of 3 possible groups: “Emacs Buffer”, “Dired”, “User Buffer”.
-  (defun tabbar-buffer-groups ()
-    (list
-     (cond
-      ((string-equal "*" (substring (buffer-name) 0 1))
-       "Emacs Buffer"
-       )
-      ((eq major-mode 'dired-mode)
-       "Dired"
-       )
-      (t
-       "User Buffer"
-       )
-      )))
-
-  ;; ignore all buffers starting with *
-  (setq tabbar-buffer-list-function
-        (lambda ()
-          (remove-if
-           (lambda(buffer)
-             (find (aref (buffer-name buffer) 0) " *"))
-           (buffer-list))))
-
-  (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
-  (global-set-key (vector (list 'control `tab)) 'tabbar-forward-tab)
-  (global-set-key (kbd "C-S-p") 'tabbar-backward-group)
-  (global-set-key (kbd "C-S-n") 'tabbar-forward-group)
-  (global-set-key (kbd "C-<") 'tabbar-backward)
-  (global-set-key (kbd "C->") 'tabbar-forward))
-
-
-;; tramp
-;; ======
-;; (setq tramp-default-method "ssh")
-
-
-;; undo-tree
-;; ==========
-(use-package undo-tree)
-(global-undo-tree-mode 1)
-
-
-;; web
-;; ====
+** HTML/Javascript
+*** web-mode
+   #+BEGIN_SRC emacs-lisp
 (use-package web-mode
   :mode (
          ("\\.css$" . web-mode)
@@ -673,71 +772,80 @@
   ;;             (add-to-list 'company-dabbrev-code-modes 'web-mode)))
   )
 
-
 (use-package company-web)
+   #+END_SRC
 
-;; Javascript
-;; use eslint with web-mode for jsx files
-;; http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html#emacs_configuration_for_eslint_and_jsx
-;; npm install -g eslint babel-eslint eslint-plugin-react
+*** Emmet(Zencoding)
+    #+BEGIN_SRC emacs-lisp
+;; emmet-mode
+(use-package emmet-mode)
+    #+END_SRC
+*** Javascript
+**** ESLint
+
+    See http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html#emacs_configuration_for_eslint_and_jsx
+    Run the following on your local machine.
+    npm install -g eslint babel-eslint eslint-plugin-react
+
+   #+BEGIN_SRC emacs-lisp
 (flycheck-add-mode 'javascript-eslint 'web-mode)
-
-;; TODO: Install just prettier?
-;; npm install -g prettier prettier-eslint
-;; (use-package prettier-eslint
-;;   :config
-;;   ;; (add-hook 'web-mode-hook (lambda () (add-hook 'after-save-hook 'prettier-eslint nil t)))
-;;   )
 
 (use-package eslint-fix
   :config
   ;; (eval-after-load 'web-mode
   ;;   '(add-hook 'web-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix nil t))))
   )
-
-;; TODO: Does this do anything different than eslint-fix
-;; (use-package js-auto-beautify
+#+END_SRC
+**** Prettier.js
+#+BEGIN_SRC emacs-lisp
+;; TODO: Install just prettier?
+;; npm install -g prettier prettier-eslint
+;; (use-package prettier-eslint
 ;;   :config
-;;   (add-hook 'web-mode 'js-auto-beautify-mode))
-
-;; vuejs
+;;   ;; (add-hook 'web-mode-hook (lambda () (add-hook 'after-save-hook 'prettier-eslint nil t)))
+;;   )
+#+END_SRC
+**** Vue.js
+    #+BEGIN_SRC emacs-lisp
 (use-package vue-mode
-  :defer t
   :mode "\\.vue\\'"
   :config
   (add-hook 'vue-mode-hook
             (lambda () (setq js-indent-level 2
                              comment-start "// "
                              comment-end   ""))))
+    #+END_SRC
 
-;; emmet-mode
-(use-package emmet-mode
-  :defer t)
-
-
-;; yaml-mode
-;; =========
+** YAML
+   #+BEGIN_SRC emacs-lisp
 (use-package yaml-mode
   :mode (("\\.yaml$" . yaml-mode)))
+   #+END_SRC
 
-
-;; yasnippet
-;; =========
+** Snippets
+   #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
   :config
   (yas-global-mode 1)
   (add-hook 'term-mode-hook (lambda()
                               (setq yas-dont-activate-functions t)))
   (add-to-list 'yas-snippet-dirs "~/.emacs.d/yasnippet-snippets"))
+   #+END_SRC
 
+* Shortcuts/Registers
 
+   #+BEGIN_SRC emacs-lisp
+(set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
+(set-register ?j (cons 'file "~/Projects/Notes/journal.org"))
+(set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.md"))
+(set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
+   #+END_SRC
 
-;; My Projects
-;; =========
+* Project Specific
+
+   #+BEGIN_SRC emacs-lisp
 ;; Forcing django mode on all html
 ;; TODO: Better way to do this?
 (setq-default web-mode-engines-alist
               '(("django"    . "\\.html\\'")))
-
-
-#+END_SRC
+   #+END_SRC
