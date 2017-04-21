@@ -24,17 +24,17 @@
   Start server automatically. Use emacsclient to associate/open files.
 
   #+BEGIN_SRC emacs-lisp
-(use-package server
-  :if window-system
-  :init
-  (server-start))
+    (use-package server
+      :if window-system
+      :init
+      (server-start))
   #+END_SRC
 
 * Appearance/UI
 ** Hide welcome message
 
    #+BEGIN_SRC emacs-lisp
-(setq inhibit-startup-message t)
+     (setq inhibit-startup-message t)
    #+END_SRC
 
 ** Hide initial scratch buffer message
@@ -176,42 +176,42 @@
 
 ** Show Tabs for buffers
    #+BEGIN_SRC emacs-lisp
-(use-package tabbar
-  :config
-  (tabbar-mode t)
-  (setq tabbar-cycle-scope (quote tabs))
-  (setq tabbar-use-images nil)
-  (setq table-time-before-update 0.1)
+     (use-package tabbar
+       :config
+       (tabbar-mode t)
+       (setq tabbar-cycle-scope (quote tabs))
+       (setq tabbar-use-images nil)
+       (setq table-time-before-update 0.1)
 
-  ;; define all tabs to be one of 3 possible groups: “Emacs Buffer”, “Dired”, “User Buffer”.
-  (defun tabbar-buffer-groups ()
-    (list
-     (cond
-      ((string-equal "*" (substring (buffer-name) 0 1))
-       "Emacs Buffer"
-       )
-      ((eq major-mode 'dired-mode)
-       "Dired"
-       )
-      (t
-       "User Buffer"
-       )
-      )))
+       ;; define all tabs to be one of 3 possible groups: “Emacs Buffer”, “Dired”, “User Buffer”.
+       (defun tabbar-buffer-groups ()
+         (list
+          (cond
+           ((string-equal "*" (substring (buffer-name) 0 1))
+            "Emacs Buffer"
+            )
+           ((eq major-mode 'dired-mode)
+            "Dired"
+            )
+           (t
+            "User Buffer"
+            )
+           )))
 
-  ;; ignore all buffers starting with *
-  (setq tabbar-buffer-list-function
-        (lambda ()
-          (remove-if
-           (lambda(buffer)
-             (find (aref (buffer-name buffer) 0) " *"))
-           (buffer-list))))
+       ;; ignore all buffers starting with *
+       (setq tabbar-buffer-list-function
+             (lambda ()
+               (remove-if
+                (lambda(buffer)
+                  (find (aref (buffer-name buffer) 0) " *"))
+                (buffer-list))))
 
-  (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
-  (global-set-key (vector (list 'control `tab)) 'tabbar-forward-tab)
-  (global-set-key (kbd "C-S-p") 'tabbar-backward-group)
-  (global-set-key (kbd "C-S-n") 'tabbar-forward-group)
-  (global-set-key (kbd "C-<") 'tabbar-backward)
-  (global-set-key (kbd "C->") 'tabbar-forward))
+       (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+       (global-set-key (vector (list 'control `tab)) 'tabbar-forward-tab)
+       (global-set-key (kbd "C-S-p") 'tabbar-backward-group)
+       (global-set-key (kbd "C-S-n") 'tabbar-forward-group)
+       (global-set-key (kbd "C-<") 'tabbar-backward)
+       (global-set-key (kbd "C->") 'tabbar-forward))
    #+END_SRC
 
 * Editing
@@ -330,8 +330,8 @@
 ** undo-tree
 
    #+BEGIN_SRC emacs-lisp
-(use-package undo-tree)
-(global-undo-tree-mode 1)
+     (use-package undo-tree)
+     (global-undo-tree-mode 1)
    #+END_SRC
 
 * Buffers
@@ -396,11 +396,11 @@
 
 ** Make buffer names unique
 
-#+BEGIN_SRC emacs-lisp
-  (use-package uniquify
-    :ensure nil
-    :config (setq uniquify-buffer-name-style 'forward))
-  #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package uniquify
+       :ensure nil
+       :config (setq uniquify-buffer-name-style 'forward))
+   #+END_SRC
 
 * Global Packages
 ** ag
@@ -572,10 +572,10 @@
 
 ** neotree
    #+BEGIN_SRC emacs-lisp
-(use-package neotree
-  :config
-  (global-set-key [f8] 'neotree-toggle)
-  (setq neo-smart-open t))
+     (use-package neotree
+       :config
+       (global-set-key [f8] 'neotree-toggle)
+       (setq neo-smart-open t))
    #+END_SRC
 
 ** Layout
@@ -587,32 +587,53 @@
 ** projectile
 
    #+BEGIN_SRC emacs-lisp
-(use-package projectile
-  :diminish projectile-mode
-  :config
-  (progn
-    (setq projectile-keymap-prefix (kbd "C-c p"))
-    (setq projectile-completion-system 'default)
-    (setq projectile-enable-caching t)
-    (projectile-mode)))
+     (use-package projectile
+       :diminish projectile-mode
+       :config
+       (progn
+         (setq projectile-keymap-prefix (kbd "C-c p"))
+         (setq projectile-completion-system 'default)
+         (setq projectile-enable-caching t)
+         (projectile-mode)))
 
-(use-package helm-projectile)
+     (use-package helm-projectile)
    #+END_SRC
 * Programming
 ** org
+
    #+BEGIN_SRC emacs-lisp
-(use-package org
-  :config
-  (setq org-agenda-files '("~/Projects/Notes/todo.org"))
-  ;;(setq org-ellipsis "⤵")
-  (setq org-hide-leading-stars t)
-  (setq org-support-shift-select t)
-  (setq org-todo-keyword-faces
-        '(("TODO" . (:foreground "yellow" :weight bold))
-          ("DONE" . "green")
-          ))
-  (global-set-key (kbd "C-c a") 'org-agenda)
-  )
+     (use-package org
+       :config
+       ;; Change ... to downward arrow when there's stuff under a header.
+       ;;(setq org-ellipsis "⤵")
+       (setq org-hide-leading-stars t)
+
+       ;; Use syntax highlighting in source blocks while editing.
+       ;; (setq org-src-fontify-natively t)
+       (font-lock-flush)
+
+       ;; Make TAB act as if it were issued in a buffer of the language's major mode.
+       (setq org-src-tab-acts-natively t)
+
+       (setq org-support-shift-select t)
+       (setq org-todo-keyword-faces
+             '(("TODO" . (:foreground "yellow" :weight bold))
+               ("DONE" . "green")
+               ))
+       (global-set-key (kbd "C-c a") 'org-agenda)
+
+       (setq org-directory "~/Projects/Notes")
+       (setq org-agenda-files '("~/Projects/Notes/todo.org"))
+       )
+   #+END_SRC
+
+   Use bullets instead of asterisks.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-bullets
+       :ensure t
+       :config
+       (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
    #+END_SRC
 
 ** dockerfile-mode
