@@ -509,9 +509,11 @@
   :config
   (add-to-list 'company-backends 'company-anaconda))
 
+;; python3
 ;; sudo apt install python3-setuptools python3-flake8 python3-jedi
 (setq-default python-shell-interpreter "python3")
 
+;;; sudo apt install python3-isort
 (use-package py-isort
   :ensure t
   :init
