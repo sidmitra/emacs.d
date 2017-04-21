@@ -64,12 +64,12 @@
   :ensure t)
 (load-theme 'dracula t)
 
-(use-package darktooth-theme
-  :ensure t)
+;; (use-package darktooth-theme
+;;   :ensure t)
 ;; (load-theme 'darktooth t)
 
-(use-package color-theme-sanityinc-tomorrow
-   :ensure t)
+;; (use-package color-theme-sanityinc-tomorrow
+;;    :ensure t)
 ;; (load-theme 'sanityinc-tomorrow-day t)
 ;; (load-theme 'sanityinc-tomorrow-night t)
 
