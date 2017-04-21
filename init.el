@@ -20,6 +20,8 @@
       (package-install package))))
 
 (ensure-packages core-packages)
+
+(setq use-package-always-ensure t)
 (require 'use-package)
 
 
@@ -206,6 +208,10 @@
     (backup-buffer)))
 
 (add-hook 'before-save-hook  'force-backup-of-buffer)
+
+;; make buffer names unique
+;; (use-package uniquify
+;;   :config (setq uniquify-buffer-name-style 'forward))
 
 
 ;; buffers
@@ -551,7 +557,6 @@
 ;; rainbow-mode
 ;; =============
 (use-package rainbow-mode
-  :ensure t
   :defer t
   :init
   (setq rainbow-html-colors-major-mode-list '(css-mode
@@ -570,7 +575,6 @@
 ;; rainbow-delimiters
 ;; ===================
 (use-package rainbow-delimiters
-  :ensure t
   :config
   (progn
     (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
@@ -597,12 +601,11 @@
 ;; tabbar
 ;; ======
 (use-package tabbar
-  :ensure t
   :config
   (tabbar-mode t)
   (setq tabbar-cycle-scope (quote tabs))
-  (setq table-time-before-update 0.1)
   (setq tabbar-use-images nil)
+  (setq table-time-before-update 0.1)
 
   ;; define all tabs to be one of 3 possible groups: “Emacs Buffer”, “Dired”, “User Buffer”.
   (defun tabbar-buffer-groups ()
@@ -642,22 +645,13 @@
 
 ;; undo-tree
 ;; ==========
-(use-package undo-tree
-  :ensure t)
+(use-package undo-tree)
 (global-undo-tree-mode 1)
-
-
-;; uniquify
-;; =========
-;; show unique buffer names
-(use-package uniquify
-  :config (setq uniquify-buffer-name-style 'forward))
 
 
 ;; web
 ;; ====
 (use-package web-mode
-  :ensure t
   :mode (
          ("\\.css$" . web-mode)
          ("\\.html$" . web-mode)
@@ -689,8 +683,7 @@
   )
 
 
-(use-package company-web
-  :ensure t)
+(use-package company-web)
 
 ;; Javascript
 ;; use eslint with web-mode for jsx files
@@ -701,13 +694,11 @@
 ;; TODO: Install just prettier?
 ;; npm install -g prettier prettier-eslint
 ;; (use-package prettier-eslint
-;;   :ensure t
 ;;   :config
 ;;   ;; (add-hook 'web-mode-hook (lambda () (add-hook 'after-save-hook 'prettier-eslint nil t)))
 ;;   )
 
 (use-package eslint-fix
-  :ensure t
   :config
   ;; (eval-after-load 'web-mode
   ;;   '(add-hook 'web-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix nil t))))
@@ -715,7 +706,6 @@
 
 ;; TODO: Does this do anything different than eslint-fix
 ;; (use-package js-auto-beautify
-;;   :ensure t
 ;;   :config
 ;;   (add-hook 'web-mode 'js-auto-beautify-mode))
 
@@ -737,18 +727,18 @@
 ;; yaml-mode
 ;; =========
 (use-package yaml-mode
-  :ensure t
   :mode (("\\.yaml$" . yaml-mode)))
 
 
 ;; yasnippet
 ;; =========
 (use-package yasnippet
-  :ensure t)
-(yas-global-mode 1)
-(add-hook 'term-mode-hook (lambda()
-                            (setq yas-dont-activate-functions t)))
-(add-to-list 'yas-snippet-dirs "~/.emacs.d/yasnippet-snippets")
+  :config
+  (yas-global-mode 1)
+  (add-hook 'term-mode-hook (lambda()
+                              (setq yas-dont-activate-functions t)))
+  (add-to-list 'yas-snippet-dirs "~/.emacs.d/yasnippet-snippets"))
+
 
 
 ;; My Projects
@@ -762,9 +752,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ag-arguments
+   (quote
+    ("--ignore-dir" "node_modules" "--ignore-dir" "elpa")))
+ '(custom-safe-themes
+   (quote
+    ("ff7625ad8aa2615eae96d6b4469fcc7d3d20b2e1ebc63b761a349bebbb9d23cb" default)))
  '(package-selected-packages
    (quote
-    (yasnippet yaml-mode use-package undo-tree twilight-bright-theme tabbar spaceline soothe-theme solarized-theme smooth-scrolling simple-httpd rainbow-mode rainbow-delimiters py-isort neotree multi-term molokai-theme mode-icons minimap markdown-mode magit js-auto-beautify helm-projectile helm-ag go-mode flymd flycheck exec-path-from-shell ess espresso-theme eslintd-fix eslint-fix emmet-mode dockerfile-mode darktooth-theme cursor-in-brackets company-web company-anaconda color-theme-solarized color-theme-sanityinc-tomorrow color-theme-github beacon anti-zenburn-theme ample-theme ag))))
+    (org-mode dracula-theme vue-mode prettier-eslint origami yafolding yasnippet yaml-mode use-package undo-tree twilight-bright-theme tabbar spaceline soothe-theme solarized-theme smooth-scrolling simple-httpd rainbow-mode rainbow-delimiters py-isort neotree multi-term molokai-theme mode-icons minimap markdown-mode magit js-auto-beautify helm-projectile helm-ag go-mode flymd flycheck exec-path-from-shell ess espresso-theme eslintd-fix eslint-fix emmet-mode dockerfile-mode darktooth-theme cursor-in-brackets company-web company-anaconda color-theme-solarized color-theme-sanityinc-tomorrow color-theme-github beacon anti-zenburn-theme ample-theme ag))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
