@@ -133,16 +133,13 @@
 
 ** Load Colour theme
    #+BEGIN_SRC emacs-lisp
-(use-package dracula-theme
-  :ensure t)
+(use-package dracula-theme)
 (load-theme 'dracula t)
 
-;; (use-package darktooth-theme
-;;   :ensure t)
+;; (use-package darktooth-theme)
 ;; (load-theme 'darktooth t)
 
-;; (use-package color-theme-sanityinc-tomorrow
-;;    :ensure t)
+;; (use-package color-theme-sanityinc-tomorrow)
 ;; (load-theme 'sanityinc-tomorrow-day t)
 ;; (load-theme 'sanityinc-tomorrow-night t)
    #+END_SRC
@@ -156,8 +153,7 @@
 ** Enable Smooth scrolling
 
    #+BEGIN_SRC emacs-lisp
-(use-package smooth-scrolling
-  :ensure t)
+(use-package smooth-scrolling)
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
    #+END_SRC
 
@@ -173,7 +169,6 @@
 
    #+BEGIN_SRC emacs-lisp
 (use-package beacon
-  :ensure t
   :config
   (beacon-mode t))
    #+END_SRC
@@ -306,7 +301,6 @@
 
 #+BEGIN_SRC emacs-lisp
 (use-package move-text
-  :ensure t
   :config
   (move-text-default-bindings))
 #+END_SRC
@@ -315,7 +309,6 @@
 
 #+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors
-  :ensure t
   :config
   (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines))
 #+END_SRC
@@ -325,7 +318,6 @@
 #+BEGIN_SRC emacs-lisp
 ;; origami - code-folding
 (use-package origami
-  :ensure t
   :config
   (global-origami-mode 1)
   (global-set-key (kbd "<C-return>") 'origami-forward-toggle-node))
@@ -409,169 +401,165 @@
 * Global Packages
 ** ag
    #+BEGIN_SRC emacs-lisp
-   (use-package ag
-  :ensure t
-  :config
-  (customize-set-variable 'ag-arguments
-   (quote
-    ("--ignore-dir" "node_modules" "--ignore-dir" "elpa"))))
-(use-package helm-ag
-  :ensure t)
-(defun projectile-helm-ag ()
-  (interactive)
-  (helm-ag (projectile-project-root)))
+     (use-package ag
+       :config
+       (customize-set-variable 'ag-arguments
+                               (quote
+                                ("--ignore-dir" "node_modules" "--ignore-dir" "elpa"))))
+     (use-package helm-ag)
+     (defun projectile-helm-ag ()
+       (interactive)
+       (helm-ag (projectile-project-root)))
    #+END_SRC
 
 ** company
 
    #+BEGIN_SRC emacs-lisp
-(use-package company
-  :ensure t
-  :config
-  (add-hook 'after-init-hook 'global-company-mode)
-  (setq company-idle-delay 0.2
-        company-minimum-prefix-length 1
-        company-selection-wrap-around t
-        company-tooltip-align-annotations t
-        company-tooltip-flip-when-above nil
-        company-tooltip-limit 10
-        company-tooltip-minimum 3
-        company-tooltip-margin 1
-        company-transformers '(company-sort-by-occurrence)
-        company-dabbrev-downcase nil)
+     (use-package company
+       :config
+       (add-hook 'after-init-hook 'global-company-mode)
+       (setq company-idle-delay 0.2
+             company-minimum-prefix-length 1
+             company-selection-wrap-around t
+             company-tooltip-align-annotations t
+             company-tooltip-flip-when-above nil
+             company-tooltip-limit 10
+             company-tooltip-minimum 3
+             company-tooltip-margin 1
+             company-transformers '(company-sort-by-occurrence)
+             company-dabbrev-downcase nil)
 
-  ;; Add yasnippet support for all company backends
-  ;; https://github.com/syl20bnr/spacemacs/pull/179
-  (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
-  (defun company-mode/backend-with-yas (backend)
-    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-        backend
-      (append (if (consp backend) backend (list backend))
-              '(:with company-yasnippet))))
-  )
+       ;; Add yasnippet support for all company backends
+       ;; https://github.com/syl20bnr/spacemacs/pull/179
+       (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+       (defun company-mode/backend-with-yas (backend)
+         (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+             backend
+           (append (if (consp backend) backend (list backend))
+                   '(:with company-yasnippet))))
+       )
    #+END_SRC
 
 ** Shell/exec-path-from-shell
    #+BEGIN_SRC emacs-lisp
-;; exec-path-from-shell
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (exec-path-from-shell-initialize))
+     ;; exec-path-from-shell
+     (use-package exec-path-from-shell
+       :config
+       (exec-path-from-shell-initialize))
    #+END_SRC
 
 ** Terminal
 
    #+BEGIN_SRC emacs-lisp
-(use-package multi-term)
-(setq multi-term-program "/bin/bash")
-(defalias 'term 'multi-term)
+     (use-package multi-term)
+     (setq multi-term-program "/bin/bash")
+     (defalias 'term 'multi-term)
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
-(defun term-bash (buffer-name)
-  "Start a terminal and rename buffer."
-  (interactive "sbuffer name: ")
-  (ansi-term "/bin/bash")
-  (rename-buffer buffer-name t))
+     (defun term-bash (buffer-name)
+       "Start a terminal and rename buffer."
+       (interactive "sbuffer name: ")
+       (ansi-term "/bin/bash")
+       (rename-buffer buffer-name t))
    #+END_SRC
 
 ** helm
    #+BEGIN_SRC emacs-lisp
-(use-package helm
-  :config
-  ;; replace default find file
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
-  ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-  ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-  ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-  (global-set-key (kbd "C-c h") 'helm-command-prefix)
-  (global-unset-key (kbd "C-x c"))
-  ;; Use helm-M-x instead, shows keybindings for commands
-  (global-set-key (kbd "M-x") 'helm-M-x)
+     (use-package helm
+       :config
+       ;; replace default find file
+       (global-set-key (kbd "C-x C-f") 'helm-find-files)
+       ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+       ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+       ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+       (global-set-key (kbd "C-c h") 'helm-command-prefix)
+       (global-unset-key (kbd "C-x c"))
+       ;; Use helm-M-x instead, shows keybindings for commands
+       (global-set-key (kbd "M-x") 'helm-M-x)
 
-  ;; rebind tab to run persistent action
-  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-  ;; make TAB works in terminal
-  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
-  ;; list actions using C-z
-  ;; (define-key helm-map (kbd "C-z")  'helm-select-action)
+       ;; rebind tab to run persistent action
+       (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+       ;; make TAB works in terminal
+       (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+       ;; list actions using C-z
+       ;; (define-key helm-map (kbd "C-z")  'helm-select-action)
 
-  (when (executable-find "curl")
-    (setq helm-google-suggest-use-curl-p t))
+       (when (executable-find "curl")
+         (setq helm-google-suggest-use-curl-p t))
 
-  ;; open helm buffer inside current window, not occupy whole other window
-  (setq helm-split-window-in-side-p t)
-  ;; move to end or beginning of source when reaching top or bottom of source.
-  (setq helm-move-to-line-cycle-in-source t)
-  ;; search for library in `require' and `declare-function' sexp.
-  (setq helm-ff-search-library-in-sexp  t)
-  ;; scroll 8 lines other window using M-<next>/M-<prior>
-  (setq helm-scroll-amount 8)
-  (setq helm-ff-file-name-history-use-recentf t)
+       ;; open helm buffer inside current window, not occupy whole other window
+       (setq helm-split-window-in-side-p t)
+       ;; move to end or beginning of source when reaching top or bottom of source.
+       (setq helm-move-to-line-cycle-in-source t)
+       ;; search for library in `require' and `declare-function' sexp.
+       (setq helm-ff-search-library-in-sexp  t)
+       ;; scroll 8 lines other window using M-<next>/M-<prior>
+       (setq helm-scroll-amount 8)
+       (setq helm-ff-file-name-history-use-recentf t)
 
-  ;; Make helm window lean
-  ;; https://www.reddit.com/r/emacs/comments/2z7nbv/lean_helm_window/
-  (setq helm-display-header-line nil) ;; t by default
-  (set-face-attribute 'helm-source-header nil :height 0.1)
-  (helm-autoresize-mode 1)
-  (defun helm-toggle-header-line ()
-    (if (= (length helm-sources) 1)
-        (set-face-attribute 'helm-source-header nil :height 0.1)
-      (set-face-attribute 'helm-source-header nil :height 1.0)))
-  (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)
+       ;; Make helm window lean
+       ;; https://www.reddit.com/r/emacs/comments/2z7nbv/lean_helm_window/
+       (setq helm-display-header-line nil) ;; t by default
+       (set-face-attribute 'helm-source-header nil :height 0.1)
+       (helm-autoresize-mode 1)
+       (defun helm-toggle-header-line ()
+         (if (= (length helm-sources) 1)
+             (set-face-attribute 'helm-source-header nil :height 0.1)
+           (set-face-attribute 'helm-source-header nil :height 1.0)))
+       (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)
 
-  ;; Enable helm
-  (helm-mode 1))
+       ;; Enable helm
+       (helm-mode 1))
    #+END_SRC
 
 ** magit
 
    #+BEGIN_SRC emacs-lisp
-(use-package magit
-  :config
-  (setq magit-auto-revert-mode nil)
-  (setq magit-last-seen-setup-instructions "1.4.0"))
+     (use-package magit
+       :config
+       (setq magit-auto-revert-mode nil)
+       (setq magit-last-seen-setup-instructions "1.4.0"))
    #+END_SRC
 
 ** Modeline
    #+BEGIN_SRC emacs-lisp
-(use-package powerline
-  :config
-  ;;(powerline-center-theme)
-  ;;(setq-default powerline-default-separator 'curve)
-  )
+     ;(use-package powerline
+       :config
+       ;;(powerline-center-theme)
+       ;;(setq-default powerline-default-separator 'curve)
+       )
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
-(use-package spaceline
-  :config
-  (progn
-    (require 'spaceline-config)
-    (setq powerline-default-separator 'slant)
-    (setq spaceline-workspace-numbers-unicode t)
-    (setq spaceline-separator-dir-left '(left . left))
-    (setq spaceline-separator-dir-right '(right . right))
-    (setq powerline-height 27)
-    (spaceline-toggle-window-number-on)
-    (spaceline-toggle-buffer-modified-on)
-    (spaceline-toggle-major-mode-on)
-    (spaceline-toggle-battery-on)
-    (spaceline-toggle-hud-on)
-    (spaceline-toggle-projectile-root-on)
-    (spaceline-emacs-theme)
-    ))
+     (use-package spaceline
+       :config
+       (progn
+         (require 'spaceline-config)
+         (setq powerline-default-separator 'slant)
+         (setq spaceline-workspace-numbers-unicode t)
+         (setq spaceline-separator-dir-left '(left . left))
+         (setq spaceline-separator-dir-right '(right . right))
+         (setq powerline-height 27)
+         (spaceline-toggle-window-number-on)
+         (spaceline-toggle-buffer-modified-on)
+         (spaceline-toggle-major-mode-on)
+         (spaceline-toggle-battery-on)
+         (spaceline-toggle-hud-on)
+         (spaceline-toggle-projectile-root-on)
+         (spaceline-emacs-theme)
+         ))
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
-(use-package mode-icons
-  :config
-  (mode-icons-mode))
+     (use-package mode-icons
+       :config
+       (mode-icons-mode))
    #+END_SRC
 
 ** SSH
    #+BEGIN_SRC emacs-lisp
-;; (setq tramp-default-method "ssh")
+     ;; (setq tramp-default-method "ssh")
    #+END_SRC
 
 ** neotree
@@ -584,9 +572,9 @@
 
 ** Layout
    #+BEGIN_SRC emacs-lisp
-;; (use-package 0blayout
-;;   :config
-;;   (0blayout-mode 1))
+     ;; (use-package 0blayout
+     ;;   :config
+     ;;   (0blayout-mode 1))
    #+END_SRC
 ** projectile
 
@@ -642,125 +630,124 @@
 ** dockerfile-mode
 
    #+BEGIN_SRC emacs-lisp
-(use-package dockerfile-mode
-  :ensure t
-  :mode "Dockerfile$")
+     (use-package dockerfile-mode
+       :mode "Dockerfile$")
    #+END_SRC
 
 ** flycheck
    #+BEGIN_SRC emacs-lisp
-(use-package let-alist)
-(use-package flycheck
-  :config
-  (add-hook 'after-init-hook #'global-flycheck-mode)
-  (setq-default flycheck-checker-error-threshold 2000)
-  (setq-default flycheck-highlighting-mode 'lines)
-  (setq-default flycheck-idle-change-delay 3)
-  (setq-default flycheck-display-errors-delay 0))
-;;(setq-default flycheck-flake8-maximum-line-length 120))
+     (use-package let-alist)
+     (use-package flycheck
+       :config
+       (add-hook 'after-init-hook #'global-flycheck-mode)
+       (setq-default flycheck-checker-error-threshold 2000)
+       (setq-default flycheck-highlighting-mode 'lines)
+       (setq-default flycheck-idle-change-delay 3)
+       (setq-default flycheck-display-errors-delay 0))
+     ;;(setq-default flycheck-flake8-maximum-line-length 120))
 
    #+END_SRC
 ** Golang
    #+BEGIN_SRC emacs-lisp
-(use-package go-mode)
+     (use-package go-mode)
    #+END_SRC
 
 ** Markdown
    #+BEGIN_SRC emacs-lisp
-(use-package markdown-mode)
-(add-hook 'markdown-mode-hook
-          (lambda ()
-            (when buffer-file-name
-              (add-hook 'after-save-hook
-                        'check-parens
-                        nil t))))
+     (use-package markdown-mode)
+     (add-hook 'markdown-mode-hook
+               (lambda ()
+                 (when buffer-file-name
+                   (add-hook 'after-save-hook
+                             'check-parens
+                             nil t))))
 
-(use-package flymd)
-(defun my-flymd-browser-function (url)
-  (let ((browse-url-browser-function 'browse-url-firefox))
-    (browse-url url)))
-(setq flymd-browser-open-function 'my-flymd-browser-function)
+     (use-package flymd)
+     (defun my-flymd-browser-function (url)
+       (let ((browse-url-browser-function 'browse-url-firefox))
+         (browse-url url)))
+     (setq flymd-browser-open-function 'my-flymd-browser-function)
    #+END_SRC
 
 ** Python
    #+BEGIN_SRC emacs-lisp
-(add-hook 'python-mode-hook
-          (lambda ()
-            (setq indent-tabs-mode nil)
-            (setq tab-width 4)
-            (setq python-indent-offset 4)))
+     (add-hook 'python-mode-hook
+               (lambda ()
+                 (setq indent-tabs-mode nil)
+                 (setq tab-width 4)
+                 (setq python-indent-offset 4)))
    #+END_SRC
    #+BEGIN_SRC emacs-lisp
-;; anaconda
-(use-package anaconda-mode
-  :config
-  (add-hook 'python-mode-hook 'anaconda-mode)
-  (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-  ;; Not sure this works yet
-  ;; (when (projectile-project-p)
-  ;;   (setenv "PYTHONPATH" (projectile-project-root)))
-  )
+     ;; anaconda
+     (use-package anaconda-mode
+       :config
+       (add-hook 'python-mode-hook 'anaconda-mode)
+       (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+       ;; Not sure this works yet
+       ;; (when (projectile-project-p)
+       ;;   (setenv "PYTHONPATH" (projectile-project-root)))
+       )
    #+END_SRC
    #+BEGIN_SRC emacs-lisp
-(use-package company-anaconda
-  :config
-  (add-to-list 'company-backends 'company-anaconda))
+     (use-package company-anaconda
+       :config
+       (add-to-list 'company-backends 'company-anaconda))
    #+END_SRC
    #+BEGIN_SRC emacs-lisp
-;; python3
-;; sudo apt install python3-setuptools python3-flake8 python3-jedi
-(setq-default python-shell-interpreter "python3")
+     ;; python3
+     ;; sudo apt install python3-setuptools python3-flake8 python3-jedi
+     (setq-default python-shell-interpreter "python3")
    #+END_SRC
    #+BEGIN_SRC emacs-lisp
-;;; sudo apt install python3-isort
-(use-package py-isort
-  :init
-  (add-hook 'before-save-hook 'py-isort-before-save)
-)
+     ;;; sudo apt install python3-isort
+     (use-package py-isort
+       :init
+       (add-hook 'before-save-hook 'py-isort-before-save)
+       )
    #+END_SRC
 
 ** R/ESS
    #+BEGIN_SRC emacs-lisp
-;; (use-package ess
-;;   :commands R
-;;   :init (progn
-;;           ;; TODO: why doesn't use-package require it for us?
-;;           (require 'ess)
+     ;; (use-package ess
+     ;;   :commands R
+     ;;   :init (progn
+     ;;           ;; TODO: why doesn't use-package require it for us?
+     ;;           (require 'ess)
 
-;;           (setq ess-eval-visibly-p nil
-;;                 ess-use-tracebug t
-;;                 ;; ess-use-auto-complete t
-;;                 ess-help-own-frame 'one
-;;                 ess-ask-for-ess-directory nil)
-;;           (setq-default ess-dialect "R")
-;;           ))
-;; ;; (ess-toggle-underscore t)))
-;; (add-to-list 'company-backends 'company-ess)
+     ;;           (setq ess-eval-visibly-p nil
+     ;;                 ess-use-tracebug t
+     ;;                 ;; ess-use-auto-complete t
+     ;;                 ess-help-own-frame 'one
+     ;;                 ess-ask-for-ess-directory nil)
+     ;;           (setq-default ess-dialect "R")
+     ;;           ))
+     ;; ;; (ess-toggle-underscore t)))
+     ;; (add-to-list 'company-backends 'company-ess)
    #+END_SRC
 
 ** rainbow-mode
    #+BEGIN_SRC emacs-lisp
-(use-package rainbow-mode
-  :init
-  (setq rainbow-html-colors-major-mode-list '(css-mode
-                                              html-mode
-                                              less-css-mode
-                                              nxml-mode
-                                              php-mode
-                                              sass-mode
-                                              scss-mode
-                                              web-mode
-                                              xml-mode))
-  (dolist (mode rainbow-html-colors-major-mode-list)
-    (add-hook (intern (format "%s-hook" mode)) 'rainbow-mode)))
+     (use-package rainbow-mode
+       :init
+       (setq rainbow-html-colors-major-mode-list '(css-mode
+                                                   html-mode
+                                                   less-css-mode
+                                                   nxml-mode
+                                                   php-mode
+                                                   sass-mode
+                                                   scss-mode
+                                                   web-mode
+                                                   xml-mode))
+       (dolist (mode rainbow-html-colors-major-mode-list)
+         (add-hook (intern (format "%s-hook" mode)) 'rainbow-mode)))
    #+END_SRC
 
 ** rainbow-delimiters
    #+BEGIN_SRC emacs-lisp
-(use-package rainbow-delimiters
-  :config
-  (progn
-    (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
+     (use-package rainbow-delimiters
+       :config
+       (progn
+         (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
    #+END_SRC
 
 ** HTML/Javascript
@@ -845,40 +832,39 @@
     #+END_SRC
 *** Emmet(Zencoding)
     #+BEGIN_SRC emacs-lisp
-      ;; emmet-mode
       (use-package emmet-mode)
     #+END_SRC
 
 ** YAML
    #+BEGIN_SRC emacs-lisp
-(use-package yaml-mode
-  :mode (("\\.yaml$" . yaml-mode)))
+     (use-package yaml-mode
+       :mode (("\\.yaml$" . yaml-mode)))
    #+END_SRC
 
 ** Snippets
    #+BEGIN_SRC emacs-lisp
-(use-package yasnippet
-  :config
-  (yas-global-mode 1)
-  (add-hook 'term-mode-hook (lambda()
-                              (setq yas-dont-activate-functions t)))
-  (add-to-list 'yas-snippet-dirs "~/.emacs.d/yasnippet-snippets"))
+     (use-package yasnippet
+       :config
+       (yas-global-mode 1)
+       (add-hook 'term-mode-hook (lambda()
+                                   (setq yas-dont-activate-functions t)))
+       (add-to-list 'yas-snippet-dirs "~/.emacs.d/yasnippet-snippets"))
    #+END_SRC
 
 * Shortcuts/Registers
 
    #+BEGIN_SRC emacs-lisp
-(set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
-(set-register ?j (cons 'file "~/Projects/Notes/journal.org"))
-(set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.md"))
-(set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
+     (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
+     (set-register ?j (cons 'file "~/Projects/Notes/journal.org"))
+     (set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.md"))
+     (set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
    #+END_SRC
 
 * Project Specific
 
    #+BEGIN_SRC emacs-lisp
-;; Forcing django mode on all html
-;; TODO: Better way to do this?
-(setq-default web-mode-engines-alist
-              '(("django"    . "\\.html\\'")))
+     ;; Forcing django mode on all html
+     ;; TODO: Better way to do this?
+     (setq-default web-mode-engines-alist
+                   '(("django"    . "\\.html\\'")))
    #+END_SRC
