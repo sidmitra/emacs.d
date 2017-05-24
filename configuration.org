@@ -545,10 +545,24 @@
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
+     (use-package diminish
+       :config
+       (diminish 'company-mode)
+       (diminish 'helm-mode)
+       (diminish 'beacon-mode)
+       (diminish 'cursor-in-brackets-mode)
+       (diminish 'undo-tree-mode)
+       (diminish 'visual-line-mode)
+       ;;(diminish 'yas-minor-mode)
+       )
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
      (use-package mode-icons
        :config
        (mode-icons-mode))
    #+END_SRC
+
 
 ** SSH
    #+BEGIN_SRC emacs-lisp
