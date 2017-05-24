@@ -798,7 +798,18 @@
      #+BEGIN_SRC emacs-lisp
        (require 'prettier-js)
        (setq prettier-target-mode "web-mode")
+
+       (defun enable-prettier () (interactive)
+              (add-hook 'before-save-hook 'prettier-before-save))
+
+       (defun disable-prettier () (interactive)
+              (remove-hook 'before-save-hook 'prettier-before-save))
+
        (prettier-mode)
+       ;; (setq prettier-args '(
+       ;;                       "--single-quote"
+       ;;                       "--no-semi"
+       ;;                       ))
      #+END_SRC
 **** ESLint - Not used anymore
      See http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html#emacs_configuration_for_eslint_and_jsx
