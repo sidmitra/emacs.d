@@ -252,16 +252,16 @@
 ** Duplicate current line
 
 #+BEGIN_SRC emacs-lisp
-(defun duplicate-line()
-  (interactive)
-  (move-beginning-of-line 1)
-  (kill-line)
-  (yank)
-  (open-line 1)
-  (next-line 1)
-  (yank)
-)
-(global-set-key (kbd "C-c d") 'duplicate-line)
+  (defun duplicate-line()
+    (interactive)
+    (move-beginning-of-line 1)
+    (kill-line)
+    (yank)
+    (open-line 1)
+    (next-line 1)
+    (yank)
+    )
+  (global-set-key (kbd "C-c d") 'duplicate-line)
 #+END_SRC
 
 ** Simplify whitespace style
@@ -328,6 +328,10 @@
    #+BEGIN_SRC emacs-lisp
      (use-package undo-tree)
      (global-undo-tree-mode 1)
+   #+END_SRC
+** Sorting lines
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-c M-s") 'sort-lines)
    #+END_SRC
 
 * Buffers
@@ -399,7 +403,7 @@
    #+END_SRC
 
 * Global Packages
-** ag
+** thesilversearcher - ag
    #+BEGIN_SRC emacs-lisp
      (use-package ag
        :config
@@ -522,7 +526,7 @@
        (setq magit-last-seen-setup-instructions "1.4.0"))
    #+END_SRC
 
-** COMMENT Modeline
+** Modeline
    #+BEGIN_SRC emacs-lisp
      (use-package spaceline
        :config
@@ -684,6 +688,7 @@
                  (setq tab-width 4)
                  (setq python-indent-offset 4)))
    #+END_SRC
+
    #+BEGIN_SRC emacs-lisp
      ;; anaconda
      (use-package anaconda-mode
@@ -695,23 +700,35 @@
        ;;   (setenv "PYTHONPATH" (projectile-project-root)))
        )
    #+END_SRC
+
    #+BEGIN_SRC emacs-lisp
      (use-package company-anaconda
        :config
        (add-to-list 'company-backends 'company-anaconda))
    #+END_SRC
+
    #+BEGIN_SRC emacs-lisp
      ;; python3
      ;; sudo apt install python3-setuptools python3-flake8 python3-jedi
      (setq-default python-shell-interpreter "python3")
    #+END_SRC
+
    #+BEGIN_SRC emacs-lisp
-     ;;; sudo apt install python3-isort
+     ;; sudo apt install python3-isort
      (use-package py-isort
        :init
        (add-hook 'before-save-hook 'py-isort-before-save)
        )
    #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     ;; sudo -H pip install yapf
+     (use-package yapfify
+       :init
+       ;; (add-hook 'python-mode-hook 'yapf-mode)
+       )
+   #+END_SRC
+
 
 ** R/ESS
    #+BEGIN_SRC emacs-lisp
@@ -798,18 +815,16 @@
      #+BEGIN_SRC emacs-lisp
        (require 'prettier-js)
        (setq prettier-target-mode "web-mode")
-
-       (defun enable-prettier () (interactive)
-              (add-hook 'before-save-hook 'prettier-before-save))
-
-       (defun disable-prettier () (interactive)
-              (remove-hook 'before-save-hook 'prettier-before-save))
-
        (prettier-mode)
-       ;; (setq prettier-args '(
-       ;;                       "--single-quote"
-       ;;                       "--no-semi"
-       ;;                       ))
+
+       (defun enable-prettier-args () (interactive)
+              (setq prettier-args '(
+                                    "--single-quote"
+                                    "--no-semi"
+                                    )))
+
+       (defun disable-prettier-args () (interactive)
+              (setq prettier-args '()))
      #+END_SRC
 **** ESLint - Not used anymore
      See http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html#emacs_configuration_for_eslint_and_jsx
@@ -881,6 +896,21 @@
 * Project Specific
 
    #+BEGIN_SRC emacs-lisp
+     (defun airbase-enable () (interactive)
+            (enable-prettier-args)
+            (remove-hook 'python-mode-hook 'yapf-mode)
+            )
+
+     (defun airbase-disable () (interactive)
+            (disable-prettier-args)
+            ;; (remove-hook 'python-mode-hook 'yapf-mode)
+            )
+
+     (defun moonlite-enable () (interactive)
+                 (disable-prettier-args)
+                 (add-hook 'python-mode-hook 'yapf-mode)
+                 )
+
      ;; Forcing django mode on all html
      ;; TODO: Better way to do this?
      (setq-default web-mode-engines-alist
