@@ -96,13 +96,14 @@
 ** Show line numbers
 
    #+BEGIN_SRC emacs-lisp
-(global-linum-mode t)
+     ;; (global-linum-mode t)
+     (add-hook 'prog-mode-hook 'linum-mode)
    #+END_SRC
 
 ** Update line numbers format to avoid graphics glitches in fringe
 
    #+BEGIN_SRC emacs-lisp
-(setq-default linum-format " %4d ")
+     (setq-default linum-format " %4d ")
    #+END_SRC
 
 ** Show column numbers
@@ -416,6 +417,10 @@
        (helm-ag (projectile-project-root)))
    #+END_SRC
 
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key "\C-c\C-g" 'ag-project)
+   #+END_SRC
+
 ** company
 
    #+BEGIN_SRC emacs-lisp
@@ -567,20 +572,23 @@
        (mode-icons-mode))
    #+END_SRC
 
-
 ** SSH
    #+BEGIN_SRC emacs-lisp
      ;; (setq tramp-default-method "ssh")
    #+END_SRC
-
 ** neotree
    #+BEGIN_SRC emacs-lisp
      (use-package neotree
        :config
        (global-set-key [f8] 'neotree-toggle)
        (setq neo-smart-open t))
-   #+END_SRC
 
+     (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+   #+END_SRC
+** Icons
+   #+BEGIN_SRC emacs-lisp
+     (use-package all-the-icons)
+   #+END_SRC
 ** Layout
    #+BEGIN_SRC emacs-lisp
      ;; (use-package 0blayout
@@ -601,6 +609,7 @@
 
      (use-package helm-projectile)
    #+END_SRC
+
 * Programming
 ** org
 
@@ -729,7 +738,6 @@
        )
    #+END_SRC
 
-
 ** R/ESS
    #+BEGIN_SRC emacs-lisp
      ;; (use-package ess
@@ -815,16 +823,7 @@
      #+BEGIN_SRC emacs-lisp
        (require 'prettier-js)
        (setq prettier-target-mode "web-mode")
-       (prettier-mode)
-
-       (defun enable-prettier-args () (interactive)
-              (setq prettier-args '(
-                                    "--single-quote"
-                                    "--no-semi"
-                                    )))
-
-       (defun disable-prettier-args () (interactive)
-              (setq prettier-args '()))
+       ;; (prettier-mode)
      #+END_SRC
 **** ESLint - Not used anymore
      See http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html#emacs_configuration_for_eslint_and_jsx
@@ -894,25 +893,35 @@
    #+END_SRC
 
 * Project Specific
-
    #+BEGIN_SRC emacs-lisp
-     (defun airbase-enable () (interactive)
-            (enable-prettier-args)
-            (remove-hook 'python-mode-hook 'yapf-mode)
-            )
+          (defun airbase-enable () (interactive)
+                 (prettier-mode)
+                 (setq prettier-args '(
+                                       "--single-quote"
+                                       "--no-semi"
+                                       ))
+                 (remove-hook 'python-mode-hook 'yapf-mode)
+                 )
 
-     (defun airbase-disable () (interactive)
-            (disable-prettier-args)
-            ;; (remove-hook 'python-mode-hook 'yapf-mode)
-            )
+          (defun airbase-disable () (interactive)
+                 (prettier-mode 0)
+                 (setq prettier-args '())
+                 )
 
-     (defun moonlite-enable () (interactive)
-                 (disable-prettier-args)
+          (defun moonlite-enable () (interactive)
+                 (prettier-mode)
+                 (setq prettier-args '())
                  (add-hook 'python-mode-hook 'yapf-mode)
                  )
 
-     ;; Forcing django mode on all html
-     ;; TODO: Better way to do this?
-     (setq-default web-mode-engines-alist
-                   '(("django"    . "\\.html\\'")))
+          (defun moonlite-disable () (interactive)
+                 (prettier-mode 0)
+                 (setq prettier-args '())
+                 (remove-hook 'python-mode-hook 'yapf-mode)
+                 )
+
+          ;; Forcing django mode on all html
+          ;; TODO: Better way to do this?
+          (setq-default web-mode-engines-alist
+                        '(("django"    . "\\.html\\'")))
    #+END_SRC
