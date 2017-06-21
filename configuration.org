@@ -316,16 +316,15 @@
 
 ** Enable code folding
 
-#+BEGIN_SRC emacs-lisp
-;; origami - code-folding
-(use-package origami
-  :config
-  (global-origami-mode 1)
-  (global-set-key (kbd "<C-return>") 'origami-forward-toggle-node))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     ;; origami - code-folding
+     ;; (use-package origami
+     ;;   :config
+     ;;   (global-origami-mode 1)
+     ;;   (global-set-key (kbd "<C-return>") 'origami-forward-toggle-node))
+   #+END_SRC
 
 ** undo-tree
-
    #+BEGIN_SRC emacs-lisp
      (use-package undo-tree)
      (global-undo-tree-mode 1)
