@@ -65,90 +65,58 @@
 ** Disable emacs window disappearing on Ctrl-z
 
    #+BEGIN_SRC emacs-lisp
-(global-unset-key (kbd "C-z"))
+     (global-unset-key (kbd "C-z"))
    #+END_SRC
 
 ** Turn off ad-handle-definition: `tramp-read-passwd' got redefined
 
    #+BEGIN_SRC emacs-lisp
-(setq ad-redefinition-action 'accept)
+     (setq ad-redefinition-action 'accept)
    #+END_SRC
 
 ** Change "yes or no" to "y or n"
 
    #+BEGIN_SRC emacs-lisp
-(defalias 'yes-or-no-p 'y-or-n-p)
+     (defalias 'yes-or-no-p 'y-or-n-p)
    #+END_SRC
 
-** Change cursor from box to bar
-
-   #+BEGIN_SRC emacs-lisp
-(setq-default cursor-type 'bar)
-   #+END_SRC
-
-** Show matching parentheses with 0 delay
-
-   #+BEGIN_SRC emacs-lisp
-(show-paren-mode 1)
-(setq-default show-paren-delay 0)
-   #+END_SRC
-
-** Show line numbers
-
+** Show Line/Col Numbers
+*** Show Line col numbers
    #+BEGIN_SRC emacs-lisp
      ;; (global-linum-mode t)
      (add-hook 'prog-mode-hook 'linum-mode)
    #+END_SRC
+*** Update line numbers format to avoid graphics glitches in fringe
 
-** Update line numbers format to avoid graphics glitches in fringe
+    #+BEGIN_SRC emacs-lisp
+      (setq-default linum-format " %4d ")
+    #+END_SRC
 
-   #+BEGIN_SRC emacs-lisp
-     (setq-default linum-format " %4d ")
-   #+END_SRC
-
-** Show column numbers
+*** Show column numbers
 
    #+BEGIN_SRC emacs-lisp
 ;; show column number
 (setq-default column-number-mode t)
    #+END_SRC
 
-** Set font and size
+** Set Font, Size
+*** Set font and size
 
    #+BEGIN_SRC emacs-lisp
 (set-frame-font "Hack 14")
    #+END_SRC
 
-** Change font-size with ctrl + mouse wheel
+*** Change font-size with ctrl + mouse wheel
 
    #+BEGIN_SRC emacs-lisp
 (global-set-key (vector (list 'control mouse-wheel-down-event)) 'text-scale-increase)
 (global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
    #+END_SRC
 
-** Apply syntax highlighting to all buffers
-
-   #+BEGIN_SRC emacs-lisp
-(global-font-lock-mode t)
-   #+END_SRC
-
-** Load Colour theme
-   #+BEGIN_SRC emacs-lisp
-(use-package dracula-theme)
-(load-theme 'dracula t)
-
-;; (use-package darktooth-theme)
-;; (load-theme 'darktooth t)
-
-;; (use-package color-theme-sanityinc-tomorrow)
-;; (load-theme 'sanityinc-tomorrow-day t)
-;; (load-theme 'sanityinc-tomorrow-night t)
-   #+END_SRC
-
 ** Enable Soft-wrap lines
 
    #+BEGIN_SRC emacs-lisp
-(global-visual-line-mode t)
+     (global-visual-line-mode t)
    #+END_SRC
 
 ** Enable Smooth scrolling
@@ -164,14 +132,27 @@
    #+BEGIN_SRC emacs-lisp
    #+END_SRC
 
+** Change cursor from box to bar
+
+   #+BEGIN_SRC emacs-lisp
+     (setq-default cursor-type 'bar)
+   #+END_SRC
+
+** Show matching parentheses with 0 delay
+
+   #+BEGIN_SRC emacs-lisp
+     (show-paren-mode 1)
+     (setq-default show-paren-delay 0)
+   #+END_SRC
+
 ** Show beacon on cursor
 
    A light that follows your cursor around so you don't lose it!
 
    #+BEGIN_SRC emacs-lisp
-(use-package beacon
-  :config
-  (beacon-mode t))
+     (use-package beacon
+       :config
+       (beacon-mode t))
    #+END_SRC
 
 ** Show Tabs for buffers
@@ -214,114 +195,132 @@
        (global-set-key (kbd "C->") 'tabbar-forward))
    #+END_SRC
 
+** Indentation
+   #+BEGIN_SRC emacs-lisp
+     (use-package highlight-indent-guides
+       :config
+       (setq highlight-indent-guides-method 'character)
+       (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
+   #+END_SRC
+
+** Layout
+   #+BEGIN_SRC emacs-lisp
+     (winner-mode 1)
+   #+END_SRC
+
+** Apply syntax highlighting to all buffers
+
+   #+BEGIN_SRC emacs-lisp
+     (global-font-lock-mode t)
+   #+END_SRC
+
+** Load Colour theme
+   #+BEGIN_SRC emacs-lisp
+(use-package dracula-theme)
+(load-theme 'dracula t)
+
+;; (use-package darktooth-theme)
+;; (load-theme 'darktooth t)
+
+;; (use-package color-theme-sanityinc-tomorrow)
+;; (load-theme 'sanityinc-tomorrow-day t)
+;; (load-theme 'sanityinc-tomorrow-night t)
+   #+END_SRC
+
 * Editing
-** Character encodings default to utf-8.
-
+** Character Encodings
    #+BEGIN_SRC emacs-lisp
-(set-default-coding-systems 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-language-environment 'utf-8)
-(setq locale-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-(when (display-graphic-p)
-  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+     (set-default-coding-systems 'utf-8)
+     (set-keyboard-coding-system 'utf-8)
+     (set-language-environment 'utf-8)
+     (setq locale-coding-system 'utf-8)
+     (set-selection-coding-system 'utf-8)
+     (set-terminal-coding-system 'utf-8)
+     (prefer-coding-system 'utf-8)
+     (when (display-graphic-p)
+       (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
    #+END_SRC
 
-** Enable copy/paste from clipboard
+** Copy/paste
+*** Enable clipboard
    #+BEGIN_SRC emacs-lisp
-(setq select-enable-clipboard t)
+     (setq select-enable-clipboard t)
+   #+END_SRC
+*** Save Interprogram paste
+    https://www.reddit.com/r/emacs/comments/30g5wo/the_kill_ring_and_the_clipboard/
+   #+BEGIN_SRC emacs-lisp
+     (setq save-interprogram-paste-before-kill t)
    #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-;; https://www.reddit.com/r/emacs/comments/30g5wo/the_kill_ring_and_the_clipboard/
-(setq save-interprogram-paste-before-kill t)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-;; overwrite active region
-(delete-selection-mode t)
-#+END_SRC
+*** Overwrite active region
+   #+BEGIN_SRC emacs-lisp
+     (delete-selection-mode t)
+   #+END_SRC
 
 ** Indent new line automatically on ENTER
-
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "RET") 'newline-and-indent)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "RET") 'newline-and-indent)
+   #+END_SRC
 
 ** Duplicate current line
-
-#+BEGIN_SRC emacs-lisp
-  (defun duplicate-line()
-    (interactive)
-    (move-beginning-of-line 1)
-    (kill-line)
-    (yank)
-    (open-line 1)
-    (next-line 1)
-    (yank)
-    )
-  (global-set-key (kbd "C-c d") 'duplicate-line)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (defun duplicate-line()
+       (interactive)
+       (move-beginning-of-line 1)
+       (kill-line)
+       (yank)
+       (open-line 1)
+       (next-line 1)
+       (yank)
+       )
+     (global-set-key (kbd "C-c d") 'duplicate-line)
+   #+END_SRC
 
 ** Simplify whitespace style
-
-#+BEGIN_SRC emacs-lisp
-(setq-default whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq-default whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
+   #+END_SRC
 
 ** Delete trailing whitespace before saving
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'before-save-hook 'delete-trailing-whitespace)
+   #+END_SRC
 
 ** Set default tab char's display width to 4 spaces
-
-#+BEGIN_SRC emacs-lisp
-(setq-default tab-width 4)
-(setq-default indent-tabs-mode nil)
-;; make tab key always call a indent command.
-(setq-default tab-always-indent t)
-;; make tab key call indent command or insert tab character, depending on cursor position
-(setq-default tab-always-indent nil)
-;; make tab key do indent first then completion.
-(setq-default tab-always-indent 'complete)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq-default tab-width 4)
+     (setq-default indent-tabs-mode nil)
+     ;; make tab key always call a indent command.
+     (setq-default tab-always-indent t)
+     ;; make tab key call indent command or insert tab character, depending on cursor position
+     (setq-default tab-always-indent nil)
+     ;; make tab key do indent first then completion.
+     (setq-default tab-always-indent 'complete)
+   #+END_SRC
 
 ** Move cursor inside brackets after adding
-
-#+BEGIN_SRC emacs-lisp
-(use-package cursor-in-brackets
-  :config
-  (add-hook 'prog-mode-hook 'cursor-in-brackets-mode))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package cursor-in-brackets
+       :config
+       (add-hook 'prog-mode-hook 'cursor-in-brackets-mode))
+   #+END_SRC
 
 ** Enable moving line or region, up or down
-
-#+BEGIN_SRC emacs-lisp
-(use-package move-text
-  :config
-  (move-text-default-bindings))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package move-text
+       :config
+       (move-text-default-bindings))
+   #+END_SRC
 
 ** Multiple Cursors
-
-#+BEGIN_SRC emacs-lisp
-(use-package multiple-cursors
-  :config
-  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package multiple-cursors
+       :config
+       (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines))
+   #+END_SRC
 
 ** Enable code folding
-
    #+BEGIN_SRC emacs-lisp
-     ;; origami - code-folding
-     ;; (use-package origami
-     ;;   :config
-     ;;   (global-origami-mode 1)
-     ;;   (global-set-key (kbd "<C-return>") 'origami-forward-toggle-node))
    #+END_SRC
 
 ** undo-tree
@@ -336,62 +335,62 @@
 
 * Buffers
 ** Backup
-   Force emacs to save backups to a specific directory.
+*** Force emacs to save backups to a specific directory.
 
    #+BEGIN_SRC emacs-lisp
-(setq backup-directory-alist '(("." . "~/.emacs.d/backup/per-save"))
-      backup-by-copying t    ; Don't delink hardlinks
-      version-control t      ; Use version numbers on backups
-      delete-old-versions t  ; Automatically delete excess backups
-      kept-new-versions 20   ; how many of the newest versions to keep
-      kept-old-versions 5    ; and how many of the old
-      )
+     (setq backup-directory-alist '(("." . "~/.emacs.d/backup/per-save"))
+           backup-by-copying t    ; Don't delink hardlinks
+           version-control t      ; Use version numbers on backups
+           delete-old-versions t  ; Automatically delete excess backups
+           kept-new-versions 20   ; how many of the newest versions to keep
+           kept-old-versions 5    ; and how many of the old
+           )
 
-(defun force-backup-of-buffer ()
-  "Make a special 'per session' backup at the first save of each Emacs session."
-  (when (not buffer-backed-up)
-    ;; Override the default parameters for per-session backups.
-    (let ((backup-directory-alist '(("" . "~/.emacs.d/backup/per-session")))
-          (kept-new-versions 3))
-      (backup-buffer)))
-  ;; Make a "per save" backup on each save.  The first save results in
-  ;; both a per-session and a per-save backup, to keep the numbering
-  ;; of per-save backups consistent.
-  (let ((buffer-backed-up nil))
-    (backup-buffer)))
+     (defun force-backup-of-buffer ()
+       "Make a special 'per session' backup at the first save of each Emacs session."
+       (when (not buffer-backed-up)
+         ;; Override the default parameters for per-session backups.
+         (let ((backup-directory-alist '(("" . "~/.emacs.d/backup/per-session")))
+               (kept-new-versions 3))
+           (backup-buffer)))
+       ;; Make a "per save" backup on each save.  The first save results in
+       ;; both a per-session and a per-save backup, to keep the numbering
+       ;; of per-save backups consistent.
+       (let ((buffer-backed-up nil))
+         (backup-buffer)))
    #+END_SRC
 
-   Force backup of buffer before saving.
+*** Force backup of buffer before saving.
 
-#+BEGIN_SRC emacs-lisp
-(add-hook 'before-save-hook  'force-backup-of-buffer)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'before-save-hook  'force-backup-of-buffer)
+   #+END_SRC
 
 ** Kill buffer without confirmation
 
   #+BEGIN_SRC emacs-lisp
-(defun volatile-kill-buffer ()
-  "Kill current buffer unconditionally."
-  (interactive)
-  (let ((buffer-modified-p nil))
-    (kill-buffer (current-buffer))))
-(global-set-key (kbd "C-x k") 'volatile-kill-buffer)
+    (defun volatile-kill-buffer ()
+      "Kill current buffer unconditionally."
+      (interactive)
+      (let ((buffer-modified-p nil))
+        (kill-buffer (current-buffer))))
+    (global-set-key (kbd "C-x k") 'volatile-kill-buffer)
   #+END_SRC
 
 ** Refresh buffer from filesystem periodically
 
-#+BEGIN_SRC emacs-lisp
-(global-auto-revert-mode t)
-#+END_SRC
+  #+BEGIN_SRC emacs-lisp
+    (global-auto-revert-mode t)
+  #+END_SRC
 
 ** Show current file path
 
-#+BEGIN_SRC emacs-lisp
-(defun show-file-name ()
-  "Show the full path file name in the minibuffer."
-  (interactive)
-  (message (buffer-file-name)))
-(global-set-key [C-f1] 'show-file-name)
+  #+BEGIN_SRC emacs-lisp
+  (defun show-file-name ()
+    "Show the full path file name in the minibuffer."
+    (interactive)
+    (message (buffer-file-name)))
+  (global-set-key [C-f1] 'show-file-name)
   #+END_SRC
 
 ** Make buffer names unique
@@ -725,7 +724,7 @@
      ;; sudo apt install python3-isort
      (use-package py-isort
        :init
-       (add-hook 'before-save-hook 'py-isort-before-save)
+       ;;(add-hook 'before-save-hook 'py-isort-before-save)
        )
    #+END_SRC
 
@@ -893,34 +892,50 @@
 
 * Project Specific
    #+BEGIN_SRC emacs-lisp
-          (defun airbase-enable () (interactive)
-                 (prettier-mode)
-                 (setq prettier-args '(
-                                       "--single-quote"
-                                       "--no-semi"
-                                       ))
-                 (remove-hook 'python-mode-hook 'yapf-mode)
-                 )
+     (defun airbase-enable () (interactive)
+            (prettier-mode)
+            (setq prettier-args '(
+                                  "--single-quote"
+                                  "--no-semi"
+                                  ))
+            (remove-hook 'python-mode-hook 'yapf-mode)
+            (remove-hook 'before-save-hook 'py-isort-before-save)
+            )
 
-          (defun airbase-disable () (interactive)
-                 (prettier-mode 0)
-                 (setq prettier-args '())
-                 )
+     (defun airbase-disable () (interactive)
+            (prettier-mode 0)
+            (setq prettier-args '())
+            )
 
-          (defun moonlite-enable () (interactive)
-                 (prettier-mode)
-                 (setq prettier-args '())
-                 (add-hook 'python-mode-hook 'yapf-mode)
-                 )
+     (defun moonlite-enable () (interactive)
+            (prettier-mode)
+            (setq prettier-args '())
+            (add-hook 'before-save-hook 'py-isort-before-save)
+            (add-hook 'python-mode-hook 'yapf-mode)
+            (yapf-mode 1)
+            )
 
-          (defun moonlite-disable () (interactive)
-                 (prettier-mode 0)
-                 (setq prettier-args '())
-                 (remove-hook 'python-mode-hook 'yapf-mode)
-                 )
+     (defun moonlite-disable () (interactive)
+            (prettier-mode 0)
+            (setq prettier-args '())
+            (remove-hook 'before-save-hook 'py-isort-before-save)
+            (remove-hook 'python-mode-hook 'yapf-mode)
+            (yapf-mode 0)
+            )
 
-          ;; Forcing django mode on all html
-          ;; TODO: Better way to do this?
-          (setq-default web-mode-engines-alist
-                        '(("django"    . "\\.html\\'")))
+
+     (defun rpm-enable () (interactive)
+            (prettier-mode 0)
+            (setq prettier-args '())
+            (add-hook 'before-save-hook 'py-isort-before-save)
+            )
+
+     (defun rpm-disable () (interactive)
+            (remove-hook 'before-save-hook 'py-isort-before-save)
+            )
+
+     ;; Forcing django mode on all html
+     ;; TODO: Better way to do this?
+     (setq-default web-mode-engines-alist
+                   '(("django"    . "\\.html\\'")))
    #+END_SRC
