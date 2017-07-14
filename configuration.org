@@ -519,6 +519,11 @@
        ;; Enable helm
        (helm-mode 1))
    #+END_SRC
+** helm-swoop
+    #+BEGIN_SRC emacs-lisp
+      (use-package helm-swoop
+        :config)
+   #+END_SRC
 
 ** magit
 
