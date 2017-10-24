@@ -592,12 +592,6 @@
    #+BEGIN_SRC emacs-lisp
      (use-package all-the-icons)
    #+END_SRC
-** Layout
-   #+BEGIN_SRC emacs-lisp
-     ;; (use-package 0blayout
-     ;;   :config
-     ;;   (0blayout-mode 1))
-   #+END_SRC
 ** projectile
 
    #+BEGIN_SRC emacs-lisp
@@ -737,7 +731,7 @@
      ;; sudo -H pip install yapf
      (use-package yapfify
        :init
-       ;; (add-hook 'python-mode-hook 'yapf-mode)
+       ;;(add-hook 'python-mode-hook 'yapf-mode)
        )
    #+END_SRC
 
