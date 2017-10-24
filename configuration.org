@@ -885,7 +885,7 @@
    #+BEGIN_SRC emacs-lisp
      (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
      (set-register ?j (cons 'file "~/Projects/Notes/journal.org"))
-     (set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.org"))
+     (set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.org "))
      (set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
    #+END_SRC
 
@@ -918,7 +918,6 @@
             (remove-hook 'python-mode-hook 'yapf-mode)
             (yapf-mode 0)
             )
-
 
      (defun rpm-enable () (interactive)
             (prettier-mode 0)
