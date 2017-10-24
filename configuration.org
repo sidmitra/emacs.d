@@ -199,7 +199,7 @@
    #+BEGIN_SRC emacs-lisp
      (use-package highlight-indent-guides
        :config
-       (setq highlight-indent-guides-method 'character)
+       (setq highlight-indent-guides-method 'fill)
        (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
    #+END_SRC
 
