@@ -891,19 +891,16 @@
 
 * Project Specific
    #+BEGIN_SRC emacs-lisp
-     (defun airbase-enable () (interactive)
-            (prettier-mode)
-            (setq prettier-args '(
-                                  "--single-quote"
-                                  "--no-semi"
-                                  ))
-            (remove-hook 'python-mode-hook 'yapf-mode)
-            (remove-hook 'before-save-hook 'py-isort-before-save)
+     (defun joypost-enable () (interactive)
+            (add-hook 'before-save-hook 'py-isort-before-save)
+            (add-hook 'python-mode-hook 'yapf-mode)
+            ;;(yapf-mode 1)
             )
 
-     (defun airbase-disable () (interactive)
-            (prettier-mode 0)
-            (setq prettier-args '())
+     (defun joypost-disable () (interactive)
+            (remove-hook 'before-save-hook 'py-isort-before-save)
+            (remove-hook 'python-mode-hook 'yapf-mode)
+            (yapf-mode 0)
             )
 
      (defun moonlite-enable () (interactive)
@@ -911,7 +908,7 @@
             (setq prettier-args '())
             (add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'yapf-mode)
-            (yapf-mode 1)
+            ;;(yapf-mode 1)
             )
 
      (defun moonlite-disable () (interactive)
