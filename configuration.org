@@ -701,9 +701,6 @@
        :config
        (add-hook 'python-mode-hook 'anaconda-mode)
        (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-       ;; Not sure this works yet
-       ;; (when (projectile-project-p)
-       ;;   (setenv "PYTHONPATH" (projectile-project-root)))
        )
    #+END_SRC
 
@@ -715,8 +712,7 @@
 
    #+BEGIN_SRC emacs-lisp
      ;; python3
-     ;; sudo apt install python3-setuptools python3-flake8 python3-jedi
-     (setq-default python-shell-interpreter "python3")
+     (setq-default python-shell-interpreter "~/.pyenv/versions/emacspython3/bin/python")
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
@@ -891,10 +887,31 @@
 
 * Project Specific
    #+BEGIN_SRC emacs-lisp
+     (defun honeycomb-enable () (interactive)
+            (add-hook 'before-save-hook 'py-isort-before-save)
+            (add-hook 'python-mode-hook 'yapf-mode)
+            )
+
+     (defun honeycomb-disable () (interactive)
+            (remove-hook 'before-save-hook 'py-isort-before-save)
+            (remove-hook 'python-mode-hook 'yapf-mode)
+            (yapf-mode 0)
+            )
+
+     (defun compt-enable () (interactive)
+            (add-hook 'before-save-hook 'py-isort-before-save)
+            (add-hook 'python-mode-hook 'yapf-mode)
+            )
+
+     (defun compt-disable () (interactive)
+            (remove-hook 'before-save-hook 'py-isort-before-save)
+            (remove-hook 'python-mode-hook 'yapf-mode)
+            (yapf-mode 0)
+            )
+
      (defun joypost-enable () (interactive)
             (add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'yapf-mode)
-            ;;(yapf-mode 1)
             )
 
      (defun joypost-disable () (interactive)
@@ -908,7 +925,6 @@
             (setq prettier-args '())
             (add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'yapf-mode)
-            ;;(yapf-mode 1)
             )
 
      (defun moonlite-disable () (interactive)
@@ -919,14 +935,16 @@
             (yapf-mode 0)
             )
 
-     (defun rpm-enable () (interactive)
+     (defun thrive-enable () (interactive)
             (prettier-mode 0)
             (setq prettier-args '())
             (add-hook 'before-save-hook 'py-isort-before-save)
+            (setq-default python-shell-interpreter "~/.pyenv/versions/emacspython2/bin/python")
             )
 
-     (defun rpm-disable () (interactive)
+     (defun thrive-disable () (interactive)
             (remove-hook 'before-save-hook 'py-isort-before-save)
+            (setq-default python-shell-interpreter "~/.pyenv/versions/emacspython3/bin/python")
             )
 
      ;; Forcing django mode on all html
