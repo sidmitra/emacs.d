@@ -715,6 +715,14 @@
    #+END_SRC
 
 ** Python
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package pyenv-mode
+   :config
+   (pyenv-mode-set "emacspython3")
+   )
+   #+END_SRC
+
    #+BEGIN_SRC emacs-lisp
      (add-hook 'python-mode-hook
                (lambda ()
