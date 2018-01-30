@@ -917,29 +917,29 @@
    #+BEGIN_SRC emacs-lisp
      (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
      (set-register ?j (cons 'file "~/Projects/Notes/journal.org"))
-     (set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.org "))
+     (set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.org"))
      (set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
    #+END_SRC
 
 * Project Specific
    #+BEGIN_SRC emacs-lisp
-     (defun honeycomb-enable () (interactive)
-            (add-hook 'before-save-hook 'py-isort-before-save)
-            (add-hook 'python-mode-hook 'yapf-mode)
-            )
-
-     (defun honeycomb-disable () (interactive)
-            (remove-hook 'before-save-hook 'py-isort-before-save)
-            (remove-hook 'python-mode-hook 'yapf-mode)
-            (yapf-mode 0)
-            )
-
      (defun compt-enable () (interactive)
             (add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'yapf-mode)
             )
 
      (defun compt-disable () (interactive)
+            (remove-hook 'before-save-hook 'py-isort-before-save)
+            (remove-hook 'python-mode-hook 'yapf-mode)
+            (yapf-mode 0)
+            )
+
+     (defun coinsy-enable () (interactive)
+            (add-hook 'before-save-hook 'py-isort-before-save)
+            (add-hook 'python-mode-hook 'yapf-mode)
+            )
+
+     (defun coinsy-disable () (interactive)
             (remove-hook 'before-save-hook 'py-isort-before-save)
             (remove-hook 'python-mode-hook 'yapf-mode)
             (yapf-mode 0)
@@ -976,11 +976,13 @@
             (setq prettier-args '())
             (add-hook 'before-save-hook 'py-isort-before-save)
             (setq-default python-shell-interpreter "~/.pyenv/versions/emacspython2/bin/python")
+            (pyenv-mode-set "emacspython2")
             )
 
      (defun thrive-disable () (interactive)
             (remove-hook 'before-save-hook 'py-isort-before-save)
             (setq-default python-shell-interpreter "~/.pyenv/versions/emacspython3/bin/python")
+            (pyenv-mode-set "emacspython3")
             )
 
      ;; Forcing django mode on all html
