@@ -127,14 +127,12 @@
 ** Enable Smooth scrolling
 
    #+BEGIN_SRC emacs-lisp
-(use-package smooth-scrolling)
-(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-   #+END_SRC
+     ;;(use-package smooth-scrolling)
+     ;;(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 
-   #+BEGIN_SRC emacs-lisp
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
+     (setq scroll-conservatively 101) ;; move minimum when cursor exits view, instead of recentering
+     (setq mouse-wheel-scroll-amount '(5)) ;; mouse scroll moves 1 line at a time, instead of 5 lines
+     (setq mouse-wheel-progressive-speed nil) ;; on a long mouse scroll keep scrolling by 1 line
    #+END_SRC
 
 ** Change cursor from box to bar
