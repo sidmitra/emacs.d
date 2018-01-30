@@ -416,9 +416,11 @@
    #+BEGIN_SRC emacs-lisp
      (use-package ag
        :config
+       (setq ag-reuse-window 't)
+       (setq ag-reuse-buffers 't)
        (customize-set-variable 'ag-arguments
                                (quote
-                                ("--ignore-dir" "node_modules" "--ignore-dir" "elpa"))))
+                                ("--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib"))))
      (use-package helm-ag)
      (defun projectile-helm-ag ()
        (interactive)
