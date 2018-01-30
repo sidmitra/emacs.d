@@ -7,21 +7,21 @@
   #+END_SRC
 ** Install use-package
   #+BEGIN_SRC emacs-lisp
-(setq core-packages
-      '(use-package))
+    (setq core-packages
+          '(use-package))
 
-(defun ensure-packages (packages)
-  (dolist (package packages)
-    (unless (package-installed-p package)
-      (package-install package))))
+    (defun ensure-packages (packages)
+      (dolist (package packages)
+        (unless (package-installed-p package)
+          (package-install package))))
 
-(ensure-packages core-packages)
+    (ensure-packages core-packages)
   #+END_SRC
 
 ** Enable auto-installing of packages using use-package
   #+BEGIN_SRC emacs-lisp
-(setq use-package-always-ensure t)
-(require 'use-package)
+    (setq use-package-always-ensure t)
+    (require 'use-package)
   #+END_SRC
 
 * Server
@@ -50,10 +50,15 @@
 ** Hide toolbar
 
    #+BEGIN_SRC emacs-lisp
-(if window-system
-    (tool-bar-mode -1))
-(if window-system
-    (menu-bar-mode -1))
+     (if window-system
+         (tool-bar-mode -1))
+     (if window-system
+         (menu-bar-mode -1))
+   #+END_SRC
+
+** Disable Scrollbar
+   #+BEGIN_SRC emacs-lisp
+     (scroll-bar-mode -1)
    #+END_SRC
 
 ** Switch window to fullscreen
@@ -204,9 +209,16 @@
    #+END_SRC
 
 ** Layout
+*** Enable winner mode
    #+BEGIN_SRC emacs-lisp
      (winner-mode 1)
    #+END_SRC
+
+*** Open new buffers in vertical window
+    #+BEGIN_SRC emacs-lisp
+      (setq split-height-threshold nil)
+      (setq split-width-threshold 80)
+    #+END_SRC
 
 ** Apply syntax highlighting to all buffers
 
