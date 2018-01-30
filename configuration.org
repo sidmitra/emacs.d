@@ -457,6 +457,11 @@
            (append (if (consp backend) backend (list backend))
                    '(:with company-yasnippet))))
        )
+
+     (use-package company
+       :config
+       (company-statistics-mode)
+       )
    #+END_SRC
 
 ** Shell/exec-path-from-shell
