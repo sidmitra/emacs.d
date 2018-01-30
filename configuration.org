@@ -661,6 +661,17 @@
        (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
    #+END_SRC
 
+** deft - Searching/Filtering notes
+   #+BEGIN_SRC emacs-lisp
+     (use-package deft
+       :config
+       (setq deft-extensions '("txt" "org"))
+       (setq deft-directory "~/Projects/Notes/")
+       (setq deft-recursive t)
+       (global-set-key [f9] 'deft)
+       )
+   #+END_SRC
+
 ** dockerfile-mode
 
    #+BEGIN_SRC emacs-lisp
