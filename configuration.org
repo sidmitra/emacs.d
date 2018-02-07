@@ -319,9 +319,9 @@
 
 ** Move cursor inside brackets after adding
    #+BEGIN_SRC emacs-lisp
-     (use-package cursor-in-brackets
-       :config
-       (add-hook 'prog-mode-hook 'cursor-in-brackets-mode))
+     ;; (use-package cursor-in-brackets
+     ;;   :config
+     ;;   (add-hook 'prog-mode-hook 'cursor-in-brackets-mode))
    #+END_SRC
 
 ** Enable moving line or region, up or down
@@ -467,7 +467,7 @@
                    '(:with company-yasnippet))))
        )
 
-     (use-package company
+     (use-package company-statistics
        :config
        (company-statistics-mode)
        )
