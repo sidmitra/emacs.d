@@ -24,6 +24,15 @@
     (require 'use-package)
   #+END_SRC
 
+* Helpers
+  #+BEGIN_SRC emacs-lisp
+    (defun enable-minor-mode (my-pair)
+      "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
+      (if (buffer-file-name)
+          (if (string-match (car my-pair) buffer-file-name)
+              (funcall (cdr my-pair)))))
+  #+END_SRC
+
 * Server
   Start server automatically. Use emacsclient to associate/open files.
 
@@ -850,9 +859,14 @@
 *** Javascript
 **** Prettier
      #+BEGIN_SRC emacs-lisp
-       (require 'prettier-js)
-       (setq prettier-target-mode "web-mode")
-       ;; (prettier-mode)
+       (use-package prettier-js
+         :config
+         ;;(add-hook 'web-mode-hook 'prettier-js-mode)
+         (add-hook 'web-mode-hook #'(lambda ()
+                                      (enable-minor-mode
+                                       '("\\.jsx?\\'" . prettier-js-mode))))
+         )
+
      #+END_SRC
 **** ESLint - Not used anymore
      See http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html#emacs_configuration_for_eslint_and_jsx
