@@ -886,6 +886,7 @@
               ("\\.js$" . web-mode)
               ("\\.json$" . web-mode)
               ("\\.jsx$" . web-mode)
+              ("\\.vue$" . web-mode)
               ("\\.scss$" . web-mode)
               ("\\.less$" . web-mode))
        :config
@@ -924,43 +925,6 @@
          )
 
      #+END_SRC
-**** ESLint - Not used anymore
-     See http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html#emacs_configuration_for_eslint_and_jsx
-
-     Run the following on your local machine.
-     npm install -g babel-eslint eslint eslint-plugin-react eslint-config-react
-
-     #+BEGIN_SRC emacs-lisp
-       ;; (defun my/use-eslint-from-node-modules ()
-       ;;   (let* ((root (locate-dominating-file
-       ;;                 (or (buffer-file-name) default-directory)
-       ;;                 "node_modules"))
-       ;;          (eslint (and root
-       ;;                       (expand-file-name "node_modules/eslint/bin/eslint.js"
-       ;;                                         root))))
-       ;;     (when (and eslint (file-executable-p eslint))
-       ;;       (setq-local flycheck-javascript-eslint-executable eslint))))
-
-       ;; (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
-
-       ;; ;;(flycheck-add-mode 'javascript-eslint 'web-mode)
-
-       ;; (use-package eslint-fix
-       ;;   :config
-       ;;   ;; (eval-after-load 'web-mode
-       ;;   ;;   '(add-hook 'web-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix nil t))))
-       ;;   )
-     #+end_SRC
-**** Vue.js
-    #+BEGIN_SRC emacs-lisp
-      (use-package vue-mode
-        :mode "\\.vue\\'"
-        :config
-        (add-hook 'vue-mode-hook
-                  (lambda () (setq js-indent-level 2
-                                   comment-start "// "
-                                   comment-end   ""))))
-    #+END_SRC
 *** Emmet(Zencoding)
     #+BEGIN_SRC emacs-lisp
       (use-package emmet-mode)
@@ -1027,14 +991,14 @@
             )
 
      (defun moonlite-enable () (interactive)
-            (prettier-mode)
+            (prettier-js-mode)
             (setq prettier-args '())
             (add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'yapf-mode)
             )
 
      (defun moonlite-disable () (interactive)
-            (prettier-mode 0)
+            (prettier-js-mode 0)
             (setq prettier-args '())
             (remove-hook 'before-save-hook 'py-isort-before-save)
             (remove-hook 'python-mode-hook 'yapf-mode)
@@ -1042,7 +1006,7 @@
             )
 
      (defun thrive-enable () (interactive)
-            (prettier-mode 0)
+            (prettier-js-mode 0)
             (setq prettier-args '())
             (add-hook 'before-save-hook 'py-isort-before-save)
             (setq-default python-shell-interpreter "~/.pyenv/versions/emacspython2/bin/python")
