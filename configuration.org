@@ -228,22 +228,64 @@
     #+END_SRC
 
 ** Apply syntax highlighting to all buffers
-
    #+BEGIN_SRC emacs-lisp
      (global-font-lock-mode t)
    #+END_SRC
 
 ** Load Colour theme
    #+BEGIN_SRC emacs-lisp
-(use-package dracula-theme)
-(load-theme 'dracula t)
+     (use-package dracula-theme)
+     (load-theme 'dracula t)
+   #+END_SRC
+** Modeline
+   #+BEGIN_SRC emacs-lisp
+     (use-package spaceline
+       :config
+       (progn
+         (require 'spaceline-config)
+         (setq powerline-default-separator 'curve)
+         (setq powerline-height 27)
+         (setq spaceline-separator-dir-left '(left . left))
+         (setq spaceline-separator-dir-right '(right . right))
+         (setq spaceline-workspace-numbers-unicode t)
+         (spaceline-toggle-battery-off)
+         (spaceline-toggle-buffer-modified-off)
+         (spaceline-toggle-hud-off)
+         (spaceline-toggle-major-mode-on)
+         (spaceline-toggle-projectile-root-off)
+         (spaceline-toggle-version-control-off)
+         (spaceline-toggle-window-number-off)
+         (spaceline-emacs-theme)
+         ;;(spaceline-helm-mode)
+         ))
+   #+END_SRC
 
-;; (use-package darktooth-theme)
-;; (load-theme 'darktooth t)
+   #+BEGIN_SRC emacs-lisp
+     (use-package diminish
+       :config
+       (diminish 'company-mode)
+       (diminish 'helm-mode)
+       (diminish 'beacon-mode)
+       (diminish 'cursor-in-brackets-mode)
+       (diminish 'undo-tree-mode)
+       (diminish 'visual-line-mode)
+       ;;(diminish 'yas-minor-mode)
+       )
+   #+END_SRC
 
-;; (use-package color-theme-sanityinc-tomorrow)
-;; (load-theme 'sanityinc-tomorrow-day t)
-;; (load-theme 'sanityinc-tomorrow-night t)
+   #+BEGIN_SRC emacs-lisp
+     (use-package mode-icons
+       :config
+       (mode-icons-mode))
+   #+END_SRC
+
+** TODO Moody modeline
+   #+BEGIN_SRC emacs-lisp
+     ;; (use-package moody
+     ;;   :config
+     ;;   (setq x-underline-at-descent-line t)
+     ;;   (moody-replace-mode-line-buffer-identification)
+     ;;   (moody-replace-vc-mode))
    #+END_SRC
 
 * Editing
@@ -338,7 +380,7 @@
        (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines))
    #+END_SRC
 
-** Enable code folding
+** TODO Enable code folding
    #+BEGIN_SRC emacs-lisp
    #+END_SRC
 
@@ -545,12 +587,6 @@
        ;; Enable helm
        (helm-mode 1))
    #+END_SRC
-** helm-swoop
-    #+BEGIN_SRC emacs-lisp
-      (use-package helm-swoop
-        :config)
-   #+END_SRC
-
 ** magit
 
    #+BEGIN_SRC emacs-lisp
@@ -558,47 +594,6 @@
        :config
        (setq magit-auto-revert-mode nil)
        (setq magit-last-seen-setup-instructions "1.4.0"))
-   #+END_SRC
-
-** Modeline
-   #+BEGIN_SRC emacs-lisp
-     (use-package spaceline
-       :config
-       (progn
-         (require 'spaceline-config)
-         (setq powerline-default-separator 'curve)
-         (setq powerline-height 27)
-         (setq spaceline-separator-dir-left '(left . left))
-         (setq spaceline-separator-dir-right '(right . right))
-         (setq spaceline-workspace-numbers-unicode t)
-         (spaceline-toggle-battery-off)
-         (spaceline-toggle-buffer-modified-off)
-         (spaceline-toggle-hud-off)
-         (spaceline-toggle-major-mode-on)
-         (spaceline-toggle-projectile-root-off)
-         (spaceline-toggle-version-control-off)
-         (spaceline-toggle-window-number-off)
-         (spaceline-emacs-theme)
-         ))
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package diminish
-       :config
-       (diminish 'company-mode)
-       (diminish 'helm-mode)
-       (diminish 'beacon-mode)
-       (diminish 'cursor-in-brackets-mode)
-       (diminish 'undo-tree-mode)
-       (diminish 'visual-line-mode)
-       ;;(diminish 'yas-minor-mode)
-       )
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package mode-icons
-       :config
-       (mode-icons-mode))
    #+END_SRC
 
 ** SSH
@@ -682,7 +677,6 @@
    #+END_SRC
 
 ** dockerfile-mode
-
    #+BEGIN_SRC emacs-lisp
      (use-package dockerfile-mode
        :mode "Dockerfile$")
