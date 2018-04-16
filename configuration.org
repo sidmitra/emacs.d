@@ -381,6 +381,13 @@
        (move-text-default-bindings))
    #+END_SRC
 
+** Editor config
+   #+BEGIN_SRC emacs-lisp
+     (use-package editorconfig
+       :config
+       (move-text-default-bindings))
+   #+END_SRC
+
 ** Multiple Cursors
    #+BEGIN_SRC emacs-lisp
      (use-package multiple-cursors
