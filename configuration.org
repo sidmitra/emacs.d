@@ -1,6 +1,14 @@
 #+TITLE: Emacs configuration
 
-* Setup package system
+* Initialize
+** gc-cons
+  #+BEGIN_SRC emacs-lisp
+    (setq gc-cons-threshold 64000000)
+    (add-hook 'after-init-hook (lambda ()
+                                 ;; restore after startup
+                                 (setq gc-cons-threshold 800000)))
+  #+END_SRC
+
 ** Add custom load path
   #+BEGIN_SRC emacs-lisp
     (add-to-list 'load-path (expand-file-name "my-packages" user-emacs-directory))
