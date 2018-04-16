@@ -1022,12 +1022,21 @@
             (add-hook 'before-save-hook 'py-isort-before-save)
             (setq-default python-shell-interpreter "~/.pyenv/versions/emacspython2/bin/python")
             (pyenv-mode-set "emacspython2")
+            (setq web-mode-code-indent-offset 4)
+            (setq web-mode-markup-indent-offset 4)
+            (setq web-mode-css-indent-offset 4)
+            (setq-default flycheck-flake8-maximum-line-length 120)
             )
 
      (defun thrive-disable () (interactive)
             (remove-hook 'before-save-hook 'py-isort-before-save)
             (setq-default python-shell-interpreter "~/.pyenv/versions/emacspython3/bin/python")
             (pyenv-mode-set "emacspython3")
+
+            (setq web-mode-code-indent-offset 2)
+            (setq web-mode-markup-indent-offset 2)
+            (setq web-mode-css-indent-offset 2)
+            (setq-default flycheck-flake8-maximum-line-length 80)
             )
 
      ;; Forcing django mode on all html
