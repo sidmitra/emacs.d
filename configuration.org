@@ -1001,17 +1001,6 @@
             (yapf-mode 0)
             )
 
-     (defun joypost-enable () (interactive)
-            (add-hook 'before-save-hook 'py-isort-before-save)
-            (add-hook 'python-mode-hook 'yapf-mode)
-            )
-
-     (defun joypost-disable () (interactive)
-            (remove-hook 'before-save-hook 'py-isort-before-save)
-            (remove-hook 'python-mode-hook 'yapf-mode)
-            (yapf-mode 0)
-            )
-
      (defun moonlite-enable () (interactive)
             (prettier-js-mode)
             (setq prettier-args '())
