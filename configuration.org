@@ -544,19 +544,20 @@
    #+BEGIN_SRC emacs-lisp
      (use-package ag
        :config
-       (setq ag-reuse-window 't)
-       (setq ag-reuse-buffers 't)
+       ;;(setq ag-reuse-window 't)
+       ;;(setq ag-reuse-buffers 't)
+       (global-set-key "\C-c\C-g" 'ag-project)
        (customize-set-variable 'ag-arguments
                                (quote
-                                ("--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib"))))
+                                ("--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib" "--ignore-dir" "build"))))
+
      (use-package helm-ag)
-     (defun projectile-helm-ag ()
-       (interactive)
-       (helm-ag (projectile-project-root)))
+     ;; (defun projectile-helm-ag ()
+     ;;   (interactive)
+     ;;   (helm-ag (proje'ctile-project-root)))
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
-     (global-set-key "\C-c\C-g" 'ag-project)
    #+END_SRC
 
 ** company
@@ -661,8 +662,14 @@
            (set-face-attribute 'helm-source-header nil :height 1.0)))
        (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)
 
+       ;; Set shortcut to helm-occur
+       ;; (global-set-key (kbd "C-c h o") 'helm-occur)
+
+       ;; (setq helm-split-window-default-side (quote right))
+
        ;; Enable helm
        (helm-mode 1))
+
    #+END_SRC
 ** magit
 
