@@ -244,6 +244,8 @@
    #+BEGIN_SRC emacs-lisp
      (use-package dracula-theme)
      (load-theme 'dracula t)
+     ;;(use-package nova-theme)
+     ;;(load-theme 'nova t)
    #+END_SRC
 ** Modeline
    #+BEGIN_SRC emacs-lisp
@@ -913,18 +915,19 @@
               ("\\.less$" . web-mode))
        :config
        (setq-default indent-tabs-mode nil) ;; no TABS
-       (setq web-mode-markup-indent-offset 2)
-       (setq web-mode-css-indent-offset 2)
        (setq web-mode-code-indent-offset 2)
-       (setq web-mode-enable-auto-pairing t)
-       (setq web-mode-enable-auto-opening t)
+       (setq web-mode-css-indent-offset 2)
        (setq web-mode-enable-auto-closing t)
+       (setq web-mode-enable-auto-expanding t)
+       (setq web-mode-enable-auto-opening t)
+       (setq web-mode-enable-auto-pairing t)
        (setq web-mode-enable-auto-pairing t)
        (setq web-mode-enable-auto-quoting nil)
+       (setq web-mode-enable-css-colorization t)
        (setq web-mode-enable-current-column-highlight t)
        (setq web-mode-enable-current-element-highlight t)
-       (setq web-mode-enable-css-colorization t)
-       (setq web-mode-enable-auto-expanding t)
+       (setq web-mode-js-indent-offset 2)
+       (setq web-mode-markup-indent-offset 2)
        (setq web-mode-content-types-alist
              '(("jsx" . "\\.js[x]?\\'")))
 
@@ -1025,6 +1028,7 @@
             (setq web-mode-code-indent-offset 4)
             (setq web-mode-markup-indent-offset 4)
             (setq web-mode-css-indent-offset 4)
+            (setq web-mode-js-indent-offset 4)
             (setq-default flycheck-flake8-maximum-line-length 120)
             )
 
@@ -1036,6 +1040,7 @@
             (setq web-mode-code-indent-offset 2)
             (setq web-mode-markup-indent-offset 2)
             (setq web-mode-css-indent-offset 2)
+            (setq web-mode-js-indent-offset 2)
             (setq-default flycheck-flake8-maximum-line-length 80)
             )
 
