@@ -765,8 +765,8 @@
 ** flycheck
    #+BEGIN_SRC emacs-lisp
      (use-package let-alist)
-     ;;:init (global-flycheck-mode)
      (use-package flycheck
+       :init (global-flycheck-mode)
        :config
        (setq-default flycheck-checker-error-threshold 500)
        (setq-default flycheck-highlighting-mode 'lines)
@@ -967,8 +967,9 @@
        :config
        (yas-global-mode 1)
        (add-hook 'term-mode-hook (lambda()
-                                   (setq yas-dont-activate-functions t)))
-       (add-to-list 'yas-snippet-dirs "~/.emacs.d/yasnippet-snippets"))
+                                   (setq yas-dont-activate-functions t))))
+
+     (use-package yasnippet-snippets)
    #+END_SRC
 
 * Shortcuts/Registers
@@ -993,8 +994,7 @@
             (setq prettier-args '())
             (add-hook 'before-save-hook 'py-isort-before-save)
 
-            ;;(setq-default python-shell-interpreter "~/.pyenv/versions/emacspython2/bin/python")
-            ;;(pyenv-mode-set "thrive")
+            (setq-default python-shell-interpreter "~/.local/share/virtualenvs/Rpm-ffkIv7wJ/bin/python")
             ;;(pipenv-activate 1)
             ;;(flycheck-select-checker `(python-flake8 python-pylint))
             ;;(flycheck-select-checker python-pylint)
@@ -1007,7 +1007,7 @@
             (setq web-mode-js-indent-offset 2)
 
             (remove-hook 'before-save-hook 'py-isort-before-save)
-            (setq-default python-shell-interpreter "~/.local/share/virtualenvs/Rpm-ffkIv7wJ/bin/python")
+            ;;(setq-default python-shell-interpreter "~/.local/share/virtualenvs/Rpm-ffkIv7wJ/bin/python")
             ;;(pipenv-deactivate 1)
             ;;(flycheck-disable-checker python-syntax-checker)
             (setq-default flycheck-flake8-maximum-line-length 80)
