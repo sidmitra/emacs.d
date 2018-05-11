@@ -762,25 +762,78 @@
        )
    #+END_SRC
 
+** flycheck
+   #+BEGIN_SRC emacs-lisp
+     (use-package let-alist)
+     ;;:init (global-flycheck-mode)
+     (use-package flycheck
+       :config
+       (setq-default flycheck-checker-error-threshold 500)
+       (setq-default flycheck-highlighting-mode 'lines)
+       (setq-default flycheck-idle-change-delay 3)
+       (setq-default flycheck-display-errors-delay 0))
+
+   #+END_SRC
 ** dockerfile-mode
    #+BEGIN_SRC emacs-lisp
      (use-package dockerfile-mode
        :mode "Dockerfile$")
    #+END_SRC
 
-** flycheck
+** Python
+
    #+BEGIN_SRC emacs-lisp
-     (use-package let-alist)
-     (use-package flycheck
-       :config
-       (add-hook 'after-init-hook #'global-flycheck-mode)
-       (setq-default flycheck-checker-error-threshold 2000)
-       (setq-default flycheck-highlighting-mode 'lines)
-       (setq-default flycheck-idle-change-delay 3)
-       (setq-default flycheck-display-errors-delay 0))
-     ;;(setq-default flycheck-flake8-maximum-line-length 120))
+     (add-hook 'python-mode-hook
+               (lambda ()
+                 (setq indent-tabs-mode nil)
+                 (setq tab-width 4)
+                 (setq python-indent-offset 4)))
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package pipenv
+       :hook (python-mode . pipenv-mode)
+       :init
+       (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended))
 
    #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     ;; python3
+     ;; (setq-default python-shell-interpreter "~/.pyenv/versions/3.6.5/bin/python")
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     ;; anaconda
+     (use-package anaconda-mode
+       :config
+       (add-hook 'python-mode-hook 'anaconda-mode)
+       (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+       )
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package company-anaconda
+       :config
+       (add-to-list 'company-backends 'company-anaconda))
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     ;; pip install isort
+     (use-package py-isort
+       :init
+       ;;(add-hook 'before-save-hook 'py-isort-before-save)
+       )
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     ;; sudo -H pip install yapf
+     (use-package yapfify
+       :init
+       ;;(add-hook 'python-mode-hook 'yapf-mode)
+       )
+   #+END_SRC
+
 ** Golang
    #+BEGIN_SRC emacs-lisp
      (use-package go-mode)
@@ -801,59 +854,6 @@
        (let ((browse-url-browser-function 'browse-url-firefox))
          (browse-url url)))
      (setq flymd-browser-open-function 'my-flymd-browser-function)
-   #+END_SRC
-
-** Python
-
-   #+BEGIN_SRC emacs-lisp
-   (use-package pyenv-mode
-   :config
-   (pyenv-mode-set "emacspython3")
-   )
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-     (add-hook 'python-mode-hook
-               (lambda ()
-                 (setq indent-tabs-mode nil)
-                 (setq tab-width 4)
-                 (setq python-indent-offset 4)))
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-     ;; anaconda
-     (use-package anaconda-mode
-       :config
-       (add-hook 'python-mode-hook 'anaconda-mode)
-       (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-       )
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package company-anaconda
-       :config
-       (add-to-list 'company-backends 'company-anaconda))
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-     ;; python3
-     (setq-default python-shell-interpreter "~/.pyenv/versions/emacspython3/bin/python")
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-     ;; sudo apt install python3-isort
-     (use-package py-isort
-       :init
-       ;;(add-hook 'before-save-hook 'py-isort-before-save)
-       )
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-     ;; sudo -H pip install yapf
-     (use-package yapfify
-       :init
-       ;;(add-hook 'python-mode-hook 'yapf-mode)
-       )
    #+END_SRC
 
 ** R/ESS
@@ -982,6 +982,37 @@
 
 * Project Specific
    #+BEGIN_SRC emacs-lisp
+     (defun thrive-enable () (interactive)
+            (setq web-mode-code-indent-offset 4)
+            (setq web-mode-markup-indent-offset 4)
+            (setq web-mode-css-indent-offset 4)
+            (setq web-mode-js-indent-offset 4)
+            (setq-default flycheck-flake8-maximum-line-length 120)
+
+            (prettier-js-mode 0)
+            (setq prettier-args '())
+            (add-hook 'before-save-hook 'py-isort-before-save)
+
+            ;;(setq-default python-shell-interpreter "~/.pyenv/versions/emacspython2/bin/python")
+            ;;(pyenv-mode-set "thrive")
+            ;;(pipenv-activate 1)
+            ;;(flycheck-select-checker `(python-flake8 python-pylint))
+            ;;(flycheck-select-checker python-pylint)
+            )
+
+     (defun thrive-disable () (interactive)
+            (setq web-mode-code-indent-offset 2)
+            (setq web-mode-markup-indent-offset 2)
+            (setq web-mode-css-indent-offset 2)
+            (setq web-mode-js-indent-offset 2)
+
+            (remove-hook 'before-save-hook 'py-isort-before-save)
+            (setq-default python-shell-interpreter "~/.local/share/virtualenvs/Rpm-ffkIv7wJ/bin/python")
+            ;;(pipenv-deactivate 1)
+            ;;(flycheck-disable-checker python-syntax-checker)
+            (setq-default flycheck-flake8-maximum-line-length 80)
+            )
+
      (defun compt-enable () (interactive)
             (add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'yapf-mode)
@@ -1017,31 +1048,6 @@
             (remove-hook 'before-save-hook 'py-isort-before-save)
             (remove-hook 'python-mode-hook 'yapf-mode)
             (yapf-mode 0)
-            )
-
-     (defun thrive-enable () (interactive)
-            (prettier-js-mode 0)
-            (setq prettier-args '())
-            (add-hook 'before-save-hook 'py-isort-before-save)
-            (setq-default python-shell-interpreter "~/.pyenv/versions/emacspython2/bin/python")
-            (pyenv-mode-set "emacspython2")
-            (setq web-mode-code-indent-offset 4)
-            (setq web-mode-markup-indent-offset 4)
-            (setq web-mode-css-indent-offset 4)
-            (setq web-mode-js-indent-offset 4)
-            (setq-default flycheck-flake8-maximum-line-length 120)
-            )
-
-     (defun thrive-disable () (interactive)
-            (remove-hook 'before-save-hook 'py-isort-before-save)
-            (setq-default python-shell-interpreter "~/.pyenv/versions/emacspython3/bin/python")
-            (pyenv-mode-set "emacspython3")
-
-            (setq web-mode-code-indent-offset 2)
-            (setq web-mode-markup-indent-offset 2)
-            (setq web-mode-css-indent-offset 2)
-            (setq web-mode-js-indent-offset 2)
-            (setq-default flycheck-flake8-maximum-line-length 80)
             )
 
      ;; Forcing django mode on all html
