@@ -542,81 +542,18 @@
    #+END_SRC
 
 * Global Packages
-** thesilversearcher - ag
+** projectile
    #+BEGIN_SRC emacs-lisp
-     (use-package ag
+     (use-package projectile
+       :diminish projectile-mode
        :config
-       ;;(setq ag-reuse-window 't)
-       ;;(setq ag-reuse-buffers 't)
-       (global-set-key "\C-c\C-g" 'ag-project)
-       (customize-set-variable 'ag-arguments
-                               (quote
-                                ("--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib" "--ignore-dir" "build"))))
+       (progn
+         (setq projectile-keymap-prefix (kbd "C-c p"))
+         (setq projectile-completion-system 'default)
+         (setq projectile-enable-caching t)
+         (projectile-mode)))
 
-     (use-package helm-ag)
-     ;; (defun projectile-helm-ag ()
-     ;;   (interactive)
-     ;;   (helm-ag (proje'ctile-project-root)))
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-   #+END_SRC
-
-** company
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package company
-       :config
-       (add-hook 'after-init-hook 'global-company-mode)
-       (setq company-idle-delay 0.2
-             company-minimum-prefix-length 1
-             company-selection-wrap-around t
-             company-tooltip-align-annotations t
-             company-tooltip-flip-when-above nil
-             company-tooltip-limit 10
-             company-tooltip-minimum 3
-             company-tooltip-margin 1
-             company-transformers '(company-sort-by-occurrence)
-             company-dabbrev-downcase nil)
-
-       ;; Add yasnippet support for all company backends
-       ;; https://github.com/syl20bnr/spacemacs/pull/179
-       (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
-       (defun company-mode/backend-with-yas (backend)
-         (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-             backend
-           (append (if (consp backend) backend (list backend))
-                   '(:with company-yasnippet))))
-       )
-
-     (use-package company-statistics
-       :config
-       (company-statistics-mode)
-       )
-   #+END_SRC
-
-** Shell/exec-path-from-shell
-   #+BEGIN_SRC emacs-lisp
-     ;; exec-path-from-shell
-     (use-package exec-path-from-shell
-       :config
-       (exec-path-from-shell-initialize))
-   #+END_SRC
-
-** Terminal
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package multi-term)
-     (setq multi-term-program "/bin/bash")
-     (defalias 'term 'multi-term)
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-     (defun term-bash (buffer-name)
-       "Start a terminal and rename buffer."
-       (interactive "sbuffer name: ")
-       (ansi-term "/bin/bash")
-       (rename-buffer buffer-name t))
+     (use-package helm-projectile)
    #+END_SRC
 
 ** helm
@@ -673,45 +610,105 @@
        (helm-mode 1))
 
    #+END_SRC
-** magit
+** thesilversearcher - ag
+   #+BEGIN_SRC emacs-lisp
+     (use-package ag
+       :config
+       ;;(setq ag-reuse-window 't)
+       ;;(setq ag-reuse-buffers 't)
+       (global-set-key "\C-c\C-g" 'ag-project)
+       (customize-set-variable 'ag-arguments
+                               (quote
+                                ("--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib" "--ignore-dir" "build"))))
+
+     (use-package helm-ag)
+     ;; (defun projectile-helm-ag ()
+     ;;   (interactive)
+     ;;   (helm-ag (proje'ctile-project-root)))
+   #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
-     (use-package magit
+   #+END_SRC
+
+** company
+   #+BEGIN_SRC emacs-lisp
+     (use-package company
        :config
-       (setq magit-auto-revert-mode nil)
-       (setq magit-last-seen-setup-instructions "1.4.0"))
+       (add-hook 'after-init-hook 'global-company-mode)
+       (setq company-idle-delay 0.2
+             company-minimum-prefix-length 1
+             company-selection-wrap-around t
+             company-tooltip-align-annotations t
+             company-tooltip-flip-when-above nil
+             company-tooltip-limit 10
+             company-tooltip-minimum 3
+             company-tooltip-margin 1
+             company-transformers '(company-sort-by-occurrence)
+             company-dabbrev-downcase nil)
+
+       ;; Add yasnippet support for all company backends
+       ;; https://github.com/syl20bnr/spacemacs/pull/179
+       (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+       (defun company-mode/backend-with-yas (backend)
+         (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+             backend
+           (append (if (consp backend) backend (list backend))
+                   '(:with company-yasnippet))))
+       )
+
+     (use-package company-statistics
+       :config
+       (company-statistics-mode)
+       )
+   #+END_SRC
+
+** Shell/exec-path-from-shell
+   #+BEGIN_SRC emacs-lisp
+     ;; exec-path-from-shell
+     (use-package exec-path-from-shell
+       :config
+       (exec-path-from-shell-initialize))
+   #+END_SRC
+
+** Terminal
+   #+BEGIN_SRC emacs-lisp
+     (use-package multi-term)
+     (setq multi-term-program "/bin/bash")
+     (defalias 'term 'multi-term)
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     (defun term-bash (buffer-name)
+       "Start a terminal and rename buffer."
+       (interactive "sbuffer name: ")
+       (ansi-term "/bin/bash")
+       (rename-buffer buffer-name t))
    #+END_SRC
 
 ** SSH
    #+BEGIN_SRC emacs-lisp
      ;; (setq tramp-default-method "ssh")
    #+END_SRC
-** neotree
+** magit
    #+BEGIN_SRC emacs-lisp
-     (use-package neotree
+     (use-package magit
        :config
-       (global-set-key [f8] 'neotree-toggle)
-       (setq neo-smart-open t))
-
-     (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+       (setq magit-auto-revert-mode nil)
+       (setq magit-last-seen-setup-instructions "1.4.0"))
    #+END_SRC
 ** Icons
    #+BEGIN_SRC emacs-lisp
      (use-package all-the-icons)
    #+END_SRC
-** projectile
-
+** neotree
    #+BEGIN_SRC emacs-lisp
-     (use-package projectile
-       :diminish projectile-mode
+     (use-package neotree
        :config
-       (progn
-         (setq projectile-keymap-prefix (kbd "C-c p"))
-         (setq projectile-completion-system 'default)
-         (setq projectile-enable-caching t)
-         (projectile-mode)))
-
-     (use-package helm-projectile)
+       (global-set-key [f8] 'neotree-toggle)
+       (setq neo-smart-open t)
+       (setq-default neo-show-hidden-files t)
+       (setq neo-theme 'icons)
+       (setq projectile-switch-project-action 'neotree-projectile-action))
    #+END_SRC
 
 * Programming
@@ -990,14 +987,14 @@
             (setq web-mode-js-indent-offset 4)
             (setq-default flycheck-flake8-maximum-line-length 120)
 
-            (prettier-js-mode 0)
-            (setq prettier-args '())
+            (pipenv-activate)
+            ;; (setq-default python-shell-interpreter "~/.local/share/virtualenvs/Rpm-ffkIv7wJ/bin/python")
+            ;;(flycheck-select-checker `("python-flake8" "python-pylint"))
             (add-hook 'before-save-hook 'py-isort-before-save)
 
-            (setq-default python-shell-interpreter "~/.local/share/virtualenvs/Rpm-ffkIv7wJ/bin/python")
-            ;;(pipenv-activate 1)
-            ;;(flycheck-select-checker `(python-flake8 python-pylint))
-            ;;(flycheck-select-checker python-pylint)
+            (prettier-js-mode 0)
+            (setq prettier-args '())
+            (editorconfig-mode)
             )
 
      (defun thrive-disable () (interactive)
@@ -1005,23 +1002,16 @@
             (setq web-mode-markup-indent-offset 2)
             (setq web-mode-css-indent-offset 2)
             (setq web-mode-js-indent-offset 2)
+            (setq-default flycheck-flake8-maximum-line-length 80)
 
+            (pipenv-deactivate)
             (remove-hook 'before-save-hook 'py-isort-before-save)
             ;;(setq-default python-shell-interpreter "~/.local/share/virtualenvs/Rpm-ffkIv7wJ/bin/python")
-            ;;(pipenv-deactivate 1)
             ;;(flycheck-disable-checker python-syntax-checker)
-            (setq-default flycheck-flake8-maximum-line-length 80)
-            )
 
-     (defun compt-enable () (interactive)
-            (add-hook 'before-save-hook 'py-isort-before-save)
-            (add-hook 'python-mode-hook 'yapf-mode)
-            )
-
-     (defun compt-disable () (interactive)
-            (remove-hook 'before-save-hook 'py-isort-before-save)
-            (remove-hook 'python-mode-hook 'yapf-mode)
-            (yapf-mode 0)
+            ;;(prettier-js-mode 0)
+            ;;(setq prettier-args '())
+            (editorconfig-mode 0)
             )
 
      (defun coinsy-enable () (interactive)
