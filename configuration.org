@@ -1,5 +1,6 @@
 #+TITLE: Emacs configuration
 
+
 * Initialize
 ** gc-cons
   #+BEGIN_SRC emacs-lisp
@@ -106,7 +107,12 @@
 *** Show Line col numbers
    #+BEGIN_SRC emacs-lisp
      ;; (global-linum-mode t)
-     (add-hook 'prog-mode-hook 'linum-mode)
+     ;;(add-hook 'prog-mode-hook 'linum-mode)
+     (use-package nlinum
+       :config
+       (add-hook 'prog-mode-hook 'nlinum-mode)
+       ;;(global-nlinum-mode)
+       )
    #+END_SRC
 *** Update line numbers format to avoid graphics glitches in fringe
 
@@ -123,9 +129,8 @@
 
 ** Set Font, Size
 *** Set font and size
-
    #+BEGIN_SRC emacs-lisp
-(set-frame-font "Hack 14")
+     (set-frame-font "Hack 14")
    #+END_SRC
 
 *** Change font-size with ctrl + mouse wheel
@@ -473,6 +478,22 @@
        )
    #+END_SRC
 
+** Expand region
+   #+BEGIN_SRC emacs-lisp
+     (use-package expand-region
+       :config
+       (global-set-key (kbd "C-=") 'er/expand-region))
+   #+END_SRC
+
+** Key Bindings
+*** Which Key
+   #+BEGIN_SRC emacs-lisp
+     (use-package which-key
+       :defer 0.2
+       :diminish
+       :config (which-key-mode))
+   #+END_SRC
+
 * Buffers
 ** Backup
 *** Force emacs to save backups to a specific directory.
@@ -545,13 +566,13 @@
 ** projectile
    #+BEGIN_SRC emacs-lisp
      (use-package projectile
-       :diminish projectile-mode
+       :init
+       (setq projectile-keymap-prefix (kbd "C-c p"))
        :config
-       (progn
-         (setq projectile-keymap-prefix (kbd "C-c p"))
-         (setq projectile-completion-system 'default)
-         (setq projectile-enable-caching t)
-         (projectile-mode)))
+       (projectile-global-mode)
+       (setq projectile-completion-system 'default)
+       (setq projectile-enable-caching t)
+       :diminish projectile-mode)
 
      (use-package helm-projectile)
    #+END_SRC
@@ -624,7 +645,7 @@
      (use-package helm-ag)
      ;; (defun projectile-helm-ag ()
      ;;   (interactive)
-     ;;   (helm-ag (proje'ctile-project-root)))
+     ;;   (helm-ag (projectile-project-root)))
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
@@ -670,6 +691,12 @@
        (exec-path-from-shell-initialize))
    #+END_SRC
 
+** direnv
+   #+BEGIN_SRC emacs-lisp
+     (use-package direnv
+      :config
+      (direnv-mode))
+   #+END_SRC
 ** Terminal
    #+BEGIN_SRC emacs-lisp
      (use-package multi-term)
@@ -784,6 +811,7 @@
                (lambda ()
                  (setq indent-tabs-mode nil)
                  (setq tab-width 4)
+                 (setq-default python-indent-guess-indent-offset nil)
                  (setq python-indent-offset 4)))
    #+END_SRC
 
@@ -824,11 +852,16 @@
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
+     ;; TODO deprecate in favour of black
      ;; sudo -H pip install yapf
      (use-package yapfify
        :init
        ;;(add-hook 'python-mode-hook 'yapf-mode)
        )
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package python-pytest)
    #+END_SRC
 
 ** Golang
@@ -969,8 +1002,14 @@
      (use-package yasnippet-snippets)
    #+END_SRC
 
-* Shortcuts/Registers
+** Coverage
+   #+BEGIN_SRC emacs-lisp
+     ;;(add-to-list 'load-path "~/.emacs.d/coverage-mode/")
+     ;;(load "coverage-mode.el")
+     ;;(require 'coverage-mode)
+   #+END_SRC
 
+* Shortcuts/Registers
    #+BEGIN_SRC emacs-lisp
      (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
      (set-register ?j (cons 'file "~/Projects/Notes/journal.org"))
@@ -992,8 +1031,8 @@
             ;;(flycheck-select-checker `("python-flake8" "python-pylint"))
             (add-hook 'before-save-hook 'py-isort-before-save)
 
-            (prettier-js-mode 0)
-            (setq prettier-args '())
+            ;;(prettier-js-mode 1)
+            ;;(setq prettier-args '())
             (editorconfig-mode)
             )
 
@@ -1014,30 +1053,37 @@
             (editorconfig-mode 0)
             )
 
+     (defun hobbit-enable () (interactive)
+            (setq web-mode-code-indent-offset 4)
+            (setq web-mode-markup-indent-offset 4)
+            (setq web-mode-css-indent-offset 4)
+            (setq web-mode-js-indent-offset 4)
+            (setq-default flycheck-flake8-maximum-line-length 88)
+            (editorconfig-mode)
+            (pipenv-activate)
+
+            (add-hook 'before-save-hook 'py-isort-before-save)
+            (add-hook 'python-mode-hook 'blacken-mode)
+            )
+     (defun hobbit-disable () (interactive)
+            (setq web-mode-code-indent-offset 2)
+            (setq web-mode-markup-indent-offset 2)
+            (setq web-mode-css-indent-offset 2)
+            (setq web-mode-js-indent-offset 2)
+            (setq-default flycheck-flake8-maximum-line-length 80)
+            (editorconfig-mode 0)
+            (pipenv-deactivate)
+
+            (remove-hook 'before-save-hook 'py-isort-before-save)
+            (remove-hook 'python-mode-hook 'blacken-mode)
+            )
+
      (defun coinsy-enable () (interactive)
             (add-hook 'before-save-hook 'py-isort-before-save)
-            (add-hook 'python-mode-hook 'yapf-mode)
             )
 
      (defun coinsy-disable () (interactive)
             (remove-hook 'before-save-hook 'py-isort-before-save)
-            (remove-hook 'python-mode-hook 'yapf-mode)
-            (yapf-mode 0)
-            )
-
-     (defun moonlite-enable () (interactive)
-            (prettier-js-mode)
-            (setq prettier-args '())
-            (add-hook 'before-save-hook 'py-isort-before-save)
-            (add-hook 'python-mode-hook 'yapf-mode)
-            )
-
-     (defun moonlite-disable () (interactive)
-            (prettier-js-mode 0)
-            (setq prettier-args '())
-            (remove-hook 'before-save-hook 'py-isort-before-save)
-            (remove-hook 'python-mode-hook 'yapf-mode)
-            (yapf-mode 0)
             )
 
      ;; Forcing django mode on all html
