@@ -220,14 +220,13 @@
        (global-set-key (kbd "C->") 'tabbar-forward))
    #+END_SRC
 
-** Indentation
+** Highlight indentation
    #+BEGIN_SRC emacs-lisp
      (use-package highlight-indent-guides
        :config
        (setq highlight-indent-guides-method 'fill)
        (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
    #+END_SRC
-
 ** Layout
 *** Enable winner mode
    #+BEGIN_SRC emacs-lisp
@@ -236,8 +235,8 @@
 
 *** Open new buffers in vertical window
     #+BEGIN_SRC emacs-lisp
-      (setq split-height-threshold nil)
-      (setq split-width-threshold 80)
+      ;; (setq split-height-threshold nil)
+      ;; (setq split-width-threshold 80)
     #+END_SRC
 
 ** Apply syntax highlighting to all buffers
@@ -583,30 +582,40 @@
        :config
        ;; replace default find file
        (global-set-key (kbd "C-x C-f") 'helm-find-files)
+
        ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
        ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
        ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
        (global-set-key (kbd "C-c h") 'helm-command-prefix)
        (global-unset-key (kbd "C-x c"))
+
        ;; Use helm-M-x instead, shows keybindings for commands
        (global-set-key (kbd "M-x") 'helm-M-x)
 
        ;; rebind tab to run persistent action
        (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+
        ;; make TAB works in terminal
        (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+
        ;; list actions using C-z
        ;; (define-key helm-map (kbd "C-z")  'helm-select-action)
 
        (when (executable-find "curl")
          (setq helm-google-suggest-use-curl-p t))
 
+       ;; Disabling window handling in favour of shackle for now
        ;; open helm buffer inside current window, not occupy whole other window
-       (setq helm-split-window-in-side-p t)
+       ;; (setq helm-split-window-in-side-p t)
+       ;; Not sure what this did.
+       ;; (setq helm-split-window-default-side (quote right))
+
        ;; move to end or beginning of source when reaching top or bottom of source.
        (setq helm-move-to-line-cycle-in-source t)
+
        ;; search for library in `require' and `declare-function' sexp.
        (setq helm-ff-search-library-in-sexp  t)
+
        ;; scroll 8 lines other window using M-<next>/M-<prior>
        (setq helm-scroll-amount 8)
        (setq helm-ff-file-name-history-use-recentf t)
@@ -625,12 +634,20 @@
        ;; Set shortcut to helm-occur
        ;; (global-set-key (kbd "C-c h o") 'helm-occur)
 
-       ;; (setq helm-split-window-default-side (quote right))
-
        ;; Enable helm
        (helm-mode 1))
-
    #+END_SRC
+
+*** COMMENT shackle
+    #+BEGIN_SRC emacs-lisp
+      (use-package shackle
+        :config
+        (setq shackle-rules '((compilation-mode :noselect t))
+              shackle-default-rule '(:select t))
+        (setq helm-display-function 'pop-to-buffer) ; make helm play nice
+        (setq shackle-rules '(("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4))))
+    #+END_SRC
+
 ** thesilversearcher - ag
    #+BEGIN_SRC emacs-lisp
      (use-package ag
@@ -739,6 +756,10 @@
    #+END_SRC
 
 * Programming
+** Language Server Protocol (LSP)
+    #+BEGIN_SRC emacs-lisp
+      (use-package lsp-mode)
+    #+END_SRC
 ** org
 
    #+BEGIN_SRC emacs-lisp
