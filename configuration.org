@@ -233,12 +233,6 @@
      (winner-mode 1)
    #+END_SRC
 
-*** Open new buffers in vertical window
-    #+BEGIN_SRC emacs-lisp
-      ;; (setq split-height-threshold nil)
-      ;; (setq split-width-threshold 80)
-    #+END_SRC
-
 ** Apply syntax highlighting to all buffers
    #+BEGIN_SRC emacs-lisp
      (global-font-lock-mode t)
@@ -252,6 +246,7 @@
      ;;(load-theme 'nova t)
    #+END_SRC
 ** Modeline
+*** Spaceline
    #+BEGIN_SRC emacs-lisp
      (use-package spaceline
        :config
@@ -274,6 +269,7 @@
          ))
    #+END_SRC
 
+*** Diminish
    #+BEGIN_SRC emacs-lisp
      (use-package diminish
        :config
@@ -287,21 +283,12 @@
        )
    #+END_SRC
 
+*** Mode Icons
    #+BEGIN_SRC emacs-lisp
      (use-package mode-icons
        :config
        (mode-icons-mode))
    #+END_SRC
-
-** TODO Moody modeline
-   #+BEGIN_SRC emacs-lisp
-     ;; (use-package moody
-     ;;   :config
-     ;;   (setq x-underline-at-descent-line t)
-     ;;   (moody-replace-mode-line-buffer-identification)
-     ;;   (moody-replace-vc-mode))
-   #+END_SRC
-
 * Editing
 ** Character Encodings
    #+BEGIN_SRC emacs-lisp
@@ -604,12 +591,6 @@
        (when (executable-find "curl")
          (setq helm-google-suggest-use-curl-p t))
 
-       ;; Disabling window handling in favour of shackle for now
-       ;; open helm buffer inside current window, not occupy whole other window
-       ;; (setq helm-split-window-in-side-p t)
-       ;; Not sure what this did.
-       ;; (setq helm-split-window-default-side (quote right))
-
        ;; move to end or beginning of source when reaching top or bottom of source.
        (setq helm-move-to-line-cycle-in-source t)
 
@@ -756,6 +737,12 @@
    #+END_SRC
 
 * Programming
+** Coverage
+   #+BEGIN_SRC emacs-lisp
+     ;;(add-to-list 'load-path "~/.emacs.d/coverage-mode/")
+     ;;(load "coverage-mode.el")
+     ;;(require 'coverage-mode)
+   #+END_SRC
 ** Language Server Protocol (LSP)
     #+BEGIN_SRC emacs-lisp
       (use-package lsp-mode)
@@ -794,17 +781,6 @@
      (use-package org-bullets
        :config
        (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
-   #+END_SRC
-
-** deft - Searching/Filtering notes
-   #+BEGIN_SRC emacs-lisp
-     (use-package deft
-       :config
-       (setq deft-extensions '("txt" "org"))
-       (setq deft-directory "~/Projects/Notes/")
-       (setq deft-recursive t)
-       (global-set-key [f9] 'deft)
-       )
    #+END_SRC
 
 ** flycheck
@@ -1005,7 +981,6 @@
     #+BEGIN_SRC emacs-lisp
       (use-package emmet-mode)
     #+END_SRC
-
 ** YAML
    #+BEGIN_SRC emacs-lisp
      (use-package yaml-mode
@@ -1023,13 +998,17 @@
      (use-package yasnippet-snippets)
    #+END_SRC
 
-** Coverage
+* Notes
+** deft - Searching/Filtering notes
    #+BEGIN_SRC emacs-lisp
-     ;;(add-to-list 'load-path "~/.emacs.d/coverage-mode/")
-     ;;(load "coverage-mode.el")
-     ;;(require 'coverage-mode)
+     (use-package deft
+       :config
+       (setq deft-extensions '("txt" "org"))
+       (setq deft-directory "~/Projects/Notes/")
+       (setq deft-recursive t)
+       (global-set-key [f9] 'deft)
+       )
    #+END_SRC
-
 * Shortcuts/Registers
    #+BEGIN_SRC emacs-lisp
      (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
@@ -1097,14 +1076,6 @@
 
             (remove-hook 'before-save-hook 'py-isort-before-save)
             (remove-hook 'python-mode-hook 'blacken-mode)
-            )
-
-     (defun coinsy-enable () (interactive)
-            (add-hook 'before-save-hook 'py-isort-before-save)
-            )
-
-     (defun coinsy-disable () (interactive)
-            (remove-hook 'before-save-hook 'py-isort-before-save)
             )
 
      ;; Forcing django mode on all html
