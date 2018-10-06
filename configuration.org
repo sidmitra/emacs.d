@@ -649,6 +649,12 @@
    #+BEGIN_SRC emacs-lisp
    #+END_SRC
 
+** wgrep
+   #+BEGIN_SRC emacs-lisp
+     (use-package wgrep-helm)
+     (use-package wgrep-ag)
+   #+END_SRC
+
 ** company
    #+BEGIN_SRC emacs-lisp
      (use-package company
@@ -695,6 +701,7 @@
       :config
       (direnv-mode))
    #+END_SRC
+
 ** Terminal
    #+BEGIN_SRC emacs-lisp
      (use-package multi-term)
