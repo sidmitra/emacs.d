@@ -615,6 +615,13 @@
        ;; Set shortcut to helm-occur
        ;; (global-set-key (kbd "C-c h o") 'helm-occur)
 
+       ;; Override switch-to-buffer
+       (global-set-key (kbd "C-x b") 'helm-mini)
+
+       ;; enable fuzzy switching
+       (setq helm-buffers-fuzzy-matching t
+             helm-recentf-fuzzy-match    t)
+
        ;; Enable helm
        (helm-mode 1))
    #+END_SRC
@@ -638,7 +645,7 @@
        (global-set-key "\C-c\C-g" 'ag-project)
        (customize-set-variable 'ag-arguments
                                (quote
-                                ("--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib" "--ignore-dir" "build"))))
+                                ("--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib" "--ignore-dir" "build" "--ignore" "*.min.js" "--ignore" "*.min.css"))))
 
      (use-package helm-ag)
      ;; (defun projectile-helm-ag ()
@@ -1083,6 +1090,18 @@
 
             (remove-hook 'before-save-hook 'py-isort-before-save)
             (remove-hook 'python-mode-hook 'blacken-mode)
+            )
+
+     (defun airbase-enable () (interactive)
+            (setq web-mode-code-indent-offset 4)
+            (setq web-mode-markup-indent-offset 4)
+            (setq web-mode-css-indent-offset 4)
+            (setq web-mode-js-indent-offset 4)
+            (setq-default python-shell-interpreter "/home/sid/Projects/Airbase/airbase-backend/venv/bin/python")
+            ;;(prettier-js-mode 1)
+            ;;(setq prettier-args '())
+            )
+     (defun airbase-disable () (interactive)
             )
 
      ;; Forcing django mode on all html
