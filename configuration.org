@@ -711,6 +711,13 @@
 
 ** Terminal
    #+BEGIN_SRC emacs-lisp
+     (use-package shx
+       :config
+       (shx-global-mode 1)
+       )
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
      (use-package multi-term)
      (setq multi-term-program "/bin/bash")
      (defalias 'term 'multi-term)
