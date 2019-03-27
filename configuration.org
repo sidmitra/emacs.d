@@ -33,6 +33,13 @@
     (require 'use-package)
   #+END_SRC
 
+** Use paradox as the default package interface
+  #+BEGIN_SRC emacs-lisp
+    (use-package paradox
+      :config
+      (paradox-enable))
+  #+END_SRC
+
 * Helpers
   #+BEGIN_SRC emacs-lisp
     (defun enable-minor-mode (my-pair)
@@ -168,6 +175,12 @@
    #+BEGIN_SRC emacs-lisp
      (show-paren-mode 1)
      (setq-default show-paren-delay 0)
+   #+END_SRC
+
+** Highlight current line
+
+   #+BEGIN_SRC emacs-lisp
+     (global-hl-line-mode +1)
    #+END_SRC
 
 ** Show beacon on cursor
@@ -692,6 +705,9 @@
        :config
        (company-statistics-mode)
        )
+
+     ;;(use-package company-box
+     ;;  :hook (company-mode . company-box-mode))
    #+END_SRC
 
 ** Shell/exec-path-from-shell
