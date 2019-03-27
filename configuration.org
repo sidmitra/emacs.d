@@ -740,10 +740,10 @@
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
-     (defun term-bash (buffer-name)
+     (defun terminal (buffer-name)
        "Start a terminal and rename buffer."
        (interactive "sbuffer name: ")
-       (ansi-term "/bin/bash")
+       (shx)
        (rename-buffer buffer-name t))
    #+END_SRC
 
