@@ -484,6 +484,22 @@
        (global-set-key (kbd "C-=") 'er/expand-region))
    #+END_SRC
 
+** TODO Move to beginning of line
+   #+BEGIN_SRC emacs-lisp
+     (defun smart-line-beginning ()
+       "Move point to the beginning of text on the current line; if that is already
+          the current position of point, then move it to the beginning of the line."
+       (interactive)
+       (let ((pt (point)))
+         (beginning-of-line-text)
+         (when (eq pt (point))
+           (beginning-of-line))))
+
+     ;; (global-set-key [remap move-beginning-of-line]
+     ;;                 'smart-line-beginning)
+     (define-key global-map [remap beginning-of-visual-line] 'smart-line-beginning)
+   #+END_SRC
+
 ** Key Bindings
 *** Which Key
    #+BEGIN_SRC emacs-lisp
@@ -783,7 +799,16 @@
 ** Language Server Protocol (LSP)
     #+BEGIN_SRC emacs-lisp
       (use-package lsp-mode)
+      (use-package lsp-mode
+        :commands lsp
+        :init)
+
+      (use-package lsp-ui :commands lsp-ui-mode)
+      (use-package company-lsp :commands company-lsp)
     #+END_SRC
+*** TODO Install LSP packages
+   npm install -g typescript-language-server typescript vue-language-server
+
 ** org
 
    #+BEGIN_SRC emacs-lisp
@@ -858,20 +883,13 @@
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
-     ;; python3
-     ;; (setq-default python-shell-interpreter "~/.pyenv/versions/3.6.5/bin/python")
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
      ;; anaconda
      (use-package anaconda-mode
        :config
        (add-hook 'python-mode-hook 'anaconda-mode)
        (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
        )
-   #+END_SRC
 
-   #+BEGIN_SRC emacs-lisp
      (use-package company-anaconda
        :config
        (add-to-list 'company-backends 'company-anaconda))
@@ -886,9 +904,7 @@
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
-     ;; TODO deprecate in favour of black
-     ;; sudo -H pip install yapf
-     (use-package yapfify
+     (use-package blacken
        :init
        ;;(add-hook 'python-mode-hook 'yapf-mode)
        )
@@ -1012,7 +1028,6 @@
                                       (enable-minor-mode
                                        '("\\.jsx?\\'" . prettier-js-mode))))
          )
-
      #+END_SRC
 *** Typescript
     #+BEGIN_SRC
@@ -1028,6 +1043,30 @@
     #+BEGIN_SRC emacs-lisp
       (use-package emmet-mode)
     #+END_SRC
+
+** Elm
+   Install npm packages using "npm install -g elm elm-format"
+
+   #+BEGIN_SRC elisp
+     (use-package elm-mode
+       :mode ("\\.elm\\'" . elm-mode)
+       :after company
+       :config
+       (when (executable-find "elm-format")
+         (setq-default elm-format-on-save t))
+       (add-to-list 'company-backends 'company-elm)
+       )
+
+     (use-package flycheck-elm
+       :after elm-mode flycheck
+       :config
+        (eval-after-load 'flycheck
+         '(add-hook 'flycheck-mode-hook #'flycheck-elm-setup))
+       )
+
+     (use-package elm-yasnippets)
+   #+END_SRC
+
 ** YAML
    #+BEGIN_SRC emacs-lisp
      (use-package yaml-mode
@@ -1044,6 +1083,25 @@
 
      (use-package yasnippet-snippets)
    #+END_SRC
+
+** Dart
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package lsp-dart)
+
+  (use-package dart-mode
+    :custom
+    (dart-format-on-save t)
+    (dart-enable-analysis-server t)
+    (dart-sdk-path "~/bin/flutter/bin/cache/dart-sdk"))
+
+  (use-package flutter
+    :after dart-mode
+    :bind (:map dart-mode-map
+                ("C-M-x" . #'flutter-run-or-hot-reload))
+    :custom
+    (flutter-sdk-path "~/bin/flutter/"))
+
+#+END_SRC
 
 * Notes
 ** deft - Searching/Filtering notes
@@ -1126,10 +1184,10 @@
             )
 
      (defun airbase-enable () (interactive)
-            (setq web-mode-code-indent-offset 4)
-            (setq web-mode-markup-indent-offset 4)
-            (setq web-mode-css-indent-offset 4)
-            (setq web-mode-js-indent-offset 4)
+            (setq web-mode-code-indent-offset 2)
+            (setq web-mode-markup-indent-offset 2)
+            (setq web-mode-css-indent-offset 2)
+            (setq web-mode-js-indent-offset 2)
             (setq-default python-shell-interpreter "/home/sid/Projects/Airbase/airbase-backend/venv/bin/python")
             ;;(prettier-js-mode 1)
             ;;(setq prettier-args '())
