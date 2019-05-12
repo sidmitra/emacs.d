@@ -798,7 +798,6 @@
    #+END_SRC
 ** Language Server Protocol (LSP)
     #+BEGIN_SRC emacs-lisp
-      (use-package lsp-mode)
       (use-package lsp-mode
         :commands lsp
         :init)
@@ -806,6 +805,7 @@
       (use-package lsp-ui :commands lsp-ui-mode)
       (use-package company-lsp :commands company-lsp)
     #+END_SRC
+
 *** TODO Install LSP packages
    npm install -g typescript-language-server typescript vue-language-server
 
@@ -832,8 +832,7 @@
                ))
        (global-set-key (kbd "C-c a") 'org-agenda)
 
-       (setq org-directory "~/Projects/Notes")
-       (setq org-agenda-files '("~/Projects/Notes/todo.org"))
+       (advice-add 'org-archive-default-command :after #'org-save-all-org-buffers)
        )
    #+END_SRC
 
@@ -1124,6 +1123,10 @@
 
 * Project Specific
    #+BEGIN_SRC emacs-lisp
+
+     (setq org-directory "~/Projects/Notes")
+     (setq org-agenda-files '("~/Projects/Notes/todo.org"))
+
      (defun thrive-enable () (interactive)
             (setq web-mode-code-indent-offset 4)
             (setq web-mode-markup-indent-offset 4)
