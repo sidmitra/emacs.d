@@ -113,12 +113,9 @@
 ** Show Line/Col Numbers
 *** Show Line col numbers
    #+BEGIN_SRC emacs-lisp
-     ;; (global-linum-mode t)
-     ;;(add-hook 'prog-mode-hook 'linum-mode)
      (use-package nlinum
        :config
        (add-hook 'prog-mode-hook 'nlinum-mode)
-       ;;(global-nlinum-mode)
        )
    #+END_SRC
 *** Update line numbers format to avoid graphics glitches in fringe
@@ -789,6 +786,14 @@
        (setq projectile-switch-project-action 'neotree-projectile-action))
    #+END_SRC
 
+** focus
+   ;; Focus on the current thing and dim the text of surrounding sections
+   ;; only enabled on programming modes
+   (use-package focus
+       :config
+       (add-hook 'prog-mode-hook focus-mode)
+       )
+
 * Programming
 ** Coverage
    #+BEGIN_SRC emacs-lisp
@@ -1170,7 +1175,7 @@
             (editorconfig-mode)
             (pipenv-activate)
 
-            (add-hook 'before-save-hook 'py-isort-before-save)
+            ;;(add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'blacken-mode)
             )
      (defun hobbit-disable () (interactive)
@@ -1191,9 +1196,13 @@
             (setq web-mode-markup-indent-offset 2)
             (setq web-mode-css-indent-offset 2)
             (setq web-mode-js-indent-offset 2)
-            (setq-default python-shell-interpreter "/home/sid/Projects/Airbase/airbase-backend/venv/bin/python")
+            (setq python-shell-interpreter "/home/sid/Projects/Airbase/airbase-backend/venv/bin/python")
             ;;(prettier-js-mode 1)
-            ;;(setq prettier-args '())
+            (pipenv-deactivate)
+            (setq prettier-args '())
+            ;;(add-hook 'before-save-hook 'py-isort-before-save)
+            (add-hook 'python-mode-hook 'blacken-mode)
+
             )
      (defun airbase-disable () (interactive)
             )
