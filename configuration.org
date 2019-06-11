@@ -784,15 +784,10 @@
        (setq-default neo-show-hidden-files t)
        (setq neo-theme 'icons)
        (setq projectile-switch-project-action 'neotree-projectile-action))
-   #+END_SRC
 
-** focus
-   ;; Focus on the current thing and dim the text of surrounding sections
-   ;; only enabled on programming modes
-   (use-package focus
-       :config
-       (add-hook 'prog-mode-hook focus-mode)
-       )
+     (defun text-scale-twice ()(interactive)(progn(text-scale-adjust 0)(text-scale-decrease 2)))
+     (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-twice)))
+   #+END_SRC
 
 * Programming
 ** Coverage
