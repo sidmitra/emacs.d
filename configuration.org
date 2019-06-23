@@ -789,6 +789,14 @@
      (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-twice)))
    #+END_SRC
 
+** keyfreq
+   #+BEGIN_SRC emacs-lisp
+     (use-package keyfreq
+       :config
+       (keyfreq-mode 1)
+       (keyfreq-autosave-mode 1))
+   #+END_SRC
+
 * Programming
 ** Coverage
    #+BEGIN_SRC emacs-lisp
@@ -832,7 +840,11 @@
                ))
        (global-set-key (kbd "C-c a") 'org-agenda)
 
-       (advice-add 'org-archive-default-command :after #'org-save-all-org-buffers)
+       ;; After archiving an org entry, save all org-buffers(especially the .archive)
+       ;; NOTE: Seems to only work if org_archive file is already open!
+       ;; TODO: Fix
+       ;; (advice-add 'org-archive-default-command :after #'org-save-all-org-buffers)
+       (advice-add 'org-archive-default-command :after 'org-save-all-org-buffers)
        )
    #+END_SRC
 
