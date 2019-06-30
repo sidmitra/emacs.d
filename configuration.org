@@ -127,8 +127,8 @@
 *** Show column numbers
 
    #+BEGIN_SRC emacs-lisp
-;; show column number
-(setq-default column-number-mode t)
+     ;; show column number
+     (setq-default column-number-mode t)
    #+END_SRC
 
 ** Set Font, Size
@@ -256,41 +256,55 @@
      ;;(load-theme 'nova t)
    #+END_SRC
 ** Modeline
-*** Spaceline
+*** COMMENT Spaceline
    #+BEGIN_SRC emacs-lisp
-     (use-package spaceline
-       :config
-       (progn
-         (require 'spaceline-config)
-         (setq powerline-default-separator 'curve)
-         (setq powerline-height 27)
-         (setq spaceline-separator-dir-left '(left . left))
-         (setq spaceline-separator-dir-right '(right . right))
-         (setq spaceline-workspace-numbers-unicode t)
-         (spaceline-toggle-battery-off)
-         (spaceline-toggle-buffer-modified-off)
-         (spaceline-toggle-hud-off)
-         (spaceline-toggle-major-mode-on)
-         (spaceline-toggle-projectile-root-off)
-         (spaceline-toggle-version-control-off)
-         (spaceline-toggle-window-number-off)
-         (spaceline-emacs-theme)
-         ;;(spaceline-helm-mode)
-         ))
+     ;; (use-package spaceline
+     ;;   :config
+     ;;   (progn
+     ;;     (require 'spaceline-config)
+     ;;     (setq powerline-default-separator 'curve)
+     ;;     (setq powerline-height 27)
+     ;;     (setq spaceline-separator-dir-left '(left . left))
+     ;;     (setq spaceline-separator-dir-right '(right . right))
+     ;;     (setq spaceline-workspace-numbers-unicode t)
+     ;;     (spaceline-toggle-battery-off)
+     ;;     (spaceline-toggle-buffer-modified-off)
+     ;;     (spaceline-toggle-hud-off)
+     ;;     (spaceline-toggle-major-mode-on)
+     ;;     (spaceline-toggle-projectile-root-off)
+     ;;     (spaceline-toggle-version-control-off)
+     ;;     (spaceline-toggle-window-number-off)
+     ;;     (spaceline-emacs-theme)
+     ;;     ;;(spaceline-helm-mode)
+     ;;     ))
    #+END_SRC
 
-*** Diminish
+*** COMMENT Diminish
    #+BEGIN_SRC emacs-lisp
-     (use-package diminish
+     ;; (use-package diminish
+     ;;   :config
+     ;;   (diminish 'company-mode)
+     ;;   (diminish 'helm-mode)
+     ;;   (diminish 'beacon-mode)
+     ;;   (diminish 'cursor-in-brackets-mode)
+     ;;   (diminish 'undo-tree-mode)
+     ;;   (diminish 'visual-line-mode)
+     ;;   ;;(diminish 'yas-minor-mode)
+     ;;   )
+   #+END_SRC
+
+*** Doom Modeine
+    #+BEGIN_SRC emacs-lisp
+      (use-package doom-modeline
+        :ensure t
+        :hook (after-init . doom-modeline-mode))
+   #+END_SRC
+
+*** Minion
+   #+BEGIN_SRC emacs-lisp
+     (use-package minions
        :config
-       (diminish 'company-mode)
-       (diminish 'helm-mode)
-       (diminish 'beacon-mode)
-       (diminish 'cursor-in-brackets-mode)
-       (diminish 'undo-tree-mode)
-       (diminish 'visual-line-mode)
-       ;;(diminish 'yas-minor-mode)
-       )
+       (minions-mode 1))
    #+END_SRC
 
 *** Mode Icons
@@ -299,6 +313,7 @@
        :config
        (mode-icons-mode))
    #+END_SRC
+
 * Editing
 ** Character Encodings
    #+BEGIN_SRC emacs-lisp
@@ -764,13 +779,6 @@
    #+BEGIN_SRC emacs-lisp
      ;; (setq tramp-default-method "ssh")
    #+END_SRC
-** magit
-   #+BEGIN_SRC emacs-lisp
-     (use-package magit
-       :config
-       (setq magit-auto-revert-mode nil)
-       (setq magit-last-seen-setup-instructions "1.4.0"))
-   #+END_SRC
 ** Icons
    #+BEGIN_SRC emacs-lisp
      (use-package all-the-icons)
@@ -796,8 +804,21 @@
        (keyfreq-mode 1)
        (keyfreq-autosave-mode 1))
    #+END_SRC
-
 * Programming
+** Git
+*** magit
+   #+BEGIN_SRC emacs-lisp
+     (use-package magit
+       :config
+       (setq magit-auto-revert-mode nil)
+       (setq magit-last-seen-setup-instructions "1.4.0"))
+   #+END_SRC
+*** git-timemachine
+   #+BEGIN_SRC emacs-lisp
+     (use-package git-timemachine
+       :config)
+   #+END_SRC
+
 ** Coverage
    #+BEGIN_SRC emacs-lisp
      ;;(add-to-list 'load-path "~/.emacs.d/coverage-mode/")
@@ -875,7 +896,7 @@
    #+END_SRC
 
 ** Python
-
+*** Python Mode
    #+BEGIN_SRC emacs-lisp
      (add-hook 'python-mode-hook
                (lambda ()
@@ -885,13 +906,15 @@
                  (setq python-indent-offset 4)))
    #+END_SRC
 
+*** Pipenv
    #+BEGIN_SRC emacs-lisp
-     (use-package pipenv
-       :hook (python-mode . pipenv-mode)
-       :init
-       (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended))
-
+     ;; (use-package pipenv
+     ;;   :hook (python-mode . pipenv-mode)
+     ;;   :init
+     ;;   (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended))
    #+END_SRC
+
+*** Anaconda Mode
 
    #+BEGIN_SRC emacs-lisp
      ;; anaconda
@@ -906,6 +929,7 @@
        (add-to-list 'company-backends 'company-anaconda))
    #+END_SRC
 
+*** Isort
    #+BEGIN_SRC emacs-lisp
      ;; pip install isort
      (use-package py-isort
@@ -924,29 +948,6 @@
    #+BEGIN_SRC emacs-lisp
      (use-package python-pytest)
    #+END_SRC
-
-** Golang
-   #+BEGIN_SRC emacs-lisp
-     (use-package go-mode)
-   #+END_SRC
-
-** Markdown
-   #+BEGIN_SRC emacs-lisp
-     (use-package markdown-mode)
-     (add-hook 'markdown-mode-hook
-               (lambda ()
-                 (when buffer-file-name
-                   (add-hook 'after-save-hook
-                             'check-parens
-                             nil t))))
-
-     (use-package flymd)
-     (defun my-flymd-browser-function (url)
-       (let ((browse-url-browser-function 'browse-url-firefox))
-         (browse-url url)))
-     (setq flymd-browser-open-function 'my-flymd-browser-function)
-   #+END_SRC
-
 ** R/ESS
    #+BEGIN_SRC emacs-lisp
      ;; (use-package ess
@@ -964,31 +965,6 @@
      ;;           ))
      ;; ;; (ess-toggle-underscore t)))
      ;; (add-to-list 'company-backends 'company-ess)
-   #+END_SRC
-
-** rainbow-mode
-   #+BEGIN_SRC emacs-lisp
-     (use-package rainbow-mode
-       :init
-       (setq rainbow-html-colors-major-mode-list '(css-mode
-                                                   html-mode
-                                                   less-css-mode
-                                                   nxml-mode
-                                                   php-mode
-                                                   sass-mode
-                                                   scss-mode
-                                                   web-mode
-                                                   xml-mode))
-       (dolist (mode rainbow-html-colors-major-mode-list)
-         (add-hook (intern (format "%s-hook" mode)) 'rainbow-mode)))
-   #+END_SRC
-
-** rainbow-delimiters
-   #+BEGIN_SRC emacs-lisp
-     (use-package rainbow-delimiters
-       :config
-       (progn
-         (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
    #+END_SRC
 
 ** HTML/Javascript
@@ -1054,7 +1030,6 @@
     #+BEGIN_SRC emacs-lisp
       (use-package emmet-mode)
     #+END_SRC
-
 ** Elm
    Install npm packages using "npm install -g elm elm-format"
 
@@ -1078,21 +1053,9 @@
      (use-package elm-yasnippets)
    #+END_SRC
 
-** YAML
+** Golang
    #+BEGIN_SRC emacs-lisp
-     (use-package yaml-mode
-       :mode (("\\.yaml$" . yaml-mode)))
-   #+END_SRC
-
-** Snippets
-   #+BEGIN_SRC emacs-lisp
-     (use-package yasnippet
-       :config
-       (yas-global-mode 1)
-       (add-hook 'term-mode-hook (lambda()
-                                   (setq yas-dont-activate-functions t))))
-
-     (use-package yasnippet-snippets)
+     (use-package go-mode)
    #+END_SRC
 
 ** Dart
@@ -1113,6 +1076,65 @@
     (flutter-sdk-path "~/bin/flutter/"))
 
 #+END_SRC
+
+** YAML
+   #+BEGIN_SRC emacs-lisp
+     (use-package yaml-mode
+       :mode (("\\.yaml$" . yaml-mode)))
+   #+END_SRC
+
+** Markdown
+   #+BEGIN_SRC emacs-lisp
+     (use-package markdown-mode)
+     (add-hook 'markdown-mode-hook
+               (lambda ()
+                 (when buffer-file-name
+                   (add-hook 'after-save-hook
+                             'check-parens
+                             nil t))))
+
+     (use-package flymd)
+     (defun my-flymd-browser-function (url)
+       (let ((browse-url-browser-function 'browse-url-firefox))
+         (browse-url url)))
+     (setq flymd-browser-open-function 'my-flymd-browser-function)
+   #+END_SRC
+
+** rainbow-mode
+   #+BEGIN_SRC emacs-lisp
+     (use-package rainbow-mode
+       :init
+       (setq rainbow-html-colors-major-mode-list '(css-mode
+                                                   html-mode
+                                                   less-css-mode
+                                                   nxml-mode
+                                                   php-mode
+                                                   sass-mode
+                                                   scss-mode
+                                                   web-mode
+                                                   xml-mode))
+       (dolist (mode rainbow-html-colors-major-mode-list)
+         (add-hook (intern (format "%s-hook" mode)) 'rainbow-mode)))
+   #+END_SRC
+
+** rainbow-delimiters
+   #+BEGIN_SRC emacs-lisp
+     (use-package rainbow-delimiters
+       :config
+       (progn
+         (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
+   #+END_SRC
+
+** Snippets
+   #+BEGIN_SRC emacs-lisp
+     (use-package yasnippet
+       :config
+       (yas-global-mode 1)
+       (add-hook 'term-mode-hook (lambda()
+                                   (setq yas-dont-activate-functions t))))
+
+     (use-package yasnippet-snippets)
+   #+END_SRC
 
 * Notes
 ** deft - Searching/Filtering notes
@@ -1146,7 +1168,7 @@
             (setq web-mode-js-indent-offset 4)
             (setq-default flycheck-flake8-maximum-line-length 120)
 
-            (pipenv-activate)
+            ;;(pipenv-activate)
             ;; (setq-default python-shell-interpreter "~/.local/share/virtualenvs/Rpm-ffkIv7wJ/bin/python")
             ;;(flycheck-select-checker `("python-flake8" "python-pylint"))
             (add-hook 'before-save-hook 'py-isort-before-save)
@@ -1163,7 +1185,7 @@
             (setq web-mode-js-indent-offset 2)
             (setq-default flycheck-flake8-maximum-line-length 80)
 
-            (pipenv-deactivate)
+            ;;(pipenv-deactivate)
             (remove-hook 'before-save-hook 'py-isort-before-save)
             ;;(setq-default python-shell-interpreter "~/.local/share/virtualenvs/Rpm-ffkIv7wJ/bin/python")
             ;;(flycheck-disable-checker python-syntax-checker)
@@ -1180,7 +1202,7 @@
             (setq web-mode-js-indent-offset 4)
             (setq-default flycheck-flake8-maximum-line-length 88)
             (editorconfig-mode)
-            (pipenv-activate)
+            ;;(pipenv-activate)
 
             ;;(add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'blacken-mode)
@@ -1192,7 +1214,7 @@
             (setq web-mode-js-indent-offset 2)
             (setq-default flycheck-flake8-maximum-line-length 80)
             (editorconfig-mode 0)
-            (pipenv-deactivate)
+            ;;(pipenv-deactivate)
 
             (remove-hook 'before-save-hook 'py-isort-before-save)
             (remove-hook 'python-mode-hook 'blacken-mode)
@@ -1205,7 +1227,7 @@
             (setq web-mode-js-indent-offset 2)
             (setq python-shell-interpreter "/home/sid/Projects/Airbase/airbase-backend/venv/bin/python")
             ;;(prettier-js-mode 1)
-            (pipenv-deactivate)
+            ;;(pipenv-deactivate)
             (setq prettier-args '())
             ;;(add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'blacken-mode)
