@@ -192,6 +192,53 @@
 
 ** Show Tabs for buffers
    #+BEGIN_SRC emacs-lisp
+     (defun make-xpm-bar (color height width)
+       "Create an XPM bitmap of a bar."
+       (propertize
+        " " 'display
+        (let ((data (make-list height (make-list width 1)))
+              (color (or color "None")))
+          (create-image
+           (concat
+            (format "/* XPM */\nstatic char * percent[] = {\n\"%i %i 2 1\",\n\". c %s\",\n\"  c %s\","
+                    (length (car data))
+                    (length data)
+                    color
+                    color)
+            (apply #'concat
+                   (cl-loop with idx = 0
+                            with len = (length data)
+                            for dl in data
+                            do (cl-incf idx)
+                            collect
+                            (concat "\""
+                                    (cl-loop for d in dl
+                                             if (= d 0) collect (string-to-char " ")
+                                             else collect (string-to-char "."))
+                                    (if (eq idx len) "\"};" "\",\n")))))
+           'xpm t :ascent 'center))))
+
+     (defun custom-tabbar-display-tab (tab)
+         (let ((label (if tabbar--buffer-show-groups
+                          (format "[%s]" (tabbar-tab-tabset tab))
+                        (format "%s" (tabbar-tab-value tab))))
+               (bar-color "#51afef")
+               (bar-height 25)
+               (bar-width 3)
+               (selected-p (eq tab (tabbar-selected-tab (tabbar-current-tabset)))))
+           (concat (when (and (display-graphic-p) selected-p)
+                     (make-xpm-bar bar-color bar-height bar-width))
+                   " "
+                   (if tabbar-auto-scroll-flag
+                       label
+                     (tabbar-shorten
+                      label (max 1 (/ (window-width)
+                                      (length (tabbar-view
+                                               (tabbar-current-tabset)))))))
+                   " ")))
+
+
+
      (use-package tabbar
        :config
        (tabbar-mode t)
@@ -222,13 +269,31 @@
                   (find (aref (buffer-name buffer) 0) " *"))
                 (buffer-list))))
 
+       ;; custom grouping of buffers
        (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+       ;; custom display x
+       (setq tabbar-tab-label-function #'custom-tabbar-display-tab)
+
        (global-set-key (vector (list 'control `tab)) 'tabbar-forward-tab)
        (global-set-key (kbd "C-S-p") 'tabbar-backward-group)
        (global-set-key (kbd "C-S-n") 'tabbar-forward-group)
        (global-set-key (kbd "C-<") 'tabbar-backward)
        (global-set-key (kbd "C->") 'tabbar-forward))
    #+END_SRC
+
+** COMMENT spacebar + eyebrowse
+   #+BEGIN_SRC emacs-lisp
+     ;; (use-package spacebar
+     ;;   :bind-keymap ("C-c w" . spacebar-command-map)
+     ;;   :config
+     ;;   (spacebar-mode))
+
+     ;; (use-package spacebar
+     ;;   :after projectile
+     ;;   :config
+     ;;   (spacebar-mode)
+     ;;   (spacebar-projectile-init))
+  #+END_SRC
 
 ** Highlight indentation
    #+BEGIN_SRC emacs-lisp
@@ -237,7 +302,7 @@
        (setq highlight-indent-guides-method 'fill)
        (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
    #+END_SRC
-** Layout
+** Configure layout
 *** Enable winner mode
    #+BEGIN_SRC emacs-lisp
      (winner-mode 1)
@@ -247,52 +312,7 @@
    #+BEGIN_SRC emacs-lisp
      (global-font-lock-mode t)
    #+END_SRC
-
-** Load Colour theme
-   #+BEGIN_SRC emacs-lisp
-     (use-package dracula-theme)
-     (load-theme 'dracula t)
-     ;;(use-package nova-theme)
-     ;;(load-theme 'nova t)
-   #+END_SRC
-** Modeline
-*** COMMENT Spaceline
-   #+BEGIN_SRC emacs-lisp
-     ;; (use-package spaceline
-     ;;   :config
-     ;;   (progn
-     ;;     (require 'spaceline-config)
-     ;;     (setq powerline-default-separator 'curve)
-     ;;     (setq powerline-height 27)
-     ;;     (setq spaceline-separator-dir-left '(left . left))
-     ;;     (setq spaceline-separator-dir-right '(right . right))
-     ;;     (setq spaceline-workspace-numbers-unicode t)
-     ;;     (spaceline-toggle-battery-off)
-     ;;     (spaceline-toggle-buffer-modified-off)
-     ;;     (spaceline-toggle-hud-off)
-     ;;     (spaceline-toggle-major-mode-on)
-     ;;     (spaceline-toggle-projectile-root-off)
-     ;;     (spaceline-toggle-version-control-off)
-     ;;     (spaceline-toggle-window-number-off)
-     ;;     (spaceline-emacs-theme)
-     ;;     ;;(spaceline-helm-mode)
-     ;;     ))
-   #+END_SRC
-
-*** COMMENT Diminish
-   #+BEGIN_SRC emacs-lisp
-     ;; (use-package diminish
-     ;;   :config
-     ;;   (diminish 'company-mode)
-     ;;   (diminish 'helm-mode)
-     ;;   (diminish 'beacon-mode)
-     ;;   (diminish 'cursor-in-brackets-mode)
-     ;;   (diminish 'undo-tree-mode)
-     ;;   (diminish 'visual-line-mode)
-     ;;   ;;(diminish 'yas-minor-mode)
-     ;;   )
-   #+END_SRC
-
+** Style the modeline
 *** Doom Modeine
     #+BEGIN_SRC emacs-lisp
       (use-package doom-modeline
@@ -312,6 +332,41 @@
      (use-package mode-icons
        :config
        (mode-icons-mode))
+   #+END_SRC
+** Load Colour theme
+   #+BEGIN_SRC emacs-lisp
+     (use-package doom-themes
+       :config
+       ;; Global settings (defaults)
+       (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+             doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+       ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+       ;; may have their own settings.
+       (load-theme 'doom-dracula t)
+
+       ;; Enable flashing mode-line on errors
+       (doom-themes-visual-bell-config)
+
+       ;; Enable custom neotree theme (all-the-icons must be installed!)
+       (doom-themes-neotree-config)
+       ;; or for treemacs users
+       (doom-themes-treemacs-config)
+
+       ;; Corrects (and improves) org-mode's native fontification.
+       (doom-themes-org-config)
+       )
+   #+END_SRC
+
+** Distinguish file buffers from others
+   #+BEGIN_SRC emacs-lisp
+     (use-package solaire-mode
+       :hook
+       ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+       (minibuffer-setup . solaire-mode-in-minibuffer)
+       :config
+       (solaire-global-mode +1)
+       (solaire-mode-swap-bg))
    #+END_SRC
 
 * Editing
@@ -689,12 +744,17 @@
                                 ("--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib" "--ignore-dir" "build" "--ignore" "*.min.js" "--ignore" "*.min.css"))))
 
      (use-package helm-ag)
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
      ;; (defun projectile-helm-ag ()
      ;;   (interactive)
      ;;   (helm-ag (projectile-project-root)))
    #+END_SRC
 
+** deadgrep
    #+BEGIN_SRC emacs-lisp
+     (use-package deadgrep)
    #+END_SRC
 
 ** wgrep
@@ -805,7 +865,7 @@
        (keyfreq-autosave-mode 1))
    #+END_SRC
 * Programming
-** Git
+** Version Control (git)
 *** magit
    #+BEGIN_SRC emacs-lisp
      (use-package magit
@@ -817,6 +877,13 @@
    #+BEGIN_SRC emacs-lisp
      (use-package git-timemachine
        :config)
+   #+END_SRC
+*** diff-hl
+   #+BEGIN_SRC emacs-lisp
+     (use-package diff-hl
+       :config
+       (global-diff-hl-mode)
+       )
    #+END_SRC
 
 ** Coverage
@@ -896,6 +963,12 @@
    #+END_SRC
 
 ** Python
+*** lsp-python
+    #+BEGIN_SRC emacs-lisp
+      ;; (use-package lsp-python-ms
+      ;;  :hook (python-mode . lsp)) ; or lsp-deferred
+    #+END_SRC
+
 *** Python Mode
    #+BEGIN_SRC emacs-lisp
      (add-hook 'python-mode-hook
@@ -909,13 +982,13 @@
 *** Pipenv
    #+BEGIN_SRC emacs-lisp
      ;; (use-package pipenv
-     ;;   :hook (python-mode . pipenv-mode)
-     ;;   :init
-     ;;   (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended))
+       ;;   :hook (python-mode . pipenv-mode)
+       ;;   :init
+       ;;   (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended)
+       ;; )
    #+END_SRC
 
 *** Anaconda Mode
-
    #+BEGIN_SRC emacs-lisp
      ;; anaconda
      (use-package anaconda-mode
@@ -933,21 +1006,29 @@
    #+BEGIN_SRC emacs-lisp
      ;; pip install isort
      (use-package py-isort
-       :init
+       :config
        ;;(add-hook 'before-save-hook 'py-isort-before-save)
        )
    #+END_SRC
 
+*** Black
    #+BEGIN_SRC emacs-lisp
      (use-package blacken
-       :init
-       ;;(add-hook 'python-mode-hook 'yapf-mode)
        )
    #+END_SRC
 
+*** pytest
    #+BEGIN_SRC emacs-lisp
-     (use-package python-pytest)
+     (use-package python-pytest
+       )
    #+END_SRC
+
+*** flycheck-prospector
+   #+BEGIN_SRC emacs-lisp
+     (use-package flycheck-prospector
+       )
+   #+END_SRC
+
 ** R/ESS
    #+BEGIN_SRC emacs-lisp
      ;; (use-package ess
@@ -1135,7 +1216,6 @@
 
      (use-package yasnippet-snippets)
    #+END_SRC
-
 * Notes
 ** deft - Searching/Filtering notes
    #+BEGIN_SRC emacs-lisp
