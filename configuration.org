@@ -181,106 +181,35 @@
    #+END_SRC
 
 ** Show beacon on cursor
-
    A light that follows your cursor around so you don't lose it!
 
    #+BEGIN_SRC emacs-lisp
      (use-package beacon
        :config
-       (beacon-mode t))
+       (setq beacon-dont-blink-major-modes
+         '(magit-status-mode magit-popup-mode eshell-mode term-mode elfeed-show-mode))
+       (beacon-mode t)
+     )
    #+END_SRC
+*** TODO Disable beacon on term-mode, ansi-term mode. The above config doesn't seem to work
 
-** Show Tabs for buffers
-   #+BEGIN_SRC emacs-lisp
-     (defun make-xpm-bar (color height width)
-       "Create an XPM bitmap of a bar."
-       (propertize
-        " " 'display
-        (let ((data (make-list height (make-list width 1)))
-              (color (or color "None")))
-          (create-image
-           (concat
-            (format "/* XPM */\nstatic char * percent[] = {\n\"%i %i 2 1\",\n\". c %s\",\n\"  c %s\","
-                    (length (car data))
-                    (length data)
-                    color
-                    color)
-            (apply #'concat
-                   (cl-loop with idx = 0
-                            with len = (length data)
-                            for dl in data
-                            do (cl-incf idx)
-                            collect
-                            (concat "\""
-                                    (cl-loop for d in dl
-                                             if (= d 0) collect (string-to-char " ")
-                                             else collect (string-to-char "."))
-                                    (if (eq idx len) "\"};" "\",\n")))))
-           'xpm t :ascent 'center))))
-
-     (defun custom-tabbar-display-tab (tab)
-         (let ((label (if tabbar--buffer-show-groups
-                          (format "[%s]" (tabbar-tab-tabset tab))
-                        (format "%s" (tabbar-tab-value tab))))
-               (bar-color "#51afef")
-               (bar-height 25)
-               (bar-width 3)
-               (selected-p (eq tab (tabbar-selected-tab (tabbar-current-tabset)))))
-           (concat (when (and (display-graphic-p) selected-p)
-                     (make-xpm-bar bar-color bar-height bar-width))
-                   " "
-                   (if tabbar-auto-scroll-flag
-                       label
-                     (tabbar-shorten
-                      label (max 1 (/ (window-width)
-                                      (length (tabbar-view
-                                               (tabbar-current-tabset)))))))
-                   " ")))
-
-
-
-     (use-package tabbar
-       :config
-       (tabbar-mode t)
-       (setq tabbar-cycle-scope (quote tabs))
-       (setq tabbar-use-images nil)
-       (setq table-time-before-update 0.1)
-
-       ;; define all tabs to be one of 3 possible groups: “Emacs Buffer”, “Dired”, “User Buffer”.
-       (defun tabbar-buffer-groups ()
-         (list
-          (cond
-           ((string-equal "*" (substring (buffer-name) 0 1))
-            "Emacs Buffer"
-            )
-           ((eq major-mode 'dired-mode)
-            "Dired"
-            )
-           (t
-            "User Buffer"
-            )
-           )))
-
-       ;; ignore all buffers starting with *
-       (setq tabbar-buffer-list-function
-             (lambda ()
-               (remove-if
-                (lambda(buffer)
-                  (find (aref (buffer-name buffer) 0) " *"))
-                (buffer-list))))
-
-       ;; custom grouping of buffers
-       (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
-       ;; custom display x
-       (setq tabbar-tab-label-function #'custom-tabbar-display-tab)
-
-       (global-set-key (vector (list 'control `tab)) 'tabbar-forward-tab)
-       (global-set-key (kbd "C-S-p") 'tabbar-backward-group)
-       (global-set-key (kbd "C-S-n") 'tabbar-forward-group)
-       (global-set-key (kbd "C-<") 'tabbar-backward)
-       (global-set-key (kbd "C->") 'tabbar-forward))
-   #+END_SRC
-
+** Enable tabs
+*** centaur-tabs
+    #+BEGIN_SRC emacs-lisp
+      (use-package centaur-tabs
+        :config
+        (setq centaur-tabs-height 32)
+        (setq centaur-tabs-set-icons t)
+        (setq centaur-tabs-style "slant")
+        ;; (setq centaur-tabs-set-bar 'left)
+        (setq centaur-tabs-set-bar 'over)
+        (setq centaur-tabs-set-modified-marker t)
+        (centaur-tabs-headline-match)
+        (centaur-tabs-mode t)
+        :bind
+        ("C-<prior>" . centaur-tabs-backward)
+        ("C-<next>" . centaur-tabs-forward))
+    #+END_SRC
 ** COMMENT spacebar + eyebrowse
    #+BEGIN_SRC emacs-lisp
      ;; (use-package spacebar
@@ -581,6 +510,10 @@
 *** Force emacs to save backups to a specific directory.
 
    #+BEGIN_SRC emacs-lisp
+     (setq make-backup-files nil) ; stop creating backup~ files
+     (setq auto-save-default nil) ; stop creating #autosave# files
+     (setq create-lockfiles nil)  ; stop creating .#lock file links
+
      (setq backup-directory-alist '(("." . "~/.emacs.d/backup/per-save"))
            backup-by-copying t    ; Don't delink hardlinks
            version-control t      ; Use version numbers on backups
