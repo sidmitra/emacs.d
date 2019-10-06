@@ -635,10 +635,13 @@
        (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)
 
        ;; Set shortcut to helm-occur
-       ;; (global-set-key (kbd "C-c h o") 'helm-occur)
+       (global-set-key (kbd "M-o") 'helm-occur)
 
        ;; Override switch-to-buffer
        (global-set-key (kbd "C-x b") 'helm-mini)
+
+       ;; Set shortcut to helm-imenu
+       (global-set-key (kbd "C-x j") 'helm-imenu)
 
        ;; enable fuzzy switching
        (setq helm-buffers-fuzzy-matching t
@@ -832,13 +835,6 @@
    #+END_SRC
 ** Language Server Protocol (LSP)
     #+BEGIN_SRC emacs-lisp
-      ;; (use-package lsp-mode
-      ;;   :commands lsp
-      ;;   :init)
-
-      ;; (use-package lsp-ui :commands lsp-ui-mode)
-      ;; (use-package company-lsp :commands company-lsp)
-
       (use-package eglot
         )
     #+END_SRC
