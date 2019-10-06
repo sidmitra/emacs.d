@@ -14,6 +14,7 @@
   #+BEGIN_SRC emacs-lisp
     (add-to-list 'load-path (expand-file-name "my-packages" user-emacs-directory))
   #+END_SRC
+
 ** Install use-package
   #+BEGIN_SRC emacs-lisp
     (setq core-packages
@@ -169,13 +170,6 @@
      (global-hl-line-mode +1)
    #+END_SRC
 ** Load Colour theme
-*** COMMENT dracula
-    #+BEGIN_SRC emacs-lisp
-      (use-package dracula-theme
-        :config
-        (load-theme 'dracula t))
-    #+END_SRC
-
 *** doom-themes
    #+BEGIN_SRC emacs-lisp
      (use-package doom-themes
@@ -835,8 +829,7 @@
    #+END_SRC
 ** Language Server Protocol (LSP)
     #+BEGIN_SRC emacs-lisp
-      (use-package eglot
-        )
+      (use-package eglot)
     #+END_SRC
 
 *** TODO Install LSP packages
@@ -891,8 +884,8 @@
        (setq-default flycheck-highlighting-mode 'lines)
        (setq-default flycheck-idle-change-delay 3)
        (setq-default flycheck-display-errors-delay 0))
-
    #+END_SRC
+
 ** dockerfile-mode
    #+BEGIN_SRC emacs-lisp
      (use-package dockerfile-mode
@@ -900,14 +893,6 @@
    #+END_SRC
 
 ** Python
-*** lsp-python
-    #+BEGIN_SRC emacs-lisp
-      ;; (use-package lsp-python-ms
-      ;;  :hook (python-mode . lsp)) ; or lsp-deferred
-    #+END_SRC
-
-
-
 *** Python Mode
    #+BEGIN_SRC emacs-lisp
      (add-hook 'python-mode-hook
@@ -916,19 +901,6 @@
                  (setq tab-width 4)
                  (setq-default python-indent-guess-indent-offset nil)
                  (setq python-indent-offset 4)))
-   #+END_SRC
-*** COMMENT Anaconda Mode
-   #+BEGIN_SRC emacs-lisp
-     ;; anaconda
-     (use-package anaconda-mode
-       :config
-       (add-hook 'python-mode-hook 'anaconda-mode)
-       (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-       )
-
-     (use-package company-anaconda
-       :config
-       (add-to-list 'company-backends 'company-anaconda))
    #+END_SRC
 
 *** isort
@@ -949,6 +921,7 @@
    #+BEGIN_SRC emacs-lisp
      (use-package python-pytest)
    #+END_SRC
+
 *** flycheck-prospector
    #+BEGIN_SRC emacs-lisp
      (use-package flycheck-prospector)
@@ -1145,6 +1118,7 @@
 
      (use-package yasnippet-snippets)
    #+END_SRC
+
 * Notes
 ** deft - Searching/Filtering notes
    #+BEGIN_SRC emacs-lisp
