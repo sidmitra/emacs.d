@@ -1,11 +1,14 @@
 ;; Initialize packages
 ;; If you remove (package-initialize), it will be automatically added here by package.el
 ;; Hence keeping related config here.
+(setq package-check-signature nil)
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (setq package-archives
-      '(("gnu"         . "http://elpa.gnu.org/packages/")
-        ("marmalade" . "http://marmalade-repo.org/packages/")
-        ("org"         . "http://orgmode.org/elpa/")
-        ("melpa"       . "http://melpa.milkbox.net/packages/")))
+      '(("melpa"       . "https://melpa.org/packages/")
+        ("gnu"         . "https://elpa.gnu.org/packages/")
+        ("org"         . "https://orgmode.org/elpa/")
+        ("gelpa"       . "https://gelpa.gdritter.com/")
+        ("marmalade"   . "https://marmalade-repo.org/packages/")))
 (package-initialize)
 (when (not package-archive-contents)
   (package-refresh-contents))
