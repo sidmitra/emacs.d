@@ -553,7 +553,6 @@
   #+END_SRC
 
 ** Make buffer names unique
-
    #+BEGIN_SRC emacs-lisp
      (use-package uniquify
        :ensure nil
@@ -675,17 +674,6 @@
      ;;   (helm-ag (projectile-project-root)))
    #+END_SRC
 
-** deadgrep
-   #+BEGIN_SRC emacs-lisp
-     (use-package deadgrep)
-   #+END_SRC
-
-** wgrep
-   #+BEGIN_SRC emacs-lisp
-     (use-package wgrep-helm)
-     (use-package wgrep-ag)
-   #+END_SRC
-
 ** company
    #+BEGIN_SRC emacs-lisp
      (use-package company
@@ -728,16 +716,6 @@
        :config
        (exec-path-from-shell-initialize))
    #+END_SRC
-
-** COMMENT direnv
-   #+BEGIN_SRC emacs-lisp
-     (use-package direnv
-       :config
-       (direnv-mode)
-       (setq direnv-always-show-summary nil)
-       )
-   #+END_SRC
-
 ** Terminal
 *** Start a terminal and rename buffer
    #+BEGIN_SRC emacs-lisp
@@ -820,13 +798,6 @@
        (global-diff-hl-mode)
        )
    #+END_SRC
-
-** Coverage
-   #+BEGIN_SRC emacs-lisp
-     ;;(add-to-list 'load-path "~/.emacs.d/coverage-mode/")
-     ;;(load "coverage-mode.el")
-     ;;(require 'coverage-mode)
-   #+END_SRC
 ** Language Server Protocol (LSP)
     #+BEGIN_SRC emacs-lisp
       (use-package eglot)
@@ -834,6 +805,13 @@
 
 *** TODO Install LSP packages
    npm install -g typescript-language-server typescript vue-language-server
+
+** Coverage
+   #+BEGIN_SRC emacs-lisp
+     ;;(add-to-list 'load-path "~/.emacs.d/coverage-mode/")
+     ;;(load "coverage-mode.el")
+     ;;(require 'coverage-mode)
+   #+END_SRC
 
 ** org
 
@@ -1013,7 +991,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package emmet-mode)
     #+END_SRC
-** Elm
+** COMMENT Elm
    Install npm packages using "npm install -g elm elm-format"
 
    #+BEGIN_SRC elisp
@@ -1036,12 +1014,12 @@
      (use-package elm-yasnippets)
    #+END_SRC
 
-** Golang
+** COMMENT Golang
    #+BEGIN_SRC emacs-lisp
      (use-package go-mode)
    #+END_SRC
 
-** Dart
+** COMMENT Dart
 #+BEGIN_SRC emacs-lisp
   ;; (use-package lsp-dart)
 
@@ -1148,13 +1126,15 @@
             (setq web-mode-markup-indent-offset 2)
             (setq web-mode-css-indent-offset 2)
             (setq web-mode-js-indent-offset 2)
-            (setq python-shell-interpreter "/home/sid/Projects/Airbase/airbase-backend/venv/bin/python")
             ;;(prettier-js-mode 1)
             ;;(pipenv-deactivate)
             (setq prettier-args '())
             ;;(add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'blacken-mode)
 
+            (setq python-shell-completion-native-enable nil
+                  python-shell-interpreter "/home/sid/Projects/Airbase/airbase-backend/venv/bin/python"
+                  python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")
             )
      (defun airbase-disable () (interactive)
             )
