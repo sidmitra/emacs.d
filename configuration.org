@@ -777,6 +777,11 @@
        (keyfreq-mode 1)
        (keyfreq-autosave-mode 1))
    #+END_SRC
+** dump-jump
+   #+BEGIN_SRC emacs-lisp
+     (use-package dumb-jump
+     :config (setq dumb-jump-selector 'helm))
+   #+END_SRC
 * Programming
 ** Version Control (git)
 *** magit
@@ -1127,11 +1132,10 @@
             (setq web-mode-css-indent-offset 2)
             (setq web-mode-js-indent-offset 2)
             ;;(prettier-js-mode 1)
-            ;;(pipenv-deactivate)
             (setq prettier-args '())
             ;;(add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'blacken-mode)
-
+            (add-hook 'python-mode-hook 'eglot-ensure)
             (setq python-shell-completion-native-enable nil
                   python-shell-interpreter "/home/sid/Projects/Airbase/airbase-backend/venv/bin/python"
                   python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")

@@ -5,9 +5,9 @@
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (setq package-archives
       '(("melpa"       . "https://melpa.org/packages/")
-        ("gnu"         . "https://elpa.gnu.org/packages/")
+        ;; ("gnu"         . "https://elpa.gnu.org/packages/")
         ("org"         . "https://orgmode.org/elpa/")
-        ("gelpa"       . "https://gelpa.gdritter.com/")
+        ;; ("gelpa"       . "https://gelpa.gdritter.com/")
         ("marmalade"   . "https://marmalade-repo.org/packages/")))
 (package-initialize)
 (when (not package-archive-contents)
@@ -34,7 +34,7 @@
  '(flutter-sdk-path "~/bin/flutter/" t)
  '(package-selected-packages
    (quote
-    (eglot centaur-tabs solaire-mode sane-term diff-hl hackernews keyfreq focus ivy virtualenv deadgrep company-lsp lsp-ui elm-yasnippets flycheck-elm elm-mode flutter lsp-dart dart-mode tide paradox heroku esonify flucui-themes wgrep-helm cider clojure-mode string-inflection comment-tags shackle nlinum which-key python-pytest filladapt toml-mode blacken expand-region hl-todo yasnippet-snippets pipenv git-blamed bm vue-mode jinja2-mode json-mode py-autopep8 adaptive-wrap deft company-statistics pyenv-mode dotenv-mode calfw calfw-cal calfw-gcal calfw-ical calfw-org yapfify minimap yasnippet yaml-mode emmet-mode eslint-fix company-web web-mode undo-tree tabbar rainbow-delimiters rainbow-mode py-isort company-anaconda anaconda-mode helm-projectile projectile neotree multi-term mode-icons spaceline powerline flymd markdown-mode magit go-mode flycheck exec-path-from-shell dockerfile-mode company beacon helm-ag ag origami multiple-cursors move-text cursor-in-brackets smooth-scrolling dracula-theme use-package)))
+    (dumb-jump edwina eglot centaur-tabs solaire-mode sane-term diff-hl hackernews keyfreq focus ivy virtualenv deadgrep company-lsp lsp-ui elm-yasnippets flycheck-elm elm-mode flutter lsp-dart dart-mode tide paradox heroku esonify flucui-themes wgrep-helm cider clojure-mode string-inflection comment-tags shackle nlinum which-key python-pytest filladapt toml-mode blacken expand-region hl-todo yasnippet-snippets pipenv git-blamed bm vue-mode jinja2-mode json-mode py-autopep8 adaptive-wrap deft company-statistics pyenv-mode dotenv-mode calfw calfw-cal calfw-gcal calfw-ical calfw-org yapfify minimap yasnippet yaml-mode emmet-mode eslint-fix company-web web-mode undo-tree tabbar rainbow-delimiters rainbow-mode py-isort company-anaconda anaconda-mode helm-projectile projectile neotree multi-term mode-icons spaceline powerline flymd markdown-mode magit go-mode flycheck exec-path-from-shell dockerfile-mode company beacon helm-ag ag origami multiple-cursors move-text cursor-in-brackets smooth-scrolling dracula-theme use-package)))
  '(paradox-github-token t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
