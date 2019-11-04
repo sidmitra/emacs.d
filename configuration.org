@@ -55,8 +55,10 @@
   #+BEGIN_SRC emacs-lisp
     (use-package server
       :if window-system
-      :init
-      (server-start))
+      :config
+      (unless (server-running-p)
+        (server-start))
+      )
   #+END_SRC
 
 * Appearance/UI
