@@ -885,6 +885,11 @@
                  (setq-default python-indent-guess-indent-offset nil)
                  (setq python-indent-offset 4)))
    #+END_SRC
+*** pyvenv
+   #+BEGIN_SRC emacs-lisp
+     (use-package pyvenv
+       )
+   #+END_SRC
 
 *** isort
    #+BEGIN_SRC emacs-lisp
@@ -1125,6 +1130,8 @@
    #+BEGIN_SRC emacs-lisp
      (setq org-directory "~/Projects/Notes")
      (setq org-agenda-files '("~/Projects/Notes/todo.org"))
+     ;; unset run-python shortcut, interferes with helm-projectile open file
+     (global-unset-key (kbd "C-c C-p"))
 
      (defun airbase-enable () (interactive)
             (setq web-mode-code-indent-offset 2)
@@ -1133,12 +1140,14 @@
             (setq web-mode-js-indent-offset 2)
             ;;(prettier-js-mode 1)
             (setq prettier-args '())
-            ;;(add-hook 'before-save-hook 'py-isort-before-save)
+            (pyvenv-activate "/home/sid/.cache/pypoetry/virtualenvs/airbase-backend-z32JXCgI-py3.7")
+            (add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'blacken-mode)
             (add-hook 'python-mode-hook 'eglot-ensure)
-            (setq python-shell-completion-native-enable nil
-                  python-shell-interpreter "/home/sid/Projects/Airbase/airbase-backend/venv/bin/python"
-                  python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")
+            ;; (setq python-shell-completion-native-enable nil
+            ;;       python-shell-interpreter "/home/sid/Projects/Airbase/airbase-backend/venv/bin/python"
+            ;;       python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")
+            ;; Unset default run-python key, because it is very similar to projectile-find-file
             )
      (defun airbase-disable () (interactive)
             )
