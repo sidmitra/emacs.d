@@ -843,11 +843,9 @@
                ))
        (global-set-key (kbd "C-c a") 'org-agenda)
 
-       ;; After archiving an org entry, save all org-buffers(especially the .archive)
+       ;; Save archive file after something is archived. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=887332
        ;; NOTE: Seems to only work if org_archive file is already open!
-       ;; TODO: Fix
-       ;; (advice-add 'org-archive-default-command :after #'org-save-all-org-buffers)
-       (advice-add 'org-archive-default-command :after 'org-save-all-org-buffers)
+       (advice-add 'org-archive-default-command :after #'org-save-all-org-buffers)
        )
    #+END_SRC
 
