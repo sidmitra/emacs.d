@@ -255,7 +255,6 @@
 *** Doom Modeine
     #+BEGIN_SRC emacs-lisp
       (use-package doom-modeline
-        :ensure t
         :hook (after-init . doom-modeline-mode))
    #+END_SRC
 
@@ -646,6 +645,17 @@
        (helm-mode 1))
    #+END_SRC
 
+*** COMMENT helm-fuzzy
+   TEMPORARY turned of to see if it broke fuzzy search
+   Enable additional fuzzy matching for helm source.
+   #+BEGIN_SRC emacs-lisp
+     (use-package helm-fuzzy
+       :init
+       (with-eval-after-load 'helm
+         (helm-fuzzy-mode 1))
+       :config
+       (setq helm-fuzzy-not-allow-fuzzy '("*helm-ag*")))
+   #+END_SRC
 *** COMMENT shackle
     #+BEGIN_SRC emacs-lisp
       (use-package shackle
@@ -707,8 +717,8 @@
        (company-statistics-mode)
        )
 
-     ;;(use-package company-box
-     ;;  :hook (company-mode . company-box-mode))
+     ;; (use-package company-box
+     ;;   :hook (company-mode . company-box-mode))
    #+END_SRC
 
 ** Shell/exec-path-from-shell
@@ -799,6 +809,7 @@
        :config)
    #+END_SRC
 *** diff-hl
+    Highlights uncommitted changes on the left side of the window, allows you to jump between and revert them selectively.
    #+BEGIN_SRC emacs-lisp
      (use-package diff-hl
        :config
@@ -990,7 +1001,6 @@
 *** Typescript
     #+BEGIN_SRC
     (use-package tide
-      :ensure t
       :after (typescript-mode company flycheck)
       :hook ((typescript-mode . tide-setup)
              (typescript-mode . tide-hl-identifier-mode)
@@ -1121,9 +1131,8 @@
 * Shortcuts/Registers
    #+BEGIN_SRC emacs-lisp
      (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
-     (set-register ?j (cons 'file "~/Projects/Notes/journal.org"))
-     (set-register ?p (cons 'file "~/Projects/Notes/pw/permanent.org"))
      (set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
+     (set-register ?s (cons 'file "~/Projects/Notes/scratch.org"))
    #+END_SRC
 
 * Project Specific
