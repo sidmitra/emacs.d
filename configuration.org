@@ -189,8 +189,6 @@
 
        ;; Enable custom neotree theme (all-the-icons must be installed!)
        (doom-themes-neotree-config)
-       ;; or for treemacs users
-       (doom-themes-treemacs-config)
 
        ;; Corrects (and improves) org-mode's native fontification.
        (doom-themes-org-config)
@@ -571,10 +569,7 @@
        (setq projectile-completion-system 'default)
        (setq projectile-enable-caching t)
        :diminish projectile-mode)
-
-     (use-package helm-projectile)
    #+END_SRC
-
 ** helm
    #+BEGIN_SRC emacs-lisp
      (use-package helm
@@ -645,15 +640,20 @@
        (helm-mode 1))
    #+END_SRC
 
-*** COMMENT helm-fuzzy
-   TEMPORARY turned of to see if it broke fuzzy search
+*** helm-projectile
+   #+BEGIN_SRC emacs-lisp
+     (use-package helm-projectile
+       :config
+       (helm-projectile-on)
+       )
+   #+END_SRC
+
+*** helm-fuzzy
    Enable additional fuzzy matching for helm source.
    #+BEGIN_SRC emacs-lisp
      (use-package helm-fuzzy
-       :init
-       (with-eval-after-load 'helm
-         (helm-fuzzy-mode 1))
        :config
+       (helm-fuzzy-mode 1)
        (setq helm-fuzzy-not-allow-fuzzy '("*helm-ag*")))
    #+END_SRC
 *** COMMENT shackle
@@ -776,7 +776,8 @@
        (setq neo-smart-open t)
        (setq-default neo-show-hidden-files t)
        (setq neo-theme 'icons)
-       (setq projectile-switch-project-action 'neotree-projectile-action))
+       ;; (setq projectile-switch-project-action 'neotree-projectile-action)
+       )
 
      (defun text-scale-twice ()(interactive)(progn(text-scale-adjust 0)(text-scale-decrease 2)))
      (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-twice)))
