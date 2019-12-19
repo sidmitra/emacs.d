@@ -1,6 +1,5 @@
 #+TITLE: Emacs configuration
 
-
 * Initialize
 ** gc-cons
   #+BEGIN_SRC emacs-lisp
@@ -80,7 +79,7 @@
          (menu-bar-mode -1))
    #+END_SRC
 
-** Disable Scrollbar
+** Disable scrollbar
    #+BEGIN_SRC emacs-lisp
      (scroll-bar-mode -1)
    #+END_SRC
@@ -106,7 +105,7 @@
      (defalias 'yes-or-no-p 'y-or-n-p)
    #+END_SRC
 
-** Show Line/Col Numbers
+** Show line/col Numbers
 *** Show Line col numbers
    #+BEGIN_SRC emacs-lisp
      (use-package nlinum
@@ -127,7 +126,7 @@
      (setq-default column-number-mode t)
    #+END_SRC
 
-** Set Font, Size
+** Set font, size
 *** Set font and size
    #+BEGIN_SRC emacs-lisp
      (set-frame-font "Hack 14")
@@ -139,12 +138,12 @@
 (global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
    #+END_SRC
 
-** Enable Soft-wrap lines
+** Enable soft-wrap lines
    #+BEGIN_SRC emacs-lisp
      (global-visual-line-mode t)
    #+END_SRC
 
-** Enable Smooth scrolling
+** Enable smooth scrolling
    #+BEGIN_SRC emacs-lisp
      ;;(use-package smooth-scrolling)
      ;;(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
@@ -167,11 +166,11 @@
    #+END_SRC
 
 ** Highlight current line
-
    #+BEGIN_SRC emacs-lisp
      (global-hl-line-mode +1)
    #+END_SRC
-** Load Colour theme
+
+** Load colour theme
 *** doom-themes
    #+BEGIN_SRC emacs-lisp
      (use-package doom-themes
@@ -194,7 +193,7 @@
        (doom-themes-org-config)
        )
    #+END_SRC
-** Layout management
+** Manage layout
 *** winner-mode
    #+BEGIN_SRC emacs-lisp
      (winner-mode 1)
@@ -205,6 +204,79 @@
         :config
         (eyebrowse-mode 1))
    #+END_SRC
+** Enable tabs
+*** COMMENT centaur-tabs
+    #+BEGIN_SRC emacs-lisp
+      (use-package centaur-tabs
+        :config
+        (setq centaur-tabs-height 32)
+        (setq centaur-tabs-set-icons t)
+        (setq centaur-tabs-style "slant")
+        ;; (setq centaur-tabs-set-bar 'left)
+        (setq centaur-tabs-set-bar 'over)
+        (setq centaur-tabs-set-modified-marker t)
+        (centaur-tabs-headline-match)
+        (centaur-tabs-mode t)
+        :bind
+        ("C-<prior>" . centaur-tabs-backward)
+        ("C-<next>" . centaur-tabs-forward))
+    #+END_SRC
+** Highlight indentation
+   #+BEGIN_SRC emacs-lisp
+     (use-package highlight-indent-guides
+       :config
+       (setq highlight-indent-guides-method 'fill)
+       (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
+   #+END_SRC
+
+** Show beacon on cursor
+   A light that follows your cursor around so you don't lose it!
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package beacon
+       :config
+       (setq beacon-dont-blink-major-modes
+         '(magit-status-mode magit-popup-mode eshell-mode term-mode elfeed-show-mode))
+       (beacon-mode t))
+   #+END_SRC
+
+*** TODO Disable beacon on term-mode, ansi-term mode. The above config doesn't seem to work
+** Apply syntax highlighting to all buffers
+   #+BEGIN_SRC emacs-lisp
+     (global-font-lock-mode t)
+   #+END_SRC
+** Style the modeline
+*** Doom Modeine
+    #+BEGIN_SRC emacs-lisp
+      (use-package doom-modeline
+        :hook (after-init . doom-modeline-mode))
+   #+END_SRC
+
+*** Minion
+   #+BEGIN_SRC emacs-lisp
+     (use-package minions
+       :config
+       (minions-mode 1))
+   #+END_SRC
+
+*** Mode Icons
+   #+BEGIN_SRC emacs-lisp
+     (use-package mode-icons
+       :config
+       (mode-icons-mode))
+   #+END_SRC
+
+** COMMENT Distinguish file buffers from others
+   #+BEGIN_SRC emacs-lisp
+     (use-package solaire-mode
+       :hook
+       ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+       (minibuffer-setup . solaire-mode-in-minibuffer)
+       :config
+       (solaire-global-mode +1)
+       (solaire-mode-swap-bg))
+   #+END_SRC
+
 * Editing
 ** Character Encodings
    #+BEGIN_SRC emacs-lisp
