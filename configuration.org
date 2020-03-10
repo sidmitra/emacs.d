@@ -493,8 +493,12 @@
      (setq auto-save-default nil) ; stop creating #autosave# files
      (setq create-lockfiles nil)  ; stop creating .#lock file links
 
-     (setq backup-directory-alist '(("." . "~/.emacs.d/backup/per-save"))
-           backup-by-copying t    ; Don't delink hardlinks
+     (setq backup-directory-alist
+     `((".*" . ,temporary-file-directory)))
+     (setq auto-save-file-name-transforms
+     `((".*" ,temporary-file-directory t)))
+
+     (setq backup-by-copying t    ; Don't delink hardlinks
            version-control t      ; Use version numbers on backups
            delete-old-versions t  ; Automatically delete excess backups
            kept-new-versions 20   ; how many of the newest versions to keep
@@ -505,7 +509,7 @@
        "Make a special 'per session' backup at the first save of each Emacs session."
        (when (not buffer-backed-up)
          ;; Override the default parameters for per-session backups.
-         (let ((backup-directory-alist '(("" . "~/.emacs.d/backup/per-session")))
+         (let ((backup-directory-alist '(("" . temporary-file-directory)))
                (kept-new-versions 3))
            (backup-buffer)))
        ;; Make a "per save" backup on each save.  The first save results in
@@ -661,20 +665,18 @@
    #+BEGIN_SRC emacs-lisp
      (use-package ag
        :config
-       ;; (setq ag-reuse-window 't)
-       (setq ag-reuse-buffers 't)
+       ;; (setq-default ag-reuse-window 't)
+       (setq-default ag-reuse-buffers 't)
        (global-set-key "\C-c\C-g" 'ag-project)
+       ;; TODO: Ignore csv/svg. This is not being run on init??? why??
        (customize-set-variable 'ag-arguments
                                (quote
-                                ("--ignore-dir" "*migrations*" "--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib" "--ignore-dir" "build" "--ignore" "*.min.js" "--ignore" "*.min.css"))))
+                                ("--ignore-dir" "test" "--ignore-dir" "*migrations*" "--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib" "--ignore-dir" "build" "--ignore" "*.min.js" "--ignore" "*.min.css")
+                                ))
+
+       )
 
      (use-package helm-ag)
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-     ;; (defun projectile-helm-ag ()
-     ;;   (interactive)
-     ;;   (helm-ag (projectile-project-root)))
    #+END_SRC
 
 ** company
@@ -1129,6 +1131,15 @@
        (global-set-key [f9] 'deft)
        )
    #+END_SRC
+** Journal
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-journal
+       :config
+       (setq org-journal-dir "~/Projects/Notes/journal/")
+       (setq org-journal-file-type "daily")
+       )
+   #+END_SRC
+
 * Shortcuts/Registers
    #+BEGIN_SRC emacs-lisp
      (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
