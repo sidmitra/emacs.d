@@ -49,7 +49,8 @@
               (funcall (cdr my-pair)))))
   #+END_SRC
 
-* Server
+* Post Init
+** Start Server
   Start server automatically. Use emacsclient to associate/open files.
   #+BEGIN_SRC emacs-lisp
     (use-package server
@@ -59,6 +60,29 @@
         (server-start))
       )
   #+END_SRC
+
+** Disable Command/Super Key on Mac systems
+   Do this early, before any mappings are added.
+   This is a problem on Macbook where option and command is weirdly placed.
+   #+BEGIN_SRC emacs-lisp
+     (defun global-unset-all-super-key ()
+       "Will unset any single key in global keymap that has the super modifier."
+       (let ((km (current-global-map)))
+         (while km
+           (let ((maybe-event (and (listp (car km))
+                                   (caar km))))
+             (if (and (eventp maybe-event) ; Also filters maybe-event when
+                                             ; nil because (car km) was not a list.
+                      (memq 'super (event-modifiers maybe-event)))
+                 (global-unset-key (vector maybe-event))))
+           (setq km (cdr km)))))
+
+     (provide 'global-unset-all-super-key)
+
+     (when (string-equal system-type "darwin")
+       (require 'global-unset-all-super-key)
+       (global-unset-all-super-key))
+    #+END_SRC
 
 * Appearance/UI
 ** Hide welcome message
@@ -385,6 +409,7 @@
      (use-package undo-tree)
      (global-undo-tree-mode 1)
    #+END_SRC
+
 ** Sorting lines
    #+BEGIN_SRC emacs-lisp
      (global-set-key (kbd "C-c M-s") 'sort-lines)
@@ -445,10 +470,14 @@
        ;; Make sure bookmarks is saved before check-in (and revert-buffer)
        (add-hook 'vc-before-checkin-hook #'bm-buffer-save)
 
+       ;; Use mouse + left fring to handle bookmarks
+       (global-set-key (kbd "<left-fringe> <mouse-1>") 'bm-toggle-mouse)
+       (global-set-key (kbd "C-<mouse-4>") 'bm-next-mouse)
+       ;; (global-set-key (kbd "C-<mouse-3>") 'bm-previous-mouse)
 
-       :bind (("<f2>" . bm-next)
-              ("S-<f2>" . bm-previous)
-              ("C-<f2>" . bm-toggle))
+       :bind (("C-x p n" . bm-next)
+              ("C-c p p" . bm-previous)
+              ("C-x p t" . bm-toggle))
        )
    #+END_SRC
 
@@ -1163,7 +1192,7 @@
              (setq buffer-name "airbase-djangoserver")
              (sane-term-create)
              (rename-buffer buffer-name t)
-             (comint-send-string buffer-name "cd /home/sid/Projects/Airbase/airbase-backend\n")
+             (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
              (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
              (comint-send-string buffer-name "python manage.py runserver\n")
              )
@@ -1172,7 +1201,7 @@
              (setq buffer-name "airbase-celery")
              (sane-term-create)
              (rename-buffer buffer-name t)
-             (comint-send-string buffer-name "cd /home/sid/Projects/Airbase/airbase-backend\n")
+             (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
              (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
              (comint-send-string buffer-name "celery --app=airbase_backend worker --loglevel=info -Ofair --queues=celery,fast\n")
              )
@@ -1181,7 +1210,7 @@
              (setq buffer-name "airbase-reactserver")
              (sane-term-create)
              (rename-buffer buffer-name t)
-             (comint-send-string buffer-name "cd /home/sid/Projects/Airbase/airbase-frontend\n")
+             (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-frontend\n")
              (comint-send-string buffer-name "BROWSER=none yarn start\n")
              )
       (defun airbase-djangoshell () (interactive)
@@ -1189,7 +1218,7 @@
              (setq buffer-name "airbase-djangoshell")
              (sane-term-create)
              (rename-buffer buffer-name t)
-             (comint-send-string buffer-name "cd /home/sid/Projects/Airbase/airbase-backend\n")
+             (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
              (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
              ;; (comint-send-string buffer-name "source ~/.profile\n")
              ;;(comint-send-string buffer-name "python manage.py shell_plus\n")
@@ -1208,12 +1237,12 @@
              (setq web-mode-js-indent-offset 2)
              ;;(prettier-js-mode 1)
              (setq prettier-args '())
-             (pyvenv-activate "/home/sid/.cache/pypoetry/virtualenvs/airbase-backend-z32JXCgI-py3.7")
+             (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.7")
              (add-hook 'before-save-hook 'py-isort-before-save)
              ;;(add-hook 'python-mode-hook 'blacken-mode)
              (add-hook 'python-mode-hook 'eglot-ensure)
              ;; (setq python-shell-completion-native-enable nil
-             ;;       python-shell-interpreter "/home/sid/Projects/Airbase/airbase-backend/venv/bin/python"
+             ;;       python-shell-interpreter "~/Projects/Airbase/airbase-backend/venv/bin/python"
              ;;       python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")
              ;; Unset default run-python key, because it is very similar to projectile-find-file
              )
@@ -1225,3 +1254,9 @@
       (setq-default web-mode-engines-alist
                     '(("django"    . "\\.html\\'")))
    #+END_SRC
+** CoreEcon
+    #+BEGIN_SRC emacs-lisp
+      (defun econ-enable () (interactive)
+             (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/coreecon-oReBlZOn-py3.7")
+             )
+    #+END_SRC
