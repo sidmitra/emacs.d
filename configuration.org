@@ -83,6 +83,10 @@
        (require 'global-unset-all-super-key)
        (global-unset-all-super-key))
     #+END_SRC
+** Misc
+  #+BEGIN_SRC emacs-lisp
+    (setq inhibit-compacting-font-caches t)
+  #+END_SRC
 
 * Appearance/UI
 ** Hide welcome message
@@ -372,11 +376,18 @@
      (setq-default tab-always-indent 'complete)
    #+END_SRC
 
-** Move cursor inside brackets after adding
+** Insert pair of chars
+    #+BEGIN_SRC emacs-lisp
+      (global-set-key (kbd "M-[") 'insert-pair)
+      (global-set-key (kbd "M-{") 'insert-pair)
+      (global-set-key (kbd "M-\"") 'insert-pair)
+    #+END_SRC
+
+** COMMENT Move cursor inside brackets after adding
    #+BEGIN_SRC emacs-lisp
-     ;; (use-package cursor-in-brackets
-     ;;   :config
-     ;;   (add-hook 'prog-mode-hook 'cursor-in-brackets-mode))
+     (use-package cursor-in-brackets
+       :config
+       (add-hook 'prog-mode-hook 'cursor-in-brackets-mode))
    #+END_SRC
 
 ** Enable moving line or region, up or down
@@ -859,7 +870,7 @@
    #+END_SRC
 
 ** org
-
+*** Main config
    #+BEGIN_SRC emacs-lisp
      (use-package org
        :config
@@ -887,12 +898,19 @@
        )
    #+END_SRC
 
+*** COMMENT org-bullets
    Use bullets instead of asterisks.
 
    #+BEGIN_SRC emacs-lisp
      (use-package org-bullets
        :config
        (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
+   #+END_SRC
+*** org-superstar
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-superstar
+       :config
+       (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
    #+END_SRC
 
 ** flycheck
