@@ -410,7 +410,7 @@
        (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines))
    #+END_SRC
 
-** TODO Enable code folding
+** COMMENT Enable code folding
    #+BEGIN_SRC emacs-lisp
    #+END_SRC
 
@@ -904,20 +904,27 @@
        )
    #+END_SRC
 
-*** COMMENT org-bullets
-   Use bullets instead of asterisks.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package org-bullets
-       :config
-       (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
-   #+END_SRC
 *** org-superstar
    #+BEGIN_SRC emacs-lisp
      (use-package org-superstar
        :config
        (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
    #+END_SRC
+*** org-super-agenda
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-super-agenda
+       :config
+       (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
+   #+END_SRC
+
+*** DOCT: Declarative Org Capture Templates
+   #+BEGIN_SRC emacs-lisp
+     (use-package doct
+       :ensure t
+       ;;recommended: defer until calling doct
+       :commands (doct))
+   #+END_SRC
+
 
 ** flycheck
    #+BEGIN_SRC emacs-lisp
