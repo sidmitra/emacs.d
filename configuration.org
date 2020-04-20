@@ -769,35 +769,35 @@
    #+END_SRC
 ** Terminal
 *** sane-term
-   #+BEGIN_SRC emacs-lisp
-     (use-package sane-term)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package sane-term)
+    #+END_SRC
 
 *** Start a terminal and rename buffer
-   #+BEGIN_SRC emacs-lisp
-     (defun terminal (buffer-name)
-       "Start a terminal and rename buffer."
-       (interactive "sbuffer name: ")
-       (sane-term-create)
-       (rename-buffer buffer-name t))
-     (global-set-key (kbd "C-c t") 'terminal)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (defun terminal (buffer-name)
+        "Start a terminal and rename buffer."
+        (interactive "sbuffer name: ")
+        (sane-term-create)
+        (rename-buffer buffer-name t))
+      (global-set-key (kbd "C-c t") 'terminal)
+    #+END_SRC
 
 *** shx
-   #+BEGIN_SRC emacs-lisp
-     (use-package shx
-       :config
-       (shx-global-mode 1)
-       )
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package shx
+        :config
+        (shx-global-mode 1)
+        )
+    #+END_SRC
 
-*** multi-term
-   For now i'm using sane-term instead of this
-   #+BEGIN_SRC emacs-lisp
-     (use-package multi-term)
-     (setq multi-term-program "/bin/bash")
-     (defalias 'term 'multi-term)
-   #+END_SRC
+*** COMMENT multi-term
+    For now i'm using sane-term instead of this
+    #+BEGIN_SRC emacs-lisp
+      (use-package multi-term)
+      (setq multi-term-program "/bin/bash")
+      (defalias 'term 'multi-term)
+    #+END_SRC
 
 ** SSH
    #+BEGIN_SRC emacs-lisp
@@ -832,41 +832,41 @@
 ** dump-jump
    #+BEGIN_SRC emacs-lisp
      (use-package dumb-jump
-     :config (setq dumb-jump-selector 'helm))
+       :config (setq dumb-jump-selector 'helm))
    #+END_SRC
 * Programming
 ** Version Control (git)
 *** magit
-   #+BEGIN_SRC emacs-lisp
-     (use-package magit
-       :config
-       (setq magit-auto-revert-mode nil)
-       (setq magit-last-seen-setup-instructions "1.4.0"))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package magit
+        :config
+        (setq magit-auto-revert-mode nil)
+        (setq magit-last-seen-setup-instructions "1.4.0"))
+    #+END_SRC
 *** vc-msg
-   #+BEGIN_SRC emacs-lisp
-     (use-package vc-msg)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package vc-msg)
+    #+END_SRC
 *** git-timemachine
-   #+BEGIN_SRC emacs-lisp
-     (use-package git-timemachine
-       :config)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package git-timemachine
+        :config)
+    #+END_SRC
 *** diff-hl
     Highlights uncommitted changes on the left side of the window, allows you to jump between and revert them selectively.
-   #+BEGIN_SRC emacs-lisp
-     (use-package diff-hl
-       :config
-       (global-diff-hl-mode)
-       )
-   #+END_SRC
-** Language Server Protocol (LSP)
     #+BEGIN_SRC emacs-lisp
-      (use-package eglot)
+      (use-package diff-hl
+        :config
+        (global-diff-hl-mode)
+        )
     #+END_SRC
+** Language Server Protocol (LSP)
+   #+BEGIN_SRC emacs-lisp
+     (use-package eglot)
+   #+END_SRC
 
 *** TODO Install LSP packages
-   npm install -g typescript-language-server typescript vue-language-server
+    npm install -g typescript-language-server typescript vue-language-server
 
 ** Coverage
    #+BEGIN_SRC emacs-lisp
@@ -877,53 +877,53 @@
 
 ** org
 *** Main config
-   #+BEGIN_SRC emacs-lisp
-     (use-package org
-       :config
-       ;; Change ... to downward arrow when there's stuff under a header.
-       ;;(setq org-ellipsis "⤵")
-       (setq org-hide-leading-stars t)
+    #+BEGIN_SRC emacs-lisp
+      (use-package org
+        :config
+        ;; Change ... to downward arrow when there's stuff under a header.
+        ;;(setq org-ellipsis "⤵")
+        (setq org-hide-leading-stars t)
 
-       ;; Use syntax highlighting in source blocks while editing.
-       ;; (setq org-src-fontify-natively t)
-       (font-lock-flush)
+        ;; Use syntax highlighting in source blocks while editing.
+        ;; (setq org-src-fontify-natively t)
+        (font-lock-flush)
 
-       ;; Make TAB act as if it were issued in a buffer of the language's major mode.
-       (setq org-src-tab-acts-natively t)
+        ;; Make TAB act as if it were issued in a buffer of the language's major mode.
+        (setq org-src-tab-acts-natively t)
 
-       (setq org-support-shift-select t)
-       (setq org-todo-keyword-faces
-             '(("TODO" . (:foreground "yellow" :weight bold))
-               ("DONE" . "green")
-               ))
-       (global-set-key (kbd "C-c a") 'org-agenda)
+        (setq org-support-shift-select t)
+        (setq org-todo-keyword-faces
+              '(("TODO" . (:foreground "yellow" :weight bold))
+                ("DONE" . "green")
+                ))
+        (global-set-key (kbd "C-c a") 'org-agenda)
 
-       ;; Save archive file after something is archived. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=887332
-       ;; NOTE: Seems to only work if org_archive file is already open!
-       (advice-add 'org-archive-default-command :after #'org-save-all-org-buffers)
-       )
-   #+END_SRC
+        ;; Save archive file after something is archived. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=887332
+        ;; NOTE: Seems to only work if org_archive file is already open!
+        (advice-add 'org-archive-default-command :after #'org-save-all-org-buffers)
+        )
+    #+END_SRC
 
 *** org-superstar
-   #+BEGIN_SRC emacs-lisp
-     (use-package org-superstar
-       :config
-       (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-superstar
+        :config
+        (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
+    #+END_SRC
 *** org-super-agenda
-   #+BEGIN_SRC emacs-lisp
-     (use-package org-super-agenda
-       :config
-       (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-super-agenda
+        :config
+        (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
+    #+END_SRC
 
 *** DOCT: Declarative Org Capture Templates
-   #+BEGIN_SRC emacs-lisp
-     (use-package doct
-       :ensure t
-       ;;recommended: defer until calling doct
-       :commands (doct))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package doct
+        :ensure t
+        ;;recommended: defer until calling doct
+        :commands (doct))
+    #+END_SRC
 
 
 ** flycheck
@@ -946,43 +946,43 @@
 
 ** Python
 *** Python Mode
-   #+BEGIN_SRC emacs-lisp
-     (add-hook 'python-mode-hook
-               (lambda ()
-                 (setq indent-tabs-mode nil)
-                 (setq tab-width 4)
-                 (setq-default python-indent-guess-indent-offset nil)
-                 (setq python-indent-offset 4)))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'python-mode-hook
+                (lambda ()
+                  (setq indent-tabs-mode nil)
+                  (setq tab-width 4)
+                  (setq-default python-indent-guess-indent-offset nil)
+                  (setq python-indent-offset 4)))
+    #+END_SRC
 *** pyvenv
-   #+BEGIN_SRC emacs-lisp
-     (use-package pyvenv
-       )
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package pyvenv
+        )
+    #+END_SRC
 
 *** isort
-   #+BEGIN_SRC emacs-lisp
-     ;; pip install isort
-     (use-package py-isort
-       :config
-       ;;(add-hook 'before-save-hook 'py-isort-before-save)
-       )
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      ;; pip install isort
+      (use-package py-isort
+        :config
+        ;;(add-hook 'before-save-hook 'py-isort-before-save)
+        )
+    #+END_SRC
 
 *** black
-   #+BEGIN_SRC emacs-lisp
-     (use-package blacken)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package blacken)
+    #+END_SRC
 
 *** pytest
-   #+BEGIN_SRC emacs-lisp
-     (use-package python-pytest)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package python-pytest)
+    #+END_SRC
 
 *** flycheck-prospector
-   #+BEGIN_SRC emacs-lisp
-     (use-package flycheck-prospector)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package flycheck-prospector)
+    #+END_SRC
 
 ** R/ESS
    #+BEGIN_SRC emacs-lisp
@@ -1005,42 +1005,42 @@
 
 ** HTML/Javascript
 *** web-mode
-   #+BEGIN_SRC emacs-lisp
-     (use-package web-mode
-       :mode (
-              ("\\.css$" . web-mode)
-              ("\\.html$" . web-mode)
-              ("\\.js$" . web-mode)
-              ("\\.json$" . web-mode)
-              ("\\.jsx$" . web-mode)
-              ("\\.vue$" . web-mode)
-              ("\\.scss$" . web-mode)
-              ("\\.less$" . web-mode))
-       :config
-       (setq-default indent-tabs-mode nil) ;; no TABS
-       (setq web-mode-code-indent-offset 2)
-       (setq web-mode-css-indent-offset 2)
-       (setq web-mode-enable-auto-closing t)
-       (setq web-mode-enable-auto-expanding t)
-       (setq web-mode-enable-auto-opening t)
-       (setq web-mode-enable-auto-pairing t)
-       (setq web-mode-enable-auto-pairing t)
-       (setq web-mode-enable-auto-quoting nil)
-       (setq web-mode-enable-css-colorization t)
-       (setq web-mode-enable-current-column-highlight t)
-       (setq web-mode-enable-current-element-highlight t)
-       (setq web-mode-js-indent-offset 2)
-       (setq web-mode-markup-indent-offset 2)
-       (setq web-mode-content-types-alist
-             '(("jsx" . "\\.js[x]?\\'")))
+    #+BEGIN_SRC emacs-lisp
+      (use-package web-mode
+        :mode (
+               ("\\.css$" . web-mode)
+               ("\\.html$" . web-mode)
+               ("\\.js$" . web-mode)
+               ("\\.json$" . web-mode)
+               ("\\.jsx$" . web-mode)
+               ("\\.vue$" . web-mode)
+               ("\\.scss$" . web-mode)
+               ("\\.less$" . web-mode))
+        :config
+        (setq-default indent-tabs-mode nil) ;; no TABS
+        (setq web-mode-code-indent-offset 2)
+        (setq web-mode-css-indent-offset 2)
+        (setq web-mode-enable-auto-closing t)
+        (setq web-mode-enable-auto-expanding t)
+        (setq web-mode-enable-auto-opening t)
+        (setq web-mode-enable-auto-pairing t)
+        (setq web-mode-enable-auto-pairing t)
+        (setq web-mode-enable-auto-quoting nil)
+        (setq web-mode-enable-css-colorization t)
+        (setq web-mode-enable-current-column-highlight t)
+        (setq web-mode-enable-current-element-highlight t)
+        (setq web-mode-js-indent-offset 2)
+        (setq web-mode-markup-indent-offset 2)
+        (setq web-mode-content-types-alist
+              '(("jsx" . "\\.js[x]?\\'")))
 
-       ;; Default comment to //
-       (setq-default web-mode-comment-formats (remove '("javascript" . "/*") web-mode-comment-formats))
-       (add-to-list 'web-mode-comment-formats '("javascript" . "//"))
-       )
+        ;; Default comment to //
+        (setq-default web-mode-comment-formats (remove '("javascript" . "/*") web-mode-comment-formats))
+        (add-to-list 'web-mode-comment-formats '("javascript" . "//"))
+        )
 
-     (use-package company-web);
-   #+END_SRC
+      (use-package company-web);
+    #+END_SRC
 *** Javascript
 **** Prettier
      #+BEGIN_SRC emacs-lisp
@@ -1085,7 +1085,7 @@
      (use-package flycheck-elm
        :after elm-mode flycheck
        :config
-        (eval-after-load 'flycheck
+       (eval-after-load 'flycheck
          '(add-hook 'flycheck-mode-hook #'flycheck-elm-setup))
        )
 
@@ -1098,23 +1098,23 @@
    #+END_SRC
 
 ** COMMENT Dart
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package lsp-dart)
+   #+BEGIN_SRC emacs-lisp
+     ;; (use-package lsp-dart)
 
-  (use-package dart-mode
-    :custom
-    (dart-format-on-save t)
-    (dart-enable-analysis-server t)
-    (dart-sdk-path "~/bin/flutter/bin/cache/dart-sdk"))
+     (use-package dart-mode
+       :custom
+       (dart-format-on-save t)
+       (dart-enable-analysis-server t)
+       (dart-sdk-path "~/bin/flutter/bin/cache/dart-sdk"))
 
-  (use-package flutter
-    :after dart-mode
-    :bind (:map dart-mode-map
-                ("C-M-x" . #'flutter-run-or-hot-reload))
-    :custom
-    (flutter-sdk-path "~/bin/flutter/"))
+     (use-package flutter
+       :after dart-mode
+       :bind (:map dart-mode-map
+                   ("C-M-x" . #'flutter-run-or-hot-reload))
+       :custom
+       (flutter-sdk-path "~/bin/flutter/"))
 
-#+END_SRC
+   #+END_SRC
 
 ** JSON
    #+BEGIN_SRC emacs-lisp
@@ -1201,93 +1201,93 @@
    #+END_SRC
 
 * Shortcuts/Registers
-   #+BEGIN_SRC emacs-lisp
-     (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
-     (set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
-     (set-register ?s (cons 'file "~/Projects/Notes/scratch.org"))
-   #+END_SRC
+  #+BEGIN_SRC emacs-lisp
+    (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
+    (set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
+    (set-register ?s (cons 'file "~/Projects/Notes/scratch.org"))
+  #+END_SRC
 
 * Project Specific
 ** Global
-    #+BEGIN_SRC emacs-lisp
-      (setq org-directory "~/Projects/Notes")
-      (setq org-agenda-files '("~/Projects/Notes/todo.org"))
-      ;; unset run-python shortcut, interferes with helm-projectile open file
-      (global-unset-key (kbd "C-c C-p"))
-    #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq org-directory "~/Projects/Notes")
+     (setq org-agenda-files '("~/Projects/Notes/todo.org"))
+     ;; unset run-python shortcut, interferes with helm-projectile open file
+     (global-unset-key (kbd "C-c C-p"))
+   #+END_SRC
 
 ** Airbase
    #+BEGIN_SRC emacs-lisp
-      (defun airbase-djangoserver () (interactive)
-             "Start django runserver on a terminal"
-             (setq buffer-name "airbase-djangoserver")
-             (sane-term-create)
-             (rename-buffer buffer-name t)
-             (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
-             (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
-             (comint-send-string buffer-name "python manage.py runserver\n")
-             )
-      (defun airbase-celery () (interactive)
-             "Start celery worker on a terminal"
-             (setq buffer-name "airbase-celery")
-             (sane-term-create)
-             (rename-buffer buffer-name t)
-             (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
-             (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
-             (comint-send-string buffer-name "celery --app=airbase_backend worker --loglevel=info -Ofair --queues=celery,fast\n")
-             )
-      (defun airbase-reactserver () (interactive)
-             "Start react frontend on a terminal"
-             (setq buffer-name "airbase-reactserver")
-             (sane-term-create)
-             (rename-buffer buffer-name t)
-             (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-frontend\n")
-             (comint-send-string buffer-name "BROWSER=none yarn start\n")
-             )
-      (defun airbase-djangoshell () (interactive)
-             "Start django shell on a terminal"
-             (setq buffer-name "airbase-djangoshell")
-             (sane-term-create)
-             (rename-buffer buffer-name t)
-             (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
-             (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
-             ;; (comint-send-string buffer-name "source ~/.profile\n")
-             ;;(comint-send-string buffer-name "python manage.py shell_plus\n")
-             )
+     (defun airbase-djangoserver () (interactive)
+            "Start django runserver on a terminal"
+            (setq buffer-name "airbase-djangoserver")
+            (sane-term-create)
+            (rename-buffer buffer-name t)
+            (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
+            (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
+            (comint-send-string buffer-name "python manage.py runserver\n")
+            )
+     (defun airbase-celery () (interactive)
+            "Start celery worker on a terminal"
+            (setq buffer-name "airbase-celery")
+            (sane-term-create)
+            (rename-buffer buffer-name t)
+            (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
+            (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
+            (comint-send-string buffer-name "celery --app=airbase_backend worker --loglevel=info -Ofair --queues=celery,fast\n")
+            )
+     (defun airbase-reactserver () (interactive)
+            "Start react frontend on a terminal"
+            (setq buffer-name "airbase-reactserver")
+            (sane-term-create)
+            (rename-buffer buffer-name t)
+            (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-frontend\n")
+            (comint-send-string buffer-name "BROWSER=none yarn start\n")
+            )
+     (defun airbase-djangoshell () (interactive)
+            "Start django shell on a terminal"
+            (setq buffer-name "airbase-djangoshell")
+            (sane-term-create)
+            (rename-buffer buffer-name t)
+            (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
+            (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
+            ;; (comint-send-string buffer-name "source ~/.profile\n")
+            ;;(comint-send-string buffer-name "python manage.py shell_plus\n")
+            )
      (defun airbase-daemons () (interactive)
-             "Start all daemons on a terminal"
-             (airbase-djangoserver)
-             (airbase-djangoshell)
-             (airbase-reactserver)
-             )
+            "Start all daemons on a terminal"
+            (airbase-djangoserver)
+            (airbase-djangoshell)
+            (airbase-reactserver)
+            )
 
-      (defun airbase-enable () (interactive)
-             (setq web-mode-code-indent-offset 2)
-             (setq web-mode-markup-indent-offset 2)
-             (setq web-mode-css-indent-offset 2)
-             (setq web-mode-js-indent-offset 2)
-             ;;(prettier-js-mode 1)
-             (setq prettier-args '())
-             (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.7")
-             (add-hook 'before-save-hook 'py-isort-before-save)
-             ;;(add-hook 'python-mode-hook 'blacken-mode)
-             (add-hook 'python-mode-hook 'eglot-ensure)
-             ;; (setq python-shell-completion-native-enable nil
-             ;;       python-shell-interpreter "~/Projects/Airbase/airbase-backend/venv/bin/python"
-             ;;       python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")
-             ;; Unset default run-python key, because it is very similar to projectile-find-file
-             )
-      (defun airbase-disable () (interactive)
-             )
+     (defun airbase-enable () (interactive)
+            (setq web-mode-code-indent-offset 2)
+            (setq web-mode-markup-indent-offset 2)
+            (setq web-mode-css-indent-offset 2)
+            (setq web-mode-js-indent-offset 2)
+            ;;(prettier-js-mode 1)
+            (setq prettier-args '())
+            (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.7")
+            (add-hook 'before-save-hook 'py-isort-before-save)
+            ;;(add-hook 'python-mode-hook 'blacken-mode)
+            (add-hook 'python-mode-hook 'eglot-ensure)
+            ;; (setq python-shell-completion-native-enable nil
+            ;;       python-shell-interpreter "~/Projects/Airbase/airbase-backend/venv/bin/python"
+            ;;       python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")
+            ;; Unset default run-python key, because it is very similar to projectile-find-file
+            )
+     (defun airbase-disable () (interactive)
+            )
 
-      ;; Forcing django mode on all html
-      ;; TODO: Better way to do this?
-      (setq-default web-mode-engines-alist
-                    '(("django"    . "\\.html\\'")))
+     ;; Forcing django mode on all html
+     ;; TODO: Better way to do this?
+     (setq-default web-mode-engines-alist
+                   '(("django"    . "\\.html\\'")))
    #+END_SRC
 ** CoreEcon
-    #+BEGIN_SRC emacs-lisp
-      (defun econ-enable () (interactive)
-             (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/coreecon-oReBlZOn-py3.7")
-             )
-    #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (defun econ-enable () (interactive)
+            (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/coreecon-oReBlZOn-py3.7")
+            )
+   #+END_SRC
