@@ -39,14 +39,6 @@
       :config
       (paradox-enable))
   #+END_SRC
-* Helpers
-  #+BEGIN_SRC emacs-lisp
-    (defun enable-minor-mode (my-pair)
-      "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
-      (if (buffer-file-name)
-          (if (string-match (car my-pair) buffer-file-name)
-              (funcall (cdr my-pair)))))
-  #+END_SRC
 
 * Post Init
 ** Start Server
@@ -63,6 +55,7 @@
 ** Disable Command/Super Key on Mac systems
    Do this early, before any mappings are added.
    This is a problem on Macbook where option and command is weirdly placed.
+
    #+BEGIN_SRC emacs-lisp
      (defun global-unset-all-super-key ()
        "Will unset any single key in global keymap that has the super modifier."
@@ -82,12 +75,83 @@
        (require 'global-unset-all-super-key)
        (global-unset-all-super-key))
     #+END_SRC
-** Misc
+
+** Inhibit compacting font cache
   #+BEGIN_SRC emacs-lisp
     (setq inhibit-compacting-font-caches t)
   #+END_SRC
 
-* Appearance/UI
+** Turn off ad-handle-definition: `tramp-read-passwd' got redefined
+   #+BEGIN_SRC emacs-lisp
+     (setq ad-redefinition-action 'accept)
+   #+END_SRC
+
+** Change "yes or no" to "y or n"
+
+   #+BEGIN_SRC emacs-lisp
+     (defalias 'yes-or-no-p 'y-or-n-p)
+   #+END_SRC
+
+** COMMENT Set default tramp method to SSH
+   #+BEGIN_SRC emacs-lisp
+     (setq tramp-default-method "ssh")
+   #+END_SRC
+** Shell/exec-path-from-shell
+   #+BEGIN_SRC emacs-lisp
+     ;; exec-path-from-shell
+     (use-package exec-path-from-shell
+       :config
+       (exec-path-from-shell-initialize))
+   #+END_SRC
+* Helpers
+  #+BEGIN_SRC emacs-lisp
+    (defun enable-minor-mode (my-pair)
+      "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
+      (if (buffer-file-name)
+          (if (string-match (car my-pair) buffer-file-name)
+              (funcall (cdr my-pair)))))
+  #+END_SRC
+
+* Appearance/Visual
+** Load colour theme
+*** doom-themes
+   #+BEGIN_SRC emacs-lisp
+     (use-package doom-themes
+       :config
+       ;; Global settings (defaults)
+       (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+             doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+       ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+       ;; may have their own settings.
+       (load-theme 'doom-dracula t)
+
+       ;; Enable flashing mode-line on errors
+       (doom-themes-visual-bell-config)
+
+       ;; Enable custom neotree theme (all-the-icons must be installed!)
+       (doom-themes-neotree-config)
+
+       ;; Corrects (and improves) org-mode's native fontification.
+       (doom-themes-org-config)
+       )
+   #+END_SRC
+** Icons
+   #+BEGIN_SRC emacs-lisp
+     (use-package all-the-icons)
+   #+END_SRC
+
+** Set font, size
+*** Set font and size
+   #+BEGIN_SRC emacs-lisp
+     (set-frame-font "Hack 14")
+   #+END_SRC
+
+*** Change font-size with ctrl + mouse wheel
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (vector (list 'control mouse-wheel-down-event)) 'text-scale-increase)
+     (global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
+   #+END_SRC
 ** Hide welcome message
    #+BEGIN_SRC emacs-lisp
      (setq inhibit-startup-message t)
@@ -95,7 +159,7 @@
 
 ** Hide initial scratch buffer message
    #+BEGIN_SRC emacs-lisp
-(setq initial-scratch-message nil)
+     (setq initial-scratch-message nil)
    #+END_SRC
 
 ** Hide toolbar
@@ -113,7 +177,7 @@
 
 ** Switch window to fullscreen
    #+BEGIN_SRC emacs-lisp
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+     (add-to-list 'default-frame-alist '(fullscreen . maximized))
    #+END_SRC
 
 ** Disable emacs window disappearing on Ctrl-z
@@ -121,24 +185,16 @@
      (global-unset-key (kbd "C-z"))
    #+END_SRC
 
-** Turn off ad-handle-definition: `tramp-read-passwd' got redefined
+** Simplify whitespace style
    #+BEGIN_SRC emacs-lisp
-     (setq ad-redefinition-action 'accept)
+     (setq-default whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
    #+END_SRC
-
-** Change "yes or no" to "y or n"
-
-   #+BEGIN_SRC emacs-lisp
-     (defalias 'yes-or-no-p 'y-or-n-p)
-   #+END_SRC
-
 ** Show line/col Numbers
 *** Show Line col numbers
    #+BEGIN_SRC emacs-lisp
      (use-package nlinum
        :config
-       (add-hook 'prog-mode-hook 'nlinum-mode)
-       )
+       (add-hook 'prog-mode-hook 'nlinum-mode))
    #+END_SRC
 *** Update line numbers format to avoid graphics glitches in fringe
 
@@ -151,18 +207,6 @@
    #+BEGIN_SRC emacs-lisp
      ;; show column number
      (setq-default column-number-mode t)
-   #+END_SRC
-
-** Set font, size
-*** Set font and size
-   #+BEGIN_SRC emacs-lisp
-     (set-frame-font "Hack 14")
-   #+END_SRC
-
-*** Change font-size with ctrl + mouse wheel
-   #+BEGIN_SRC emacs-lisp
-(global-set-key (vector (list 'control mouse-wheel-down-event)) 'text-scale-increase)
-(global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
    #+END_SRC
 
 ** Enable soft-wrap lines
@@ -192,34 +236,23 @@
      (setq-default show-paren-delay 0)
    #+END_SRC
 
+** Apply syntax highlighting to all buffers
+   #+BEGIN_SRC emacs-lisp
+     (global-font-lock-mode t)
+   #+END_SRC
 ** Highlight current line
    #+BEGIN_SRC emacs-lisp
      (global-hl-line-mode +1)
    #+END_SRC
 
-** Load colour theme
-*** doom-themes
+** Highlight indentation
    #+BEGIN_SRC emacs-lisp
-     (use-package doom-themes
+     (use-package highlight-indent-guides
        :config
-       ;; Global settings (defaults)
-       (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-             doom-themes-enable-italic t) ; if nil, italics is universally disabled
-
-       ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
-       ;; may have their own settings.
-       (load-theme 'doom-dracula t)
-
-       ;; Enable flashing mode-line on errors
-       (doom-themes-visual-bell-config)
-
-       ;; Enable custom neotree theme (all-the-icons must be installed!)
-       (doom-themes-neotree-config)
-
-       ;; Corrects (and improves) org-mode's native fontification.
-       (doom-themes-org-config)
-       )
+       (setq highlight-indent-guides-method 'fill)
+       (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
    #+END_SRC
+
 ** Manage layout
 *** winner-mode
    #+BEGIN_SRC emacs-lisp
@@ -248,14 +281,6 @@
         ("C-<prior>" . centaur-tabs-backward)
         ("C-<next>" . centaur-tabs-forward))
     #+END_SRC
-** Highlight indentation
-   #+BEGIN_SRC emacs-lisp
-     (use-package highlight-indent-guides
-       :config
-       (setq highlight-indent-guides-method 'fill)
-       (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
-   #+END_SRC
-
 ** Show beacon on cursor
    A light that follows your cursor around so you don't lose it!
 
@@ -268,10 +293,6 @@
    #+END_SRC
 
 *** TODO Disable beacon on term-mode, ansi-term mode. The above config doesn't seem to work
-** Apply syntax highlighting to all buffers
-   #+BEGIN_SRC emacs-lisp
-     (global-font-lock-mode t)
-   #+END_SRC
 ** Style the modeline
 *** Doom Modeine
     #+BEGIN_SRC emacs-lisp
@@ -303,7 +324,14 @@
        (solaire-global-mode +1)
        (solaire-mode-swap-bg))
    #+END_SRC
-
+** volatile-highlights
+   Minor mode for visual feedback on some operations in Emacs
+   #+BEGIN_SRC emacs-lisp
+     (use-package volatile-highlights
+       :hook prog-mode
+       :config
+       (volatile-highlights-mode t))
+   #+END_SRC
 * Editing
 ** Character Encodings
    #+BEGIN_SRC emacs-lisp
@@ -351,11 +379,6 @@
        (yank)
        )
      (global-set-key (kbd "C-c d") 'duplicate-line)
-   #+END_SRC
-
-** Simplify whitespace style
-   #+BEGIN_SRC emacs-lisp
-     (setq-default whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
    #+END_SRC
 
 ** Delete trailing whitespace before saving
@@ -418,11 +441,6 @@
    #+BEGIN_SRC emacs-lisp
      (use-package undo-tree)
      (global-undo-tree-mode 1)
-   #+END_SRC
-
-** Sorting lines
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-c M-s") 'sort-lines)
    #+END_SRC
 
 ** Bookmarks
@@ -489,6 +507,11 @@
               ("C-c p p" . bm-previous)
               ("C-x p t" . bm-toggle))
        )
+   #+END_SRC
+
+** Sorting lines
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-c M-s") 'sort-lines)
    #+END_SRC
 
 ** Expand region
@@ -605,7 +628,7 @@
         ;; (helm :sources '(helm-bufler-source))
    #+END_SRC
 
-* Global Packages
+* Tools
 ** projectile
    #+BEGIN_SRC emacs-lisp
      (use-package projectile
@@ -659,17 +682,6 @@
        (setq helm-scroll-amount 8)
        (setq helm-ff-file-name-history-use-recentf t)
 
-       ;; Make helm window lean
-       ;; https://www.reddit.com/r/emacs/comments/2z7nbv/lean_helm_window/
-       (setq helm-display-header-line nil) ;; t by default
-       (set-face-attribute 'helm-source-header nil :height 0.1)
-       (helm-autoresize-mode 1)
-       (defun helm-toggle-header-line ()
-         (if (= (length helm-sources) 1)
-             (set-face-attribute 'helm-source-header nil :height 0.1)
-           (set-face-attribute 'helm-source-header nil :height 1.0)))
-       (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)
-
        ;; Set shortcut to helm-occur
        (global-set-key (kbd "M-o") 'helm-occur)
 
@@ -683,8 +695,32 @@
        (setq helm-buffers-fuzzy-matching t
              helm-recentf-fuzzy-match    t)
 
+       ;; ;; Make helm window lean
+       ;; ;; https://www.reddit.com/r/emacs/comments/2z7nbv/lean_helm_window/
+       ;; (setq helm-display-header-line nil) ;; t by default
+       ;; (set-face-attribute 'helm-source-header nil :height 0.1)
+       ;; (helm-autoresize-mode 1)
+       ;; (defun helm-toggle-header-line ()
+       ;;   (if (= (length helm-sources) 1)
+       ;;       (set-face-attribute 'helm-source-header nil :height 0.1)
+       ;;     (set-face-attribute 'helm-source-header nil :height 1.0)))
+       ;; (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)
+
        ;; Enable helm
        (helm-mode 1))
+   #+END_SRC
+
+*** helm-posframe
+    helm-posframe is a helm extension, which let helm use posframe to show its candidate menu.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package helm-posframe
+       :config
+       (setq helm-posframe-parameters
+             '((left-fringe . 10)
+               (right-fringe . 10)))
+       (helm-posframe-enable)
+       )
    #+END_SRC
 
 *** helm-projectile
@@ -707,24 +743,6 @@
        (helm-fuzzy-mode 1)
        (setq helm-fuzzy-not-allow-fuzzy '("*helm-ag*")))
    #+END_SRC
-** thesilversearcher - ag
-   #+BEGIN_SRC emacs-lisp
-     (use-package ag
-       :config
-       ;; (setq-default ag-reuse-window 't)
-       (setq-default ag-reuse-buffers 't)
-       (global-set-key "\C-c\C-g" 'ag-project)
-       ;; TODO: Ignore csv/svg. This is not being run on init??? why??
-       (customize-set-variable 'ag-arguments
-                               (quote
-                                ("--ignore-dir" "test" "--ignore-dir" "*migrations*" "--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib" "--ignore-dir" "build" "--ignore" "*.min.js" "--ignore" "*.min.css")
-                                ))
-
-       )
-
-     (use-package helm-ag)
-   #+END_SRC
-
 ** company
    #+BEGIN_SRC emacs-lisp
      (use-package company
@@ -760,13 +778,46 @@
      ;;   :hook (company-mode . company-box-mode))
    #+END_SRC
 
-** Shell/exec-path-from-shell
+** neotree
    #+BEGIN_SRC emacs-lisp
-     ;; exec-path-from-shell
-     (use-package exec-path-from-shell
+     (use-package neotree
        :config
-       (exec-path-from-shell-initialize))
+       (global-set-key [f8] 'neotree-toggle)
+       (setq neo-smart-open t)
+       (setq-default neo-show-hidden-files t)
+       (setq neo-theme 'icons)
+       ;; (setq projectile-switch-project-action 'neotree-projectile-action)
+       )
+
+     (defun text-scale-twice ()(interactive)(progn(text-scale-adjust 0)(text-scale-decrease 2)))
+     (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-twice)))
    #+END_SRC
+
+** keyfreq
+   #+BEGIN_SRC emacs-lisp
+     (use-package keyfreq
+       :config
+       (keyfreq-mode 1)
+       (keyfreq-autosave-mode 1))
+   #+END_SRC
+** thesilversearcher - ag
+   #+BEGIN_SRC emacs-lisp
+     (use-package ag
+       :config
+       ;; (setq-default ag-reuse-window 't)
+       (setq-default ag-reuse-buffers 't)
+       (global-set-key "\C-c\C-g" 'ag-project)
+       ;; TODO: Ignore csv/svg. This is not being run on init??? why??
+       (customize-set-variable 'ag-arguments
+                               (quote
+                                ("--ignore-dir" "test" "--ignore-dir" "*migrations*" "--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib" "--ignore-dir" "build" "--ignore" "*.min.js" "--ignore" "*.min.css")
+                                ))
+
+       )
+
+     (use-package helm-ag)
+   #+END_SRC
+
 ** Terminal
 *** sane-term
     #+BEGIN_SRC emacs-lisp
@@ -799,36 +850,56 @@
       (defalias 'term 'multi-term)
     #+END_SRC
 
-** SSH
-   #+BEGIN_SRC emacs-lisp
-     ;; (setq tramp-default-method "ssh")
-   #+END_SRC
-** Icons
-   #+BEGIN_SRC emacs-lisp
-     (use-package all-the-icons)
-   #+END_SRC
-** neotree
-   #+BEGIN_SRC emacs-lisp
-     (use-package neotree
-       :config
-       (global-set-key [f8] 'neotree-toggle)
-       (setq neo-smart-open t)
-       (setq-default neo-show-hidden-files t)
-       (setq neo-theme 'icons)
-       ;; (setq projectile-switch-project-action 'neotree-projectile-action)
-       )
+** org
+*** Main config
+    #+BEGIN_SRC emacs-lisp
+      (use-package org
+        :bind ("C-c a" . org-agenda)
+        :config
+        ;; Change ... to downward arrow when there's stuff under a header.
+        (setq org-hide-leading-stars t)
 
-     (defun text-scale-twice ()(interactive)(progn(text-scale-adjust 0)(text-scale-decrease 2)))
-     (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-twice)))
-   #+END_SRC
+        ;; Use syntax highlighting in source blocks while editing.
+        ;; (setq org-src-fontify-natively t)
+        (font-lock-flush)
 
-** keyfreq
-   #+BEGIN_SRC emacs-lisp
-     (use-package keyfreq
-       :config
-       (keyfreq-mode 1)
-       (keyfreq-autosave-mode 1))
-   #+END_SRC
+        ;; Make TAB act as if it were issued in a buffer of the language's major mode.
+        (setq org-src-tab-acts-natively t)
+
+        (setq org-support-shift-select t)
+        (setq org-todo-keyword-faces
+              '(("TODO" . (:foreground "yellow" :weight bold))
+                ("DONE" . "green")
+                ))
+
+        ;; Save archive file after something is archived.
+        (setq org-archive-subtree-save-file-p t)
+
+        ;; (global-set-key (kbd "C-c a") ')
+
+        )
+    #+END_SRC
+
+*** org-superstar
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-superstar
+        :config
+        (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
+    #+END_SRC
+*** org-super-agenda
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-super-agenda
+        :config
+        )
+    #+END_SRC
+
+*** DOCT: Declarative Org Capture Templates
+    #+BEGIN_SRC emacs-lisp
+      (use-package doct
+        :ensure t
+        ;;recommended: defer until calling doct
+        :commands (doct))
+    #+END_SRC
 ** dump-jump
    #+BEGIN_SRC emacs-lisp
      (use-package dumb-jump
@@ -874,57 +945,6 @@
      ;;(load "coverage-mode.el")
      ;;(require 'coverage-mode)
    #+END_SRC
-
-** org
-*** Main config
-    #+BEGIN_SRC emacs-lisp
-      (use-package org
-        :config
-        ;; Change ... to downward arrow when there's stuff under a header.
-        ;;(setq org-ellipsis "⤵")
-        (setq org-hide-leading-stars t)
-
-        ;; Use syntax highlighting in source blocks while editing.
-        ;; (setq org-src-fontify-natively t)
-        (font-lock-flush)
-
-        ;; Make TAB act as if it were issued in a buffer of the language's major mode.
-        (setq org-src-tab-acts-natively t)
-
-        (setq org-support-shift-select t)
-        (setq org-todo-keyword-faces
-              '(("TODO" . (:foreground "yellow" :weight bold))
-                ("DONE" . "green")
-                ))
-        (global-set-key (kbd "C-c a") 'org-agenda)
-
-        ;; Save archive file after something is archived. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=887332
-        ;; NOTE: Seems to only work if org_archive file is already open!
-        (advice-add 'org-archive-default-command :after #'org-save-all-org-buffers)
-        )
-    #+END_SRC
-
-*** org-superstar
-    #+BEGIN_SRC emacs-lisp
-      (use-package org-superstar
-        :config
-        (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
-    #+END_SRC
-*** org-super-agenda
-    #+BEGIN_SRC emacs-lisp
-      (use-package org-super-agenda
-        :config
-        (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
-    #+END_SRC
-
-*** DOCT: Declarative Org Capture Templates
-    #+BEGIN_SRC emacs-lisp
-      (use-package doct
-        :ensure t
-        ;;recommended: defer until calling doct
-        :commands (doct))
-    #+END_SRC
-
 
 ** flycheck
    #+BEGIN_SRC emacs-lisp
