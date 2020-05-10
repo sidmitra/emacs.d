@@ -324,6 +324,7 @@
        (solaire-global-mode +1)
        (solaire-mode-swap-bg))
    #+END_SRC
+
 ** volatile-highlights
    Minor mode for visual feedback on some operations in Emacs
    #+BEGIN_SRC emacs-lisp
@@ -504,7 +505,7 @@
        ;; (global-set-key (kbd "C-<mouse-3>") 'bm-previous-mouse)
 
        :bind (("C-x p n" . bm-next)
-              ("C-c p p" . bm-previous)
+              ("C-x p p" . bm-previous)
               ("C-x p t" . bm-toggle))
        )
    #+END_SRC
@@ -539,12 +540,21 @@
 
 ** Key Bindings
 *** Which Key
+**** Main
    #+BEGIN_SRC emacs-lisp
      (use-package which-key
        :defer 0.2
        :diminish
        :config (which-key-mode))
    #+END_SRC
+
+**** which-key-posframe
+     This package is a emacs-which-key extension, which use posframe to show which-key popup.
+     #+BEGIN_SRC emacs-lisp
+       (use-package which-key-posframe
+         :config
+         (which-key-posframe-mode))
+     #+END_SRC
 
 * Buffers
 ** Backup
@@ -768,15 +778,36 @@
            (append (if (consp backend) backend (list backend))
                    '(:with company-yasnippet))))
        )
-
-     (use-package company-statistics
-       :config
-       (company-statistics-mode)
-       )
-
-     ;; (use-package company-box
-     ;;   :hook (company-mode . company-box-mode))
    #+END_SRC
+
+**** company-statistics
+     Company-statistics is a global minor mode built on top of the
+     in-buffer completion system company-mode. The idea is to keep a
+     log of a certain number of completions you choose, along with
+     some context information, and use that to rank candidates the
+     next time you have to choose — hopefully showing you likelier
+     candidates at the top of the list.
+     #+BEGIN_SRC emacs-lisp
+       (use-package company-statistics
+         :config
+         (company-statistics-mode))
+     #+END_SRC
+
+**** company-posframe
+     company-posframe is a company extension, which let company use
+     child frame as its candidate menu.
+     #+BEGIN_SRC emacs-lisp
+       (use-package which-key-posframe
+         :config
+         (which-key-posframe-mode))
+     #+END_SRC
+
+**** COMMENT company-box
+     A company front-end with icons.
+     #+BEGIN_SRC emacs-lisp
+       (use-package company-box
+         :hook (company-mode . company-box-mode))
+     #+END_SRC
 
 ** neotree
    #+BEGIN_SRC emacs-lisp
@@ -800,6 +831,13 @@
        (keyfreq-mode 1)
        (keyfreq-autosave-mode 1))
    #+END_SRC
+** COMMENT ctrlf
+   #+BEGIN_SRC emacs-lisp
+     (use-package ctrlf
+       :config
+       (ctrlf-mode +1))
+   #+END_SRC
+
 ** thesilversearcher - ag
    #+BEGIN_SRC emacs-lisp
      (use-package ag
@@ -905,6 +943,21 @@
      (use-package dumb-jump
        :config (setq dumb-jump-selector 'helm))
    #+END_SRC
+*** org-roam
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-roam
+        :hook
+        (after-init . org-roam-mode)
+        :custom
+        (org-roam-directory "~/Projects/Notes/")
+        :bind (:map org-roam-mode-map
+                    (("C-c n l" . org-roam)
+                     ("C-c n f" . org-roam-find-file)
+                     ("C-c n g" . org-roam-show-graph))
+                    :map org-mode-map
+                    (("C-c n i" . org-roam-insert))))
+    #+END_SRC
+
 * Programming
 ** Version Control (git)
 *** magit
@@ -947,6 +1000,7 @@
    #+END_SRC
 
 ** flycheck
+*** Main
    #+BEGIN_SRC emacs-lisp
      (use-package let-alist)
      (use-package flycheck
@@ -958,6 +1012,15 @@
        (setq-default flycheck-display-errors-delay 0))
    #+END_SRC
 
+*** flycheck-posframe
+    Display flycheck error messages via posframe.
+    #+BEGIN_SRC emacs-lisp
+      (use-package flycheck-posframe
+        :after flycheck
+        :config
+        (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode)
+        (flycheck-posframe-configure-pretty-defaults))
+    #+END_SRC
 ** dockerfile-mode
    #+BEGIN_SRC emacs-lisp
      (use-package dockerfile-mode
