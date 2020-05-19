@@ -845,10 +845,9 @@
        ;; (setq-default ag-reuse-window 't)
        (setq-default ag-reuse-buffers 't)
        (global-set-key "\C-c\C-g" 'ag-project)
-       ;; TODO: Ignore csv/svg. This is not being run on init??? why??
        (customize-set-variable 'ag-arguments
                                (quote
-                                ("--ignore-dir" "test" "--ignore-dir" "*migrations*" "--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib" "--ignore-dir" "build" "--ignore" "*.min.js" "--ignore" "*.min.css")
+                                ("--ignore-dir" "test" "--ignore-dir" "*migrations*" "--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib" "--ignore-dir" "build" "--ignore" "*.min.js" "--ignore" "*.min.css" "--ignore" "*.csv" "--ignore" "pdf_purchase_order.html" "--ignore" "*.svg")
                                 ))
 
        )
@@ -966,6 +965,13 @@
         :config
         (setq magit-auto-revert-mode nil)
         (setq magit-last-seen-setup-instructions "1.4.0"))
+    #+END_SRC
+
+*** forge
+    Forge allows you to work with Git forges, such as Github and Gitlab
+    #+BEGIN_SRC emacs-lisp
+      (use-package forge
+        :after magit)
     #+END_SRC
 *** vc-msg
     #+BEGIN_SRC emacs-lisp
