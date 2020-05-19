@@ -991,7 +991,7 @@
         (global-diff-hl-mode)
         )
     #+END_SRC
-** Language Server Protocol (LSP)
+** COMMENT Language Server Protocol (LSP)
    #+BEGIN_SRC emacs-lisp
      (use-package eglot)
    #+END_SRC
