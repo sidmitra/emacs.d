@@ -115,7 +115,8 @@
      (when (display-graphic-p)
        (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
    #+END_SRC
-* Helpers
+* Config Helpers
+** Enable minor mode
   #+BEGIN_SRC emacs-lisp
     (defun enable-minor-mode (my-pair)
       "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
@@ -570,6 +571,17 @@
    #+END_SRC
 
 * Tools
+** projectile
+   #+BEGIN_SRC emacs-lisp
+     (use-package projectile
+       :init
+       (setq projectile-keymap-prefix (kbd "C-c p"))
+       :config
+       (projectile-global-mode)
+       (setq projectile-completion-system 'default)
+       (setq projectile-enable-caching t)
+       :diminish projectile-mode)
+   #+END_SRC
 ** undo-tree
    #+BEGIN_SRC emacs-lisp
      (use-package undo-tree)
@@ -640,16 +652,10 @@
               ("C-x p t" . bm-toggle))
        )
    #+END_SRC
-** projectile
+** dump-jump
    #+BEGIN_SRC emacs-lisp
-     (use-package projectile
-       :init
-       (setq projectile-keymap-prefix (kbd "C-c p"))
-       :config
-       (projectile-global-mode)
-       (setq projectile-completion-system 'default)
-       (setq projectile-enable-caching t)
-       :diminish projectile-mode)
+     (use-package dumb-jump
+       :config (setq dumb-jump-selector 'helm))
    #+END_SRC
 ** helm
    #+BEGIN_SRC emacs-lisp
@@ -845,13 +851,24 @@
        :config
        ;; (setq-default ag-reuse-window 't)
        (setq-default ag-reuse-buffers 't)
-       (global-set-key "\C-c\C-g" 'ag-project)
-       (customize-set-variable 'ag-arguments
-                               (quote
-                                ("--ignore-dir" "test" "--ignore-dir" "*migrations*" "--ignore-dir" "node_modules" "--ignore-dir" "elpa" "--ignore-dir" "lib" "--ignore-dir" "build" "--ignore" "*.min.js" "--ignore" "*.min.css" "--ignore" "*.csv" "--ignore" "pdf_purchase_order.html" "--ignore" "*.svg")
-                                ))
-
-       )
+       (setq-default ag-arguments '(
+                            "--smart-case"
+                            "--stats"
+                            "--ignore-dir" "migrations"
+                            "--ignore-dir" "node_modules"
+                            "--ignore-dir" "elpa"
+                            "--ignore-dir" "lib"
+                            "--ignore-dir" "build"
+                            "--ignore" "pdf_purchase_order.html"
+                            "--ignore" "*.min.js"
+                            "--ignore" "*.min.css"
+                            "--ignore" "*.csv"
+                            "--ignore" "*.svg"
+                            "--ignore" "*.json"
+                            "--ignore" "*.yaml"
+                            "--ignore" "*.yml"
+                            ))
+     (global-set-key "\C-c\C-g" 'ag-project))
 
      (use-package helm-ag)
    #+END_SRC
@@ -888,77 +905,11 @@
       (defalias 'term 'multi-term)
     #+END_SRC
 
-** org
-*** Main config
-    #+BEGIN_SRC emacs-lisp
-      (use-package org
-        :bind ("C-c a" . org-agenda)
-        :config
-        ;; Change ... to downward arrow when there's stuff under a header.
-        (setq org-hide-leading-stars t)
-
-        ;; Use syntax highlighting in source blocks while editing.
-        ;; (setq org-src-fontify-natively t)
-        (font-lock-flush)
-
-        ;; Make TAB act as if it were issued in a buffer of the language's major mode.
-        (setq org-src-tab-acts-natively t)
-
-        (setq org-support-shift-select t)
-        (setq org-todo-keyword-faces
-              '(("TODO" . (:foreground "yellow" :weight bold))
-                ("DONE" . "green")
-                ))
-
-        ;; Save archive file after something is archived.
-        (setq org-archive-subtree-save-file-p t)
-
-        ;; (global-set-key (kbd "C-c a") ')
-
-        )
-    #+END_SRC
-
-*** org-superstar
-    #+BEGIN_SRC emacs-lisp
-      (use-package org-superstar
-        :config
-        (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
-    #+END_SRC
-*** org-super-agenda
-    #+BEGIN_SRC emacs-lisp
-      (use-package org-super-agenda
-        :config
-        )
-    #+END_SRC
-
-*** DOCT: Declarative Org Capture Templates
-    #+BEGIN_SRC emacs-lisp
-      (use-package doct
-        :ensure t
-        ;;recommended: defer until calling doct
-        :commands (doct))
-    #+END_SRC
-** dump-jump
-   #+BEGIN_SRC emacs-lisp
-     (use-package dumb-jump
-       :config (setq dumb-jump-selector 'helm))
-   #+END_SRC
-*** org-roam
-    #+BEGIN_SRC emacs-lisp
-      (use-package org-roam
-        :hook
-        (after-init . org-roam-mode)
-        :custom
-        (org-roam-directory "~/Projects/Notes/")
-        :bind (:map org-roam-mode-map
-                    (("C-c n l" . org-roam)
-                     ("C-c n f" . org-roam-find-file)
-                     ("C-c n g" . org-roam-show-graph))
-                    :map org-mode-map
-                    (("C-c n i" . org-roam-insert))))
-    #+END_SRC
-
 * Programming
+** Snippets
+     #+BEGIN_SRC emacs-lisp
+       (use-package yasnippet-snippets)
+     #+END_SRC
 ** Version Control (git)
 *** magit
     #+BEGIN_SRC emacs-lisp
@@ -978,6 +929,19 @@
     #+BEGIN_SRC emacs-lisp
       (use-package vc-msg)
     #+END_SRC
+*** magit-delta
+    Use magit + delta to show diffs.
+    https://github.com/dandavison/magit-delta
+
+    Install delta via instructions here:
+    https://github.com/dandavison/delta
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package magit-delta
+        :config
+        (magit-delta-mode))
+    #+END_SRC
+
 *** git-timemachine
     #+BEGIN_SRC emacs-lisp
       (use-package git-timemachine
@@ -1142,10 +1106,6 @@
                                        '("\\.jsx?\\'" . prettier-js-mode))))
          )
      #+END_SRC
-**** Snippets
-     #+BEGIN_SRC emacs-lisp
-       (use-package yasnippet-snippets)
-     #+END_SRC
 *** Typescript
     #+BEGIN_SRC
     (use-package tide
@@ -1271,7 +1231,70 @@
    #+END_SRC
 
 * Notes
-** deft - Searching/Filtering notes
+** org
+*** Main config
+    #+BEGIN_SRC emacs-lisp
+      (use-package org
+        :bind ("C-c a" . org-agenda)
+        :config
+        ;; Change ... to downward arrow when there's stuff under a header.
+        (setq org-hide-leading-stars t)
+
+        ;; Use syntax highlighting in source blocks while editing.
+        ;; (setq org-src-fontify-natively t)
+        (font-lock-flush)
+
+        ;; Make TAB act as if it were issued in a buffer of the language's major mode.
+        (setq org-src-tab-acts-natively t)
+
+        (setq org-support-shift-select t)
+        (setq org-todo-keyword-faces
+              '(("TODO" . (:foreground "yellow" :weight bold))
+                ("DONE" . "green")
+                ))
+
+        ;; Save archive file after something is archived.
+        (setq org-archive-subtree-save-file-p t)
+
+        ;; (global-set-key (kbd "C-c a") ')
+
+        )
+    #+END_SRC
+
+*** org-superstar
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-superstar
+        :config
+        (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
+    #+END_SRC
+*** org-super-agenda
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-super-agenda
+        :config
+        )
+    #+END_SRC
+
+*** DOCT: Declarative Org Capture Templates
+    #+BEGIN_SRC emacs-lisp
+      (use-package doct
+        :ensure t
+        ;;recommended: defer until calling doct
+        :commands (doct))
+    #+END_SRC
+** org-roam
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-roam
+        :hook
+        (after-init . org-roam-mode)
+        :bind (:map org-roam-mode-map
+                    (("C-c n l" . org-roam)
+                     ("C-c n f" . org-roam-find-file)
+                     ("C-c n g" . org-roam-show-graph))
+                    :map org-mode-map
+                    (("C-c n i" . org-roam-insert))))
+    #+END_SRC
+** deft
+   Searching/Filtering notes
    #+BEGIN_SRC emacs-lisp
      (use-package deft
        :config
@@ -1281,7 +1304,7 @@
        (global-set-key [f9] 'deft)
        )
    #+END_SRC
-** Journal
+** org-journal
    #+BEGIN_SRC emacs-lisp
      (use-package org-journal
        :config
@@ -1290,18 +1313,53 @@
        )
    #+END_SRC
 
-* Shortcuts/Registers
+* Custom Needs
+** Pretty print json
+   Pretty prints the selection on a json document. It uses python.
+   Adjust the python path and executable.
+   See http://stackoverflow.com/questions/1548605/emacs-lisp-shell-command-on-region
+
   #+BEGIN_SRC emacs-lisp
-    (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
-    (set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
-    (set-register ?s (cons 'file "~/Projects/Notes/scratch.org"))
+    (defun pretty-print-json(&optional b e)
+      (interactive "r")
+      (shell-command-on-region b e "python -m json.tool" (current-buffer) t)
+      )
   #+END_SRC
 
+** Pretty print python
+  #+BEGIN_SRC emacs-lisp
+    (defun pretty-print-python ()
+      (interactive)
+      (let ( (new-buffer-name "*pprint*") (selection (buffer-substring-no-properties (region-beginning) (region-end))))
+        (if (bufferp new-buffer-name)
+            (kill-buffer new-buffer-name))
+        (call-process
+         "python"
+         nil
+         new-buffer-name nil
+         "-c"
+         "import ast; import json; import sys; x=ast.literal_eval(sys.argv[1]); print(json.dumps(x,indent=4)")
+         selection)
+        (pop-to-buffer new-buffer-name)))
+  #+END_SRC
+
+
+
 * Project Specific
-** Global
+** Registers
    #+BEGIN_SRC emacs-lisp
-     (setq org-directory "~/Projects/Notes")
-     (setq org-agenda-files '("~/Projects/Notes/todo.org"))
+     (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
+     (set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
+     (set-register ?s (cons 'file "~/Projects/Notes/scratch.org"))
+   #+END_SRC
+
+** File Paths
+   #+BEGIN_SRC emacs-lisp
+     (setq-default fill-column 88)
+     (setq-default org-directory "~/Projects/Notes")
+     (setq-default org-roam-directory "~/Projects/Notes/")
+     (setq-default org-roam-index-file "index.org")
+     (setq-default org-agenda-files '("~/Projects/Notes/todo.org"))
      ;; unset run-python shortcut, interferes with helm-projectile open file
      (global-unset-key (kbd "C-c C-p"))
    #+END_SRC
@@ -1360,12 +1418,11 @@
             (setq prettier-args '())
             (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.7")
             (add-hook 'before-save-hook 'py-isort-before-save)
-            ;;(add-hook 'python-mode-hook 'blacken-mode)
-            (add-hook 'python-mode-hook 'eglot-ensure)
+            (add-hook 'python-mode-hook 'blacken-mode)
+            ;;(add-hook 'python-mode-hook 'eglot-ensure)
             ;; (setq python-shell-completion-native-enable nil
             ;;       python-shell-interpreter "~/Projects/Airbase/airbase-backend/venv/bin/python"
             ;;       python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")
-            ;; Unset default run-python key, because it is very similar to projectile-find-file
             )
      (defun airbase-disable () (interactive)
             )
