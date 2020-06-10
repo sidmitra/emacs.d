@@ -1314,7 +1314,7 @@
    #+END_SRC
 
 * Custom Needs
-** Pretty print json
+** COMMENT Pretty print json
    Pretty prints the selection on a json document. It uses python.
    Adjust the python path and executable.
    See http://stackoverflow.com/questions/1548605/emacs-lisp-shell-command-on-region
@@ -1326,7 +1326,7 @@
       )
   #+END_SRC
 
-** Pretty print python
+** COMMENT Pretty print python
   #+BEGIN_SRC emacs-lisp
     (defun pretty-print-python ()
       (interactive)
@@ -1340,10 +1340,8 @@
          "-c"
          "import ast; import json; import sys; x=ast.literal_eval(sys.argv[1]); print(json.dumps(x,indent=4)")
          selection)
-        (pop-to-buffer new-buffer-name)))
+        (pop-to-buffer new-buffer-name))
   #+END_SRC
-
-
 
 * Project Specific
 ** Registers
@@ -1360,6 +1358,7 @@
      (setq-default org-roam-directory "~/Projects/Notes/")
      (setq-default org-roam-index-file "index.org")
      (setq-default org-agenda-files '("~/Projects/Notes/todo.org"))
+
      ;; unset run-python shortcut, interferes with helm-projectile open file
      (global-unset-key (kbd "C-c C-p"))
    #+END_SRC
