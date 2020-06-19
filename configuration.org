@@ -183,7 +183,7 @@
          (menu-bar-mode -1))
    #+END_SRC
 
-** Disable scrollbar
+** Hide scrollbar
    #+BEGIN_SRC emacs-lisp
      (scroll-bar-mode -1)
    #+END_SRC
@@ -222,17 +222,13 @@
      (setq-default cursor-type 'bar)
    #+END_SRC
 
-** Show matching parentheses with 0 delay
+** Highlight syntax
+   Apply syntax highlighting to all buffers
 
-   #+BEGIN_SRC emacs-lisp
-     (show-paren-mode 1)
-     (setq-default show-paren-delay 0)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (global-font-lock-mode t)
+#+END_SRC
 
-** Apply syntax highlighting to all buffers
-   #+BEGIN_SRC emacs-lisp
-     (global-font-lock-mode t)
-   #+END_SRC
 ** Highlight current line
    #+BEGIN_SRC emacs-lisp
      (global-hl-line-mode +1)
@@ -245,6 +241,47 @@
        (setq highlight-indent-guides-method 'fill)
        (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
    #+END_SRC
+
+** Highlight delimiters
+*** Show matching parentheses with 0 delay
+
+#+BEGIN_SRC emacs-lisp
+  (show-paren-mode 1)
+  (setq-default show-paren-delay 0)
+#+END_SRC
+
+*** rainbow-mode
+
+Highlight matching delimiters parens, brackets, and braces with different colors
+https://www.emacswiki.org/emacs/RainbowDelimiters
+
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-delimiters
+    :config
+    (progn
+      (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
+#+END_SRC
+
+** Highlight hex color strings
+
+This minor mode sets background color to strings that match color.
+https://elpa.gnu.org/packages/rainbow-mode.html
+
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-mode
+    :init
+    (setq rainbow-html-colors-major-mode-list '(css-mode
+                                                html-mode
+                                                less-css-mode
+                                                nxml-mode
+                                                php-mode
+                                                sass-mode
+                                                scss-mode
+                                                web-mode
+                                                xml-mode))
+    (dolist (mode rainbow-html-colors-major-mode-list)
+      (add-hook (intern (format "%s-hook" mode)) 'rainbow-mode)))
+#+END_SRC
 
 ** Manage layout
 *** winner-mode
@@ -492,83 +529,83 @@
 ** Backup
 *** Force emacs to save backups to a specific directory.
 
-   #+BEGIN_SRC emacs-lisp
-     (setq make-backup-files nil) ; stop creating backup~ files
-     (setq auto-save-default nil) ; stop creating #autosave# files
-     (setq create-lockfiles nil)  ; stop creating .#lock file links
+#+BEGIN_SRC emacs-lisp
+  (setq make-backup-files nil) ; stop creating backup~ files
+  (setq auto-save-default nil) ; stop creating #autosave# files
+  (setq create-lockfiles nil)  ; stop creating .#lock file links
 
-     (setq backup-directory-alist
-     `((".*" . ,temporary-file-directory)))
-     (setq auto-save-file-name-transforms
-     `((".*" ,temporary-file-directory t)))
+  (setq backup-directory-alist
+  `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms
+  `((".*" ,temporary-file-directory t)))
 
-     (setq backup-by-copying t    ; Don't delink hardlinks
-           version-control t      ; Use version numbers on backups
-           delete-old-versions t  ; Automatically delete excess backups
-           kept-new-versions 20   ; how many of the newest versions to keep
-           kept-old-versions 5    ; and how many of the old
-           )
+  (setq backup-by-copying t    ; Don't delink hardlinks
+        version-control t      ; Use version numbers on backups
+        delete-old-versions t  ; Automatically delete excess backups
+        kept-new-versions 20   ; how many of the newest versions to keep
+        kept-old-versions 5    ; and how many of the old
+        )
 
-     (defun force-backup-of-buffer ()
-       "Make a special 'per session' backup at the first save of each Emacs session."
-       (when (not buffer-backed-up)
-         ;; Override the default parameters for per-session backups.
-         (let ((backup-directory-alist '(("" . temporary-file-directory)))
-               (kept-new-versions 3))
-           (backup-buffer)))
-       ;; Make a "per save" backup on each save.  The first save results in
-       ;; both a per-session and a per-save backup, to keep the numbering
-       ;; of per-save backups consistent.
-       (let ((buffer-backed-up nil))
-         (backup-buffer)))
-   #+END_SRC
+  (defun force-backup-of-buffer ()
+    "Make a special 'per session' backup at the first save of each Emacs session."
+    (when (not buffer-backed-up)
+      ;; Override the default parameters for per-session backups.
+      (let ((backup-directory-alist '(("" . temporary-file-directory)))
+            (kept-new-versions 3))
+        (backup-buffer)))
+    ;; Make a "per save" backup on each save.  The first save results in
+    ;; both a per-session and a per-save backup, to keep the numbering
+    ;; of per-save backups consistent.
+    (let ((buffer-backed-up nil))
+      (backup-buffer)))
+#+END_SRC
 
 *** Force backup of buffer before saving.
 
-   #+BEGIN_SRC emacs-lisp
-     (add-hook 'before-save-hook  'force-backup-of-buffer)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'before-save-hook  'force-backup-of-buffer)
+#+END_SRC
 
 ** Kill buffer without confirmation
 
-  #+BEGIN_SRC emacs-lisp
-    (defun volatile-kill-buffer ()
-      "Kill current buffer unconditionally."
-      (interactive)
-      (let ((buffer-modified-p nil))
-        (kill-buffer (current-buffer))))
-    (global-set-key (kbd "C-x k") 'volatile-kill-buffer)
-  #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun volatile-kill-buffer ()
+    "Kill current buffer unconditionally."
+    (interactive)
+    (let ((buffer-modified-p nil))
+      (kill-buffer (current-buffer))))
+  (global-set-key (kbd "C-x k") 'volatile-kill-buffer)
+#+END_SRC
 
 ** Refresh buffer from filesystem periodically
 
-  #+BEGIN_SRC emacs-lisp
-    (global-auto-revert-mode t)
-  #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (global-auto-revert-mode t)
+#+END_SRC
 
 ** Show current file path
 
-  #+BEGIN_SRC emacs-lisp
-  (defun show-file-name ()
-    "Show the full path file name in the minibuffer."
-    (interactive)
-    (message (buffer-file-name)))
-  (global-set-key [C-f1] 'show-file-name)
-  #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(defun show-file-name ()
+  "Show the full path file name in the minibuffer."
+  (interactive)
+  (message (buffer-file-name)))
+(global-set-key [C-f1] 'show-file-name)
+#+END_SRC
 
 ** Make buffer names unique
-   #+BEGIN_SRC emacs-lisp
-     (use-package uniquify
-       :ensure nil
-       :config (setq uniquify-buffer-name-style 'forward))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package uniquify
+    :ensure nil
+    :config (setq uniquify-buffer-name-style 'forward))
+#+END_SRC
 
 ** COMMENT Group buffers
-   #+BEGIN_SRC emacs-lisp
-        (use-package bufler)
-        (use-package helm-bufler)
-        ;; (helm :sources '(helm-bufler-source))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package bufler)
+  (use-package helm-bufler)
+  ;; (helm :sources '(helm-bufler-source))
+#+END_SRC
 
 * Tools
 ** projectile
@@ -582,6 +619,14 @@
        (setq projectile-enable-caching t)
        :diminish projectile-mode)
    #+END_SRC
+** Format code
+*** format-all-the-code
+Auto-format source code in many languages using the same command for all languages.
+https://github.com/lassik/emacs-format-all-the-code
+
+#+BEGIN_SRC emacs-lisp
+  (use-package format-all)
+#+END_SRC
 ** undo-tree
    #+BEGIN_SRC emacs-lisp
      (use-package undo-tree)
@@ -907,9 +952,15 @@
 
 * Programming
 ** Snippets
-     #+BEGIN_SRC emacs-lisp
-       (use-package yasnippet-snippets)
-     #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package yasnippet
+       :config
+       (yas-global-mode 1)
+       (add-hook 'term-mode-hook (lambda()
+                                   (setq yas-dont-activate-functions t))))
+
+     (use-package yasnippet-snippets)
+   #+END_SRC
 ** Version Control (git)
 *** magit
     #+BEGIN_SRC emacs-lisp
@@ -992,12 +1043,6 @@
         (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode)
         (flycheck-posframe-configure-pretty-defaults))
     #+END_SRC
-** dockerfile-mode
-   #+BEGIN_SRC emacs-lisp
-     (use-package dockerfile-mode
-       :mode "Dockerfile$")
-   #+END_SRC
-
 ** Python
 *** Python Mode
     #+BEGIN_SRC emacs-lisp
@@ -1037,7 +1082,6 @@
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck-prospector)
     #+END_SRC
-
 ** R/ESS
    #+BEGIN_SRC emacs-lisp
      ;; (use-package ess
@@ -1194,40 +1238,10 @@
      (setq flymd-browser-open-function 'my-flymd-browser-function)
    #+END_SRC
 
-** rainbow-mode
+** dockerfile-mode
    #+BEGIN_SRC emacs-lisp
-     (use-package rainbow-mode
-       :init
-       (setq rainbow-html-colors-major-mode-list '(css-mode
-                                                   html-mode
-                                                   less-css-mode
-                                                   nxml-mode
-                                                   php-mode
-                                                   sass-mode
-                                                   scss-mode
-                                                   web-mode
-                                                   xml-mode))
-       (dolist (mode rainbow-html-colors-major-mode-list)
-         (add-hook (intern (format "%s-hook" mode)) 'rainbow-mode)))
-   #+END_SRC
-
-** rainbow-delimiters
-   #+BEGIN_SRC emacs-lisp
-     (use-package rainbow-delimiters
-       :config
-       (progn
-         (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
-   #+END_SRC
-
-** Snippets
-   #+BEGIN_SRC emacs-lisp
-     (use-package yasnippet
-       :config
-       (yas-global-mode 1)
-       (add-hook 'term-mode-hook (lambda()
-                                   (setq yas-dont-activate-functions t))))
-
-     (use-package yasnippet-snippets)
+     (use-package dockerfile-mode
+       :mode "Dockerfile$")
    #+END_SRC
 
 * Notes
@@ -1292,6 +1306,8 @@
                      ("C-c n g" . org-roam-show-graph))
                     :map org-mode-map
                     (("C-c n i" . org-roam-insert))))
+
+      ;; (use-package org-roam-protocol)
     #+END_SRC
 ** deft
    Searching/Filtering notes
