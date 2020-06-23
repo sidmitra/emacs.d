@@ -399,6 +399,10 @@ https://elpa.gnu.org/packages/rainbow-mode.html
      ;; make tab key do indent first then completion.
      (setq-default tab-always-indent 'complete)
    #+END_SRC
+** Set fill-column
+#+BEGIN_SRC emacs-lisp
+(setq-default fill-column 88)
+#+END_SRC
 
 ** Delete trailing whitespace before saving
    #+BEGIN_SRC emacs-lisp
@@ -700,7 +704,12 @@ https://github.com/lassik/emacs-format-all-the-code
 ** dump-jump
    #+BEGIN_SRC emacs-lisp
      (use-package dumb-jump
-       :config (setq dumb-jump-selector 'helm))
+       :bind (("M-g o" . dumb-jump-go-other-window)
+              ("M-g j" . dumb-jump-go)
+              ("M-g x" . dumb-jump-go-prefer-external)
+              ("M-g z" . dumb-jump-go-prefer-external-other-window))
+       :config (setq dumb-jump-selector 'helm)
+       :init (dumb-jump-mode))
    #+END_SRC
 ** helm
    #+BEGIN_SRC emacs-lisp
@@ -919,36 +928,46 @@ https://github.com/lassik/emacs-format-all-the-code
    #+END_SRC
 
 ** Terminal
+*** better-shell
+#+BEGIN_SRC emacs-lisp
+  (use-package better-shell
+    :bind (("C-'" . better-shell-shell)
+           ;;("C-;" . better-shell-remote-open))
+   )
+#+END_SRC
+
+#+RESULTS:
+: better-shell-remote-open
+
 *** sane-term
-    #+BEGIN_SRC emacs-lisp
-      (use-package sane-term)
-    #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package sane-term)
+#+END_SRC
 
 *** Start a terminal and rename buffer
-    #+BEGIN_SRC emacs-lisp
-      (defun terminal (buffer-name)
-        "Start a terminal and rename buffer."
-        (interactive "sbuffer name: ")
-        (sane-term-create)
-        (rename-buffer buffer-name t))
-      (global-set-key (kbd "C-c t") 'terminal)
-    #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun terminal (buffer-name)
+    "Start a terminal and rename buffer."
+    (interactive "sbuffer name: ")
+    (sane-term-create)
+    (rename-buffer buffer-name t))
+  (global-set-key (kbd "C-c t") 'terminal)
+#+END_SRC
 
 *** shx
-    #+BEGIN_SRC emacs-lisp
-      (use-package shx
-        :config
-        (shx-global-mode 1)
-        )
-    #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package shx
+    :config
+    (shx-global-mode 1))
+#+END_SRC
 
 *** COMMENT multi-term
-    For now i'm using sane-term instead of this
-    #+BEGIN_SRC emacs-lisp
-      (use-package multi-term)
-      (setq multi-term-program "/bin/bash")
-      (defalias 'term 'multi-term)
-    #+END_SRC
+For now i'm using sane-term instead of this
+#+BEGIN_SRC emacs-lisp
+  (use-package multi-term)
+  (setq multi-term-program "/bin/bash")
+  (defalias 'term 'multi-term)
+#+END_SRC
 
 * Programming
 ** Snippets
@@ -1329,7 +1348,7 @@ https://github.com/lassik/emacs-format-all-the-code
        )
    #+END_SRC
 
-* Custom Needs
+* My Helpers
 ** COMMENT Pretty print json
    Pretty prints the selection on a json document. It uses python.
    Adjust the python path and executable.
@@ -1359,94 +1378,116 @@ https://github.com/lassik/emacs-format-all-the-code
         (pop-to-buffer new-buffer-name))
   #+END_SRC
 
-* Project Specific
+* My Workflow
 ** Registers
-   #+BEGIN_SRC emacs-lisp
-     (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
-     (set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
-     (set-register ?s (cons 'file "~/Projects/Notes/scratch.org"))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
+  (set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
+  (set-register ?s (cons 'file "~/Projects/Notes/scratch.org"))
+#+END_SRC
 
 ** File Paths
-   #+BEGIN_SRC emacs-lisp
-     (setq-default fill-column 88)
-     (setq-default org-directory "~/Projects/Notes")
-     (setq-default org-roam-directory "~/Projects/Notes/")
-     (setq-default org-roam-index-file "index.org")
-     (setq-default org-agenda-files '("~/Projects/Notes/todo.org"))
-
-     ;; unset run-python shortcut, interferes with helm-projectile open file
-     (global-unset-key (kbd "C-c C-p"))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq-default org-directory "~/Projects/Notes")
+  (setq-default org-roam-directory "~/Projects/Notes/")
+  (setq-default org-roam-index-file "index.org")
+  (setq-default org-agenda-files '("~/Projects/Notes/todo.org"))
+#+END_SRC
 
 ** Airbase
-   #+BEGIN_SRC emacs-lisp
-     (defun airbase-djangoserver () (interactive)
-            "Start django runserver on a terminal"
-            (setq buffer-name "airbase-djangoserver")
-            (sane-term-create)
-            (rename-buffer buffer-name t)
-            (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
-            (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
-            (comint-send-string buffer-name "python manage.py runserver\n")
-            )
-     (defun airbase-celery () (interactive)
-            "Start celery worker on a terminal"
-            (setq buffer-name "airbase-celery")
-            (sane-term-create)
-            (rename-buffer buffer-name t)
-            (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
-            (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
-            (comint-send-string buffer-name "celery --app=airbase_backend worker --loglevel=info -Ofair --queues=celery,fast\n")
-            )
-     (defun airbase-reactserver () (interactive)
-            "Start react frontend on a terminal"
-            (setq buffer-name "airbase-reactserver")
-            (sane-term-create)
-            (rename-buffer buffer-name t)
-            (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-frontend\n")
-            (comint-send-string buffer-name "BROWSER=none yarn start\n")
-            )
-     (defun airbase-djangoshell () (interactive)
-            "Start django shell on a terminal"
-            (setq buffer-name "airbase-djangoshell")
-            (sane-term-create)
-            (rename-buffer buffer-name t)
-            (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
-            (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
-            ;; (comint-send-string buffer-name "source ~/.profile\n")
-            ;;(comint-send-string buffer-name "python manage.py shell_plus\n")
-            )
-     (defun airbase-daemons () (interactive)
-            "Start all daemons on a terminal"
-            (airbase-djangoserver)
-            (airbase-djangoshell)
-            (airbase-reactserver)
-            )
+#+BEGIN_SRC emacs-lisp
+  ;; (defun airbase-djangoserver () (interactive)
+  ;;        "Start django runserver on a terminal"
+  ;;        (setq buffer-name "airbase-djangoserver")
+  ;;        (sane-term-create)
+  ;;        (rename-buffer buffer-name t)
+  ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
+  ;;        (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
+  ;;        (comint-send-string buffer-name "python manage.py runserver\n")
+  ;;        )
+  ;; (defun airbase-celery () (interactive)
+  ;;        "Start celery worker on a terminal"
+  ;;        (setq buffer-name "airbase-celery")
+  ;;        (sane-term-create)
+  ;;        (rename-buffer buffer-name t)
+  ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
+  ;;        (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
+  ;;        (comint-send-string buffer-name "celery --app=airbase_backend worker --loglevel=info -Ofair --queues=celery,fast\n")
+  ;;        )
+  ;; (defun airbase-reactserver () (interactive)
+  ;;        "Start react frontend on a terminal"
+  ;;        (setq buffer-name "airbase-reactserver")
+  ;;        (sane-term-create)
+  ;;        (rename-buffer buffer-name t)
+  ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-frontend\n")
+  ;;        (comint-send-string buffer-name "BROWSER=none yarn start\n")
+  ;;        )
+  ;; (defun airbase-djangoshell () (interactive)
+  ;;        "Start django shell on a terminal"
+  ;;        (setq buffer-name "airbase-djangoshell")
+  ;;        (sane-term-create)
+  ;;        (rename-buffer buffer-name t)
+  ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
+  ;;        (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
+  ;;        ;; (comint-send-string buffer-name "source ~/.profile\n")
+  ;;        ;;(comint-send-string buffer-name "python manage.py shell_plus\n")
+  ;;        )
+  ;; (defun airbase-daemons () (interactive)
+  ;;        "Start all daemons on a terminal"
+  ;;        (airbase-djangoserver)
+  ;;        (airbase-djangoshell)
+  ;;        (airbase-reactserver)
+  ;;        )
 
-     (defun airbase-enable () (interactive)
-            (setq web-mode-code-indent-offset 2)
-            (setq web-mode-markup-indent-offset 2)
-            (setq web-mode-css-indent-offset 2)
-            (setq web-mode-js-indent-offset 2)
-            ;;(prettier-js-mode 1)
-            (setq prettier-args '())
-            (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.7")
-            (add-hook 'before-save-hook 'py-isort-before-save)
-            (add-hook 'python-mode-hook 'blacken-mode)
-            ;;(add-hook 'python-mode-hook 'eglot-ensure)
-            ;; (setq python-shell-completion-native-enable nil
-            ;;       python-shell-interpreter "~/Projects/Airbase/airbase-backend/venv/bin/python"
-            ;;       python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")
-            )
-     (defun airbase-disable () (interactive)
-            )
+  (defun airbase-enable () (interactive)
+         ;; JS
+         (setq web-mode-code-indent-offset 2)
+         (setq web-mode-markup-indent-offset 2)
+         (setq web-mode-css-indent-offset 2)
+         (setq web-mode-js-indent-offset 2)
+         ;;(prettier-js-mode 1)
+         (setq prettier-args '())
 
-     ;; Forcing django mode on all html
-     ;; TODO: Better way to do this?
-     (setq-default web-mode-engines-alist
-                   '(("django"    . "\\.html\\'")))
-   #+END_SRC
+         ;; Python
+         (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.7")
+         (add-hook 'before-save-hook 'py-isort-before-save)
+         (add-hook 'python-mode-hook 'blacken-mode)
+
+         (defun custom-python-flycheck-setup ()
+           (setq-default flycheck-disabled-checkers
+                         (append flycheck-disabled-checkers
+                                 '(python-pylint)))
+
+           (setq-default flycheck-disabled-checkers
+                         (append flycheck-disabled-checkers
+                                 '(python-flake8)))
+           (flycheck-select-checker 'python-prospector))
+
+         (add-hook 'python-mode-hook #'custom-python-flycheck-setup)
+
+         ;; (add-hook 'python-mode-local-vars-hook
+         ;;           (lambda ()
+         ;;             (when (flycheck-may-enable-checker 'python-prospector)
+         ;;               (flycheck-select-checker 'python-prospector))))
+
+
+         ;;(add-hook 'python-mode-hook 'eglot-ensure)
+         ;; (setq python-shell-completion-native-enable nil
+         ;;       python-shell-interpreter "~/Projects/Airbase/airbase-backend/venv/bin/python"
+         ;;       python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")
+
+         ;; unset run-python shortcut, interferes with helm-projectile open file
+         (global-unset-key (kbd "C-c C-p"))
+         )
+
+  (defun airbase-disable () (interactive)
+         )
+
+  ;; Forcing django mode on all html
+  ;; TODO: Better way to do this?
+  (setq-default web-mode-engines-alist
+                '(("django"    . "\\.html\\'")))
+#+END_SRC
 ** CoreEcon
    #+BEGIN_SRC emacs-lisp
      (defun econ-enable () (interactive)
