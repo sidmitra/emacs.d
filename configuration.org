@@ -932,8 +932,8 @@ https://github.com/lassik/emacs-format-all-the-code
 #+BEGIN_SRC emacs-lisp
   (use-package better-shell
     :bind (("C-'" . better-shell-shell)
-           ;;("C-;" . better-shell-remote-open))
-   )
+           ;;("C-;" . better-shell-remote-open)
+          ))
 #+END_SRC
 
 #+RESULTS:
