@@ -2,55 +2,55 @@
 
 * Initialize
 ** gc-cons
-  #+BEGIN_SRC emacs-lisp
-    (setq gc-cons-threshold 64000000)
-    (add-hook 'after-init-hook (lambda ()
-                                 ;; restore after startup
-                                 (setq gc-cons-threshold 800000)))
-  #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq gc-cons-threshold 64000000)
+     (add-hook 'after-init-hook (lambda ()
+                                  ;; restore after startup
+                                  (setq gc-cons-threshold 800000)))
+   #+END_SRC
 
 ** Add custom load path
-  #+BEGIN_SRC emacs-lisp
-    (add-to-list 'load-path (expand-file-name "my-packages" user-emacs-directory))
-  #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'load-path (expand-file-name "my-packages" user-emacs-directory))
+   #+END_SRC
 
 ** Install use-package
-  #+BEGIN_SRC emacs-lisp
-    (setq core-packages
-          '(use-package))
+   #+BEGIN_SRC emacs-lisp
+     (setq core-packages
+           '(use-package))
 
-    (defun ensure-packages (packages)
-      (dolist (package packages)
-        (unless (package-installed-p package)
-          (package-install package))))
+     (defun ensure-packages (packages)
+       (dolist (package packages)
+         (unless (package-installed-p package)
+           (package-install package))))
 
-    (ensure-packages core-packages)
-  #+END_SRC
+     (ensure-packages core-packages)
+   #+END_SRC
 
 ** Enable auto-installing of packages using use-package
-  #+BEGIN_SRC emacs-lisp
-    (setq use-package-always-ensure t)
-    (require 'use-package)
-  #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq use-package-always-ensure t)
+     (require 'use-package)
+   #+END_SRC
 
 ** Use paradox as the default package interface
-  #+BEGIN_SRC emacs-lisp
-    (use-package paradox
-      :config
-      (paradox-enable))
-  #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package paradox
+       :config
+       (paradox-enable))
+   #+END_SRC
 
 * Post Init
 ** Start Server
-  Start server automatically. Use emacsclient to associate/open files.
-  #+BEGIN_SRC emacs-lisp
-    (use-package server
-      :if window-system
-      :config
-      (unless (server-running-p)
-        (server-start))
-      )
-  #+END_SRC
+   Start server automatically. Use emacsclient to associate/open files.
+   #+BEGIN_SRC emacs-lisp
+     (use-package server
+       :if window-system
+       :config
+       (unless (server-running-p)
+         (server-start))
+       )
+   #+END_SRC
 
 ** Disable Command/Super Key on Mac systems
    Do this early, before any mappings are added.
@@ -74,12 +74,12 @@
      (when (string-equal system-type "darwin")
        (require 'global-unset-all-super-key)
        (global-unset-all-super-key))
-    #+END_SRC
+   #+END_SRC
 
 ** Inhibit compacting font cache
-  #+BEGIN_SRC emacs-lisp
-    (setq inhibit-compacting-font-caches t)
-  #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq inhibit-compacting-font-caches t)
+   #+END_SRC
 
 ** Turn off ad-handle-definition: `tramp-read-passwd' got redefined
    #+BEGIN_SRC emacs-lisp
@@ -117,54 +117,61 @@
    #+END_SRC
 * Config Helpers
 ** Enable minor mode
-  #+BEGIN_SRC emacs-lisp
-    (defun enable-minor-mode (my-pair)
-      "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
-      (if (buffer-file-name)
-          (if (string-match (car my-pair) buffer-file-name)
-              (funcall (cdr my-pair)))))
-  #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (defun enable-minor-mode (my-pair)
+       "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
+       (if (buffer-file-name)
+           (if (string-match (car my-pair) buffer-file-name)
+               (funcall (cdr my-pair)))))
+   #+END_SRC
 
 * Appearance/Visual
 ** Load colour theme
 *** doom-themes
-   #+BEGIN_SRC emacs-lisp
-     (use-package doom-themes
-       :config
-       ;; Global settings (defaults)
-       (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-             doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    #+BEGIN_SRC emacs-lisp
+      (use-package doom-themes
+        :config
+        ;; Global settings (defaults)
+        (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+              doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-       ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
-       ;; may have their own settings.
-       (load-theme 'doom-dracula t)
+        ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+        ;; may have their own settings.
+        (load-theme 'doom-dracula t)
 
-       ;; Enable flashing mode-line on errors
-       (doom-themes-visual-bell-config)
+        ;; Enable flashing mode-line on errors
+        (doom-themes-visual-bell-config)
 
-       ;; Enable custom neotree theme (all-the-icons must be installed!)
-       (doom-themes-neotree-config)
+        ;; Enable custom neotree theme (all-the-icons must be installed!)
+        (doom-themes-neotree-config)
 
-       ;; Corrects (and improves) org-mode's native fontification.
-       (doom-themes-org-config)
-       )
-   #+END_SRC
+        ;; Corrects (and improves) org-mode's native fontification.
+        (doom-themes-org-config)
+        )
+    #+END_SRC
 ** Icons
    #+BEGIN_SRC emacs-lisp
      (use-package all-the-icons)
    #+END_SRC
 
-** Set font, size
-*** Set font and size
+** Fonts
    #+BEGIN_SRC emacs-lisp
-     (set-frame-font "Hack 14")
+     (use-package unicode-fonts
+       :config
+       (unicode-fonts-setup))
    #+END_SRC
 
+** Set font, size
+*** Set font and size
+    #+BEGIN_SRC emacs-lisp
+      (set-frame-font "Hack 14")
+    #+END_SRC
+
 *** Change font-size with ctrl + mouse wheel
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (vector (list 'control mouse-wheel-down-event)) 'text-scale-increase)
-     (global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (global-set-key (vector (list 'control mouse-wheel-down-event)) 'text-scale-increase)
+      (global-set-key (vector (list 'control mouse-wheel-up-event))   'text-scale-decrease)
+    #+END_SRC
 ** Hide welcome message
    #+BEGIN_SRC emacs-lisp
      (setq inhibit-startup-message t)
@@ -224,76 +231,99 @@
 
 ** Highlight syntax
    Apply syntax highlighting to all buffers
-
-#+BEGIN_SRC emacs-lisp
-  (global-font-lock-mode t)
-#+END_SRC
-
-** Highlight current line
    #+BEGIN_SRC emacs-lisp
-     (global-hl-line-mode +1)
+     (global-font-lock-mode t)
    #+END_SRC
+*** Highlight identifiers
+    Color Identifiers is a minor mode for Emacs that highlights each source code identifier uniquely based on its name.
+    https://github.com/ankurdave/color-identifiers-mode
 
-** Highlight indentation
-   #+BEGIN_SRC emacs-lisp
-     (use-package highlight-indent-guides
-       :config
-       (setq highlight-indent-guides-method 'fill)
-       (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package color-identifiers-mode
+        :config
+        (add-hook 'after-init-hook 'global-color-identifiers-mode)
+        ;; Make the variables stand out, turn off highlighting for all other keywords in supported modes using a code like:
+        (defun myfunc-color-identifiers-mode-hook ()
+          (let ((faces '(font-lock-comment-face font-lock-comment-delimiter-face font-lock-constant-face font-lock-type-face font-lock-function-name-face font-lock-variable-name-face font-lock-keyword-face font-lock-string-face font-lock-builtin-face font-lock-preprocessor-face font-lock-warning-face font-lock-doc-face font-lock-negation-char-face font-lock-regexp-grouping-construct font-lock-regexp-grouping-backslash)))
+            (dolist (face faces)
+              (face-remap-add-relative face '((:foreground "" :weight normal :slant normal)))))
+          (face-remap-add-relative 'font-lock-keyword-face '((:weight bold)))
+          (face-remap-add-relative 'font-lock-comment-face '((:slant italic)))
+          (face-remap-add-relative 'font-lock-builtin-face '((:weight bold)))
+          (face-remap-add-relative 'font-lock-preprocessor-face '((:weight bold)))
+          (face-remap-add-relative 'font-lock-function-name-face '((:slant italic)))
+          (face-remap-add-relative 'font-lock-string-face '((:slant italic)))
+          (face-remap-add-relative 'font-lock-constant-face '((:weight bold))))
+        ;; (add-hook 'color-identifiers-mode-hook 'myfunc-color-identifiers-mode-hook)
 
-** Highlight delimiters
-*** Show matching parentheses with 0 delay
+        )
+    #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-  (show-paren-mode 1)
-  (setq-default show-paren-delay 0)
-#+END_SRC
+*** Highlight current line
+    #+BEGIN_SRC emacs-lisp
+      (global-hl-line-mode +1)
+    #+END_SRC
 
-*** rainbow-mode
+*** Highlight indentation
+    #+BEGIN_SRC emacs-lisp
+      (use-package highlight-indent-guides
+        :config
+        (setq highlight-indent-guides-method 'fill)
+        (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
+    #+END_SRC
 
-Highlight matching delimiters parens, brackets, and braces with different colors
-https://www.emacswiki.org/emacs/RainbowDelimiters
+*** Highlight delimiters
+**** Show matching parentheses with 0 delay
 
-#+BEGIN_SRC emacs-lisp
-  (use-package rainbow-delimiters
-    :config
-    (progn
-      (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
-#+END_SRC
+     #+BEGIN_SRC emacs-lisp
+       (show-paren-mode 1)
+       (setq-default show-paren-delay 0)
+     #+END_SRC
+
+**** rainbow-mode
+
+     Highlight matching delimiters parens, brackets, and braces with different colors
+     https://www.emacswiki.org/emacs/RainbowDelimiters
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package rainbow-delimiters
+         :config
+         (progn
+           (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
+     #+END_SRC
 
 ** Highlight hex color strings
 
-This minor mode sets background color to strings that match color.
-https://elpa.gnu.org/packages/rainbow-mode.html
+   This minor mode sets background color to strings that match color.
+   https://elpa.gnu.org/packages/rainbow-mode.html
 
-#+BEGIN_SRC emacs-lisp
-  (use-package rainbow-mode
-    :init
-    (setq rainbow-html-colors-major-mode-list '(css-mode
-                                                html-mode
-                                                less-css-mode
-                                                nxml-mode
-                                                php-mode
-                                                sass-mode
-                                                scss-mode
-                                                web-mode
-                                                xml-mode))
-    (dolist (mode rainbow-html-colors-major-mode-list)
-      (add-hook (intern (format "%s-hook" mode)) 'rainbow-mode)))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package rainbow-mode
+       :init
+       (setq rainbow-html-colors-major-mode-list '(css-mode
+                                                   html-mode
+                                                   less-css-mode
+                                                   nxml-mode
+                                                   php-mode
+                                                   sass-mode
+                                                   scss-mode
+                                                   web-mode
+                                                   xml-mode))
+       (dolist (mode rainbow-html-colors-major-mode-list)
+         (add-hook (intern (format "%s-hook" mode)) 'rainbow-mode)))
+   #+END_SRC
 
 ** Manage layout
 *** winner-mode
-   #+BEGIN_SRC emacs-lisp
-     (winner-mode 1)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (winner-mode 1)
+    #+END_SRC
 *** eyebrowse
-   #+BEGIN_SRC emacs-lisp
-     (use-package eyebrowse
+    #+BEGIN_SRC emacs-lisp
+      (use-package eyebrowse
         :config
         (eyebrowse-mode 1))
-   #+END_SRC
+    #+END_SRC
 ** Enable tabs
 *** COMMENT centaur-tabs
     #+BEGIN_SRC emacs-lisp
@@ -311,40 +341,19 @@ https://elpa.gnu.org/packages/rainbow-mode.html
         ("C-<prior>" . centaur-tabs-backward)
         ("C-<next>" . centaur-tabs-forward))
     #+END_SRC
-** Show beacon on cursor
+** COMMENT Show beacon on cursor
    A light that follows your cursor around so you don't lose it!
 
    #+BEGIN_SRC emacs-lisp
      (use-package beacon
        :config
        (setq beacon-dont-blink-major-modes
-         '(magit-status-mode magit-popup-mode eshell-mode term-mode elfeed-show-mode))
+             '(magit-status-mode magit-popup-mode eshell-mode term-mode elfeed-show-mode))
        (beacon-mode t))
    #+END_SRC
 
 *** TODO Disable beacon on term-mode, ansi-term mode. The above config doesn't seem to work
-** Style the modeline
-*** Doom Modeine
-    #+BEGIN_SRC emacs-lisp
-      (use-package doom-modeline
-        :hook (after-init . doom-modeline-mode))
-   #+END_SRC
-
-*** Minion
-   #+BEGIN_SRC emacs-lisp
-     (use-package minions
-       :config
-       (minions-mode 1))
-   #+END_SRC
-
-*** Mode Icons
-   #+BEGIN_SRC emacs-lisp
-     (use-package mode-icons
-       :config
-       (mode-icons-mode))
-   #+END_SRC
-
-** volatile-highlights
+** COMMENT volatile-highlights
    Minor mode for visual feedback on some operations in Emacs
    #+BEGIN_SRC emacs-lisp
      (use-package volatile-highlights
@@ -353,17 +362,17 @@ https://elpa.gnu.org/packages/rainbow-mode.html
    #+END_SRC
 ** Show line/col Numbers
 *** Show Line col numbers
-   #+BEGIN_SRC emacs-lisp
-     (use-package nlinum
-       :config
-       (add-hook 'prog-mode-hook 'nlinum-mode))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package nlinum
+        :config
+        (add-hook 'prog-mode-hook 'nlinum-mode))
+    #+END_SRC
 
-   nlinum-hl [tries to] remedy an issue in nlinum where line numbers disappear, due to a combination of bugs internal to nlinum and the fontification processes of certain major-modes and commands.
-   Load this after nlinum
-   #+BEGIN_SRC emacs-lisp
-     (use-package nlinum-hl)
-   #+END_SRC
+    nlinum-hl [tries to] remedy an issue in nlinum where line numbers disappear, due to a combination of bugs internal to nlinum and the fontification processes of certain major-modes and commands.
+    Load this after nlinum
+    #+BEGIN_SRC emacs-lisp
+      (use-package nlinum-hl)
+    #+END_SRC
 *** Update line numbers format to avoid graphics glitches in fringe
 
     #+BEGIN_SRC emacs-lisp
@@ -372,10 +381,30 @@ https://elpa.gnu.org/packages/rainbow-mode.html
 
 *** Show column numbers
 
-   #+BEGIN_SRC emacs-lisp
-     ;; show column number
-     (setq-default column-number-mode t)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      ;; show column number
+      (setq-default column-number-mode t)
+    #+END_SRC
+** Style the modeline
+*** Doom Modeine
+    #+BEGIN_SRC emacs-lisp
+      (use-package doom-modeline
+        :hook (after-init . doom-modeline-mode))
+    #+END_SRC
+
+*** Minion
+    #+BEGIN_SRC emacs-lisp
+      (use-package minions
+        :config
+        (minions-mode 1))
+    #+END_SRC
+
+*** Mode Icons
+    #+BEGIN_SRC emacs-lisp
+      (use-package mode-icons
+        :config
+        (mode-icons-mode))
+    #+END_SRC
 ** COMMENT Distinguish file buffers from others
    #+BEGIN_SRC emacs-lisp
      (use-package solaire-mode
@@ -400,9 +429,9 @@ https://elpa.gnu.org/packages/rainbow-mode.html
      (setq-default tab-always-indent 'complete)
    #+END_SRC
 ** Set fill-column
-#+BEGIN_SRC emacs-lisp
-(setq-default fill-column 88)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq-default fill-column 88)
+   #+END_SRC
 
 ** Delete trailing whitespace before saving
    #+BEGIN_SRC emacs-lisp
@@ -411,19 +440,19 @@ https://elpa.gnu.org/packages/rainbow-mode.html
 
 ** Copy/paste
 *** Enable clipboard
-   #+BEGIN_SRC emacs-lisp
-     (setq select-enable-clipboard t)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (setq select-enable-clipboard t)
+    #+END_SRC
 *** Save Interprogram paste
     https://www.reddit.com/r/emacs/comments/30g5wo/the_kill_ring_and_the_clipboard/
-   #+BEGIN_SRC emacs-lisp
-     (setq save-interprogram-paste-before-kill t)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (setq save-interprogram-paste-before-kill t)
+    #+END_SRC
 
 *** Overwrite active region
-   #+BEGIN_SRC emacs-lisp
-     (delete-selection-mode t)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (delete-selection-mode t)
+    #+END_SRC
 
 ** Indent new line automatically on ENTER
    #+BEGIN_SRC emacs-lisp
@@ -445,11 +474,11 @@ https://elpa.gnu.org/packages/rainbow-mode.html
    #+END_SRC
 
 ** Insert pair of chars
-    #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "M-[") 'insert-pair)
-      (global-set-key (kbd "M-{") 'insert-pair)
-      (global-set-key (kbd "M-\"") 'insert-pair)
-    #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "M-[") 'insert-pair)
+     (global-set-key (kbd "M-{") 'insert-pair)
+     (global-set-key (kbd "M-\"") 'insert-pair)
+   #+END_SRC
 
 ** Enable moving line or region, up or down
    #+BEGIN_SRC emacs-lisp
@@ -514,12 +543,12 @@ https://elpa.gnu.org/packages/rainbow-mode.html
 ** Key Bindings
 *** Which Key
 **** Main
-   #+BEGIN_SRC emacs-lisp
-     (use-package which-key
-       :defer 0.2
-       :diminish
-       :config (which-key-mode))
-   #+END_SRC
+     #+BEGIN_SRC emacs-lisp
+       (use-package which-key
+         :defer 0.2
+         :diminish
+         :config (which-key-mode))
+     #+END_SRC
 
 **** which-key-posframe
      This package is a emacs-which-key extension, which use posframe to show which-key popup.
@@ -533,83 +562,83 @@ https://elpa.gnu.org/packages/rainbow-mode.html
 ** Backup
 *** Force emacs to save backups to a specific directory.
 
-#+BEGIN_SRC emacs-lisp
-  (setq make-backup-files nil) ; stop creating backup~ files
-  (setq auto-save-default nil) ; stop creating #autosave# files
-  (setq create-lockfiles nil)  ; stop creating .#lock file links
+    #+BEGIN_SRC emacs-lisp
+      (setq make-backup-files nil) ; stop creating backup~ files
+      (setq auto-save-default nil) ; stop creating #autosave# files
+      (setq create-lockfiles nil)  ; stop creating .#lock file links
 
-  (setq backup-directory-alist
-  `((".*" . ,temporary-file-directory)))
-  (setq auto-save-file-name-transforms
-  `((".*" ,temporary-file-directory t)))
+      (setq backup-directory-alist
+            `((".*" . ,temporary-file-directory)))
+      (setq auto-save-file-name-transforms
+            `((".*" ,temporary-file-directory t)))
 
-  (setq backup-by-copying t    ; Don't delink hardlinks
-        version-control t      ; Use version numbers on backups
-        delete-old-versions t  ; Automatically delete excess backups
-        kept-new-versions 20   ; how many of the newest versions to keep
-        kept-old-versions 5    ; and how many of the old
-        )
+      (setq backup-by-copying t    ; Don't delink hardlinks
+            version-control t      ; Use version numbers on backups
+            delete-old-versions t  ; Automatically delete excess backups
+            kept-new-versions 20   ; how many of the newest versions to keep
+            kept-old-versions 5    ; and how many of the old
+            )
 
-  (defun force-backup-of-buffer ()
-    "Make a special 'per session' backup at the first save of each Emacs session."
-    (when (not buffer-backed-up)
-      ;; Override the default parameters for per-session backups.
-      (let ((backup-directory-alist '(("" . temporary-file-directory)))
-            (kept-new-versions 3))
-        (backup-buffer)))
-    ;; Make a "per save" backup on each save.  The first save results in
-    ;; both a per-session and a per-save backup, to keep the numbering
-    ;; of per-save backups consistent.
-    (let ((buffer-backed-up nil))
-      (backup-buffer)))
-#+END_SRC
+      (defun force-backup-of-buffer ()
+        "Make a special 'per session' backup at the first save of each Emacs session."
+        (when (not buffer-backed-up)
+          ;; Override the default parameters for per-session backups.
+          (let ((backup-directory-alist '(("" . temporary-file-directory)))
+                (kept-new-versions 3))
+            (backup-buffer)))
+        ;; Make a "per save" backup on each save.  The first save results in
+        ;; both a per-session and a per-save backup, to keep the numbering
+        ;; of per-save backups consistent.
+        (let ((buffer-backed-up nil))
+          (backup-buffer)))
+    #+END_SRC
 
 *** Force backup of buffer before saving.
 
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'before-save-hook  'force-backup-of-buffer)
-#+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'before-save-hook  'force-backup-of-buffer)
+    #+END_SRC
 
 ** Kill buffer without confirmation
 
-#+BEGIN_SRC emacs-lisp
-  (defun volatile-kill-buffer ()
-    "Kill current buffer unconditionally."
-    (interactive)
-    (let ((buffer-modified-p nil))
-      (kill-buffer (current-buffer))))
-  (global-set-key (kbd "C-x k") 'volatile-kill-buffer)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (defun volatile-kill-buffer ()
+       "Kill current buffer unconditionally."
+       (interactive)
+       (let ((buffer-modified-p nil))
+         (kill-buffer (current-buffer))))
+     (global-set-key (kbd "C-x k") 'volatile-kill-buffer)
+   #+END_SRC
 
 ** Refresh buffer from filesystem periodically
 
-#+BEGIN_SRC emacs-lisp
-  (global-auto-revert-mode t)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (global-auto-revert-mode t)
+   #+END_SRC
 
 ** Show current file path
 
-#+BEGIN_SRC emacs-lisp
-(defun show-file-name ()
-  "Show the full path file name in the minibuffer."
-  (interactive)
-  (message (buffer-file-name)))
-(global-set-key [C-f1] 'show-file-name)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (defun show-file-name ()
+       "Show the full path file name in the minibuffer."
+       (interactive)
+       (message (buffer-file-name)))
+     (global-set-key [C-f1] 'show-file-name)
+   #+END_SRC
 
 ** Make buffer names unique
-#+BEGIN_SRC emacs-lisp
-  (use-package uniquify
-    :ensure nil
-    :config (setq uniquify-buffer-name-style 'forward))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package uniquify
+       :ensure nil
+       :config (setq uniquify-buffer-name-style 'forward))
+   #+END_SRC
 
 ** COMMENT Group buffers
-#+BEGIN_SRC emacs-lisp
-  (use-package bufler)
-  (use-package helm-bufler)
-  ;; (helm :sources '(helm-bufler-source))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package bufler)
+     (use-package helm-bufler)
+     ;; (helm :sources '(helm-bufler-source))
+   #+END_SRC
 
 * Tools
 ** projectile
@@ -625,12 +654,12 @@ https://elpa.gnu.org/packages/rainbow-mode.html
    #+END_SRC
 ** Format code
 *** format-all-the-code
-Auto-format source code in many languages using the same command for all languages.
-https://github.com/lassik/emacs-format-all-the-code
+    Auto-format source code in many languages using the same command for all languages.
+    https://github.com/lassik/emacs-format-all-the-code
 
-#+BEGIN_SRC emacs-lisp
-  (use-package format-all)
-#+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package format-all)
+    #+END_SRC
 ** undo-tree
    #+BEGIN_SRC emacs-lisp
      (use-package undo-tree)
@@ -784,36 +813,43 @@ https://github.com/lassik/emacs-format-all-the-code
 *** helm-posframe
     helm-posframe is a helm extension, which let helm use posframe to show its candidate menu.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package helm-posframe
-       :config
-       (setq helm-posframe-parameters
-             '((left-fringe . 10)
-               (right-fringe . 10)))
-       (helm-posframe-enable)
-       )
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package helm-posframe
+        :config
+        (setq helm-posframe-parameters
+              '((left-fringe . 10)
+                (right-fringe . 10)))
+        (helm-posframe-enable)
+        )
+    #+END_SRC
 
 *** helm-projectile
-   #+BEGIN_SRC emacs-lisp
-     (use-package helm-projectile
-       :config
-       (helm-projectile-on))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package helm-projectile
+        :config
+        (helm-projectile-on))
+    #+END_SRC
 
 *** COMMENT helm-fuzzy
-   Note: Disabled for now because was getting an
-     "Error running timer: (wrong-type-argument sequencep #<buffer blah_test_base.py>)"
-      on typing on helm-mini
-      Seems to have gone away after disabled.
+    Note: Disabled for now because was getting an
+    "Error running timer: (wrong-type-argument sequencep #<buffer blah_test_base.py>)"
+    on typing on helm-mini
+    Seems to have gone away after disabled.
 
-   Enable additional fuzzy matching for helm source.
-   #+BEGIN_SRC emacs-lisp
-     (use-package helm-fuzzy
-       :config
-       (helm-fuzzy-mode 1)
-       (setq helm-fuzzy-not-allow-fuzzy '("*helm-ag*")))
-   #+END_SRC
+    Enable additional fuzzy matching for helm source.
+    #+BEGIN_SRC emacs-lisp
+      (use-package helm-fuzzy
+        :config
+        (helm-fuzzy-mode 1)
+        (setq helm-fuzzy-not-allow-fuzzy '("*helm-ag*")))
+    #+END_SRC
+*** helm-icons
+    #+BEGIN_SRC emacs-lisp
+      (use-package helm-icons
+        :config
+        (helm-icons-enable))
+    #+END_SRC
+
 ** company
    #+BEGIN_SRC emacs-lisp
      (use-package company
@@ -906,68 +942,81 @@ https://github.com/lassik/emacs-format-all-the-code
        ;; (setq-default ag-reuse-window 't)
        (setq-default ag-reuse-buffers 't)
        (setq-default ag-arguments '(
-                            "--smart-case"
-                            "--stats"
-                            "--ignore-dir" "migrations"
-                            "--ignore-dir" "node_modules"
-                            "--ignore-dir" "elpa"
-                            "--ignore-dir" "lib"
-                            "--ignore-dir" "build"
-                            "--ignore" "pdf_purchase_order.html"
-                            "--ignore" "*.min.js"
-                            "--ignore" "*.min.css"
-                            "--ignore" "*.csv"
-                            "--ignore" "*.svg"
-                            "--ignore" "*.json"
-                            "--ignore" "*.yaml"
-                            "--ignore" "*.yml"
-                            ))
-     (global-set-key "\C-c\C-g" 'ag-project))
+                                    "--smart-case"
+                                    "--stats"
+                                    "--ignore-dir" "migrations"
+                                    "--ignore-dir" "node_modules"
+                                    "--ignore-dir" "elpa"
+                                    "--ignore-dir" "lib"
+                                    "--ignore-dir" "build"
+                                    "--ignore" "\*.min.js"
+                                    "--ignore" "\*.min.css"
+                                    "--ignore" "\*.csv"
+                                    "--ignore" "\*.svg"
+                                    "--ignore" "\*.json"
+                                    "--ignore" "\*.yaml"
+                                    "--ignore" "\*.yml"
+                                    ))
+       (global-set-key "\C-c\C-g" 'ag-project))
 
      (use-package helm-ag)
    #+END_SRC
 
 ** Terminal
-*** better-shell
-#+BEGIN_SRC emacs-lisp
-  (use-package better-shell
-    :bind (("C-'" . better-shell-shell)
-           ;;("C-;" . better-shell-remote-open)
-          ))
-#+END_SRC
+*** vterm
+    #+BEGIN_SRC emacs-lisp
+      (use-package vterm
+        :config
+        (setq vterm-buffer-name-string "%s"
+              vterm-max-scrollback 100000
+              vterm-kill-buffer-on-exit t)
 
-#+RESULTS:
-: better-shell-remote-open
+        ;; Change the font in vterm buffers to a mono-spaced font (the fixed-pitch face)
+        ;; if the default font in Emacs is a proportional font.
+        (add-hook 'vterm-mode-hook
+          (lambda ()
+            (set (make-local-variable 'buffer-face-mode-face) 'fixed-pitch)
+                 (buffer-face-mode t)))
+        )
+    #+END_SRC
+
+*** better-shell
+    #+BEGIN_SRC emacs-lisp
+      (use-package better-shell
+        :bind (("C-'" . better-shell-shell)
+               ;;("C-;" . better-shell-remote-open)
+               ))
+    #+END_SRC
 
 *** sane-term
-#+BEGIN_SRC emacs-lisp
-  (use-package sane-term)
-#+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package sane-term)
+    #+END_SRC
 
 *** Start a terminal and rename buffer
-#+BEGIN_SRC emacs-lisp
-  (defun terminal (buffer-name)
-    "Start a terminal and rename buffer."
-    (interactive "sbuffer name: ")
-    (sane-term-create)
-    (rename-buffer buffer-name t))
-  (global-set-key (kbd "C-c t") 'terminal)
-#+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (defun terminal (buffer-name)
+        "Start a terminal and rename buffer."
+        (interactive "sbuffer name: ")
+        (sane-term-create)
+        (rename-buffer buffer-name t))
+      (global-set-key (kbd "C-c t") 'terminal)
+    #+END_SRC
 
 *** shx
-#+BEGIN_SRC emacs-lisp
-  (use-package shx
-    :config
-    (shx-global-mode 1))
-#+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package shx
+        :config
+        (shx-global-mode 1))
+    #+END_SRC
 
 *** COMMENT multi-term
-For now i'm using sane-term instead of this
-#+BEGIN_SRC emacs-lisp
-  (use-package multi-term)
-  (setq multi-term-program "/bin/bash")
-  (defalias 'term 'multi-term)
-#+END_SRC
+    For now i'm using sane-term instead of this
+    #+BEGIN_SRC emacs-lisp
+      (use-package multi-term)
+      (setq multi-term-program "/bin/bash")
+      (defalias 'term 'multi-term)
+    #+END_SRC
 
 * Programming
 ** Snippets
@@ -1042,16 +1091,16 @@ For now i'm using sane-term instead of this
 
 ** flycheck
 *** Main
-   #+BEGIN_SRC emacs-lisp
-     (use-package let-alist)
-     (use-package flycheck
-       :init (global-flycheck-mode)
-       :config
-       (setq-default flycheck-checker-error-threshold 500)
-       (setq-default flycheck-highlighting-mode 'lines)
-       (setq-default flycheck-idle-change-delay 3)
-       (setq-default flycheck-display-errors-delay 0))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package let-alist)
+      (use-package flycheck
+        :init (global-flycheck-mode)
+        :config
+        (setq-default flycheck-checker-error-threshold 500)
+        (setq-default flycheck-highlighting-mode 'lines)
+        (setq-default flycheck-idle-change-delay 3)
+        (setq-default flycheck-display-errors-delay 0))
+    #+END_SRC
 
 *** flycheck-posframe
     Display flycheck error messages via posframe.
@@ -1293,6 +1342,10 @@ For now i'm using sane-term instead of this
 
         )
     #+END_SRC
+*** COMMENT org-tempo
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-tempo)
+    #+END_SRC
 
 *** org-superstar
     #+BEGIN_SRC emacs-lisp
@@ -1315,19 +1368,19 @@ For now i'm using sane-term instead of this
         :commands (doct))
     #+END_SRC
 ** org-roam
-    #+BEGIN_SRC emacs-lisp
-      (use-package org-roam
-        :hook
-        (after-init . org-roam-mode)
-        :bind (:map org-roam-mode-map
-                    (("C-c n l" . org-roam)
-                     ("C-c n f" . org-roam-find-file)
-                     ("C-c n g" . org-roam-show-graph))
-                    :map org-mode-map
-                    (("C-c n i" . org-roam-insert))))
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-roam
+       :hook
+       (after-init . org-roam-mode)
+       :bind (:map org-roam-mode-map
+                   (("C-c n l" . org-roam)
+                    ("C-c n f" . org-roam-find-file)
+                    ("C-c n g" . org-roam-show-graph))
+                   :map org-mode-map
+                   (("C-c n i" . org-roam-insert))))
 
-      ;; (use-package org-roam-protocol)
-    #+END_SRC
+     ;; (use-package org-roam-protocol)
+   #+END_SRC
 ** deft
    Searching/Filtering notes
    #+BEGIN_SRC emacs-lisp
@@ -1354,140 +1407,245 @@ For now i'm using sane-term instead of this
    Adjust the python path and executable.
    See http://stackoverflow.com/questions/1548605/emacs-lisp-shell-command-on-region
 
-  #+BEGIN_SRC emacs-lisp
-    (defun pretty-print-json(&optional b e)
-      (interactive "r")
-      (shell-command-on-region b e "python -m json.tool" (current-buffer) t)
-      )
-  #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (defun pretty-print-json(&optional b e)
+       (interactive "r")
+       (shell-command-on-region b e "python -m json.tool" (current-buffer) t)
+       )
+   #+END_SRC
 
 ** COMMENT Pretty print python
-  #+BEGIN_SRC emacs-lisp
-    (defun pretty-print-python ()
-      (interactive)
-      (let ( (new-buffer-name "*pprint*") (selection (buffer-substring-no-properties (region-beginning) (region-end))))
-        (if (bufferp new-buffer-name)
-            (kill-buffer new-buffer-name))
-        (call-process
-         "python"
-         nil
-         new-buffer-name nil
-         "-c"
-         "import ast; import json; import sys; x=ast.literal_eval(sys.argv[1]); print(json.dumps(x,indent=4)")
+   #+BEGIN_SRC emacs-lisp
+     (defun pretty-print-python ()
+       (interactive)
+       (let ( (new-buffer-name "*pprint*") (selection (buffer-substring-no-properties (region-beginning) (region-end))))
+         (if (bufferp new-buffer-name)
+             (kill-buffer new-buffer-name))
+         (call-process
+          "python"
+          nil
+          new-buffer-name nil
+          "-c"
+          "import ast; import json; import sys; x=ast.literal_eval(sys.argv[1]); print(json.dumps(x,indent=4)")
          selection)
-        (pop-to-buffer new-buffer-name))
-  #+END_SRC
+       (pop-to-buffer new-buffer-name))
+   #+END_SRC
+
+** Quote lines
+   #+BEGIN_SRC emacs-lisp
+     (defun xah-quote-lines ()
+       "Change current text block's lines to quoted lines with comma or other separator char.
+     When there is a text selection, act on the selection, else, act on a text block separated by blank lines.
+
+     For example,
+
+      cat
+      dog
+      cow
+
+     becomes
+
+      \"cat\",
+      \"dog\",
+      \"cow\",
+
+     or
+
+      (cat)
+      (dog)
+      (cow)
+
+     If the delimiter is any left bracket, the end delimiter is automatically the matching bracket.
+
+     URL `http://ergoemacs.org/emacs/emacs_quote_lines.html'
+     Version 2020-06-26"
+       (interactive)
+       (let* (
+              $p1
+              $p2
+              ($quoteToUse
+               (read-string
+                "Quote to use:" "\"" nil
+                '(
+                  ""
+                  "\""
+                  "'"
+                  "("
+                  "{"
+                  "["
+                  )))
+              ($separator
+               (read-string
+                "line separator:" "," nil
+                '(
+                  ""
+                  ","
+                  ";"
+                  )))
+              ($beginQuote $quoteToUse)
+              ($endQuote
+               ;; if begin quote is a bracket, set end quote to the matching one. else, same as begin quote
+               (let (($syntableValue (aref (syntax-table) (string-to-char $beginQuote))))
+                 (if (eq (car $syntableValue ) 4) ; ; syntax table, code 4 is open paren
+                     (char-to-string (cdr $syntableValue))
+                   $quoteToUse
+                   ))))
+         (if (use-region-p)
+             (setq $p1 (region-beginning) $p2 (region-end))
+           (progn
+             (if (re-search-backward "\n[ \t]*\n" nil "move")
+                 (progn (re-search-forward "\n[ \t]*\n")
+                        (setq $p1 (point)))
+               (setq $p1 (point)))
+             (re-search-forward "\n[ \t]*\n" nil "move")
+             (skip-chars-backward " \t\n" )
+             (setq $p2 (point))))
+         (save-excursion
+           (save-restriction
+             (narrow-to-region $p1 $p2)
+             (goto-char (point-min))
+             (catch 'EndReached
+               (while t
+                 (skip-chars-forward "\t ")
+                 (insert $beginQuote)
+                 (end-of-line )
+                 (insert $endQuote $separator)
+                 (if (eq (point) (point-max))
+                     (throw 'EndReached t)
+                   (forward-char 1))))))))
+
+   #+END_SRC
 
 * My Workflow
 ** Registers
-#+BEGIN_SRC emacs-lisp
-  (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
-  (set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
-  (set-register ?s (cons 'file "~/Projects/Notes/scratch.org"))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
+     (set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
+     (set-register ?s (cons 'file "~/Projects/Notes/scratch.org"))
+   #+END_SRC
 
 ** File Paths
-#+BEGIN_SRC emacs-lisp
-  (setq-default org-directory "~/Projects/Notes")
-  (setq-default org-roam-directory "~/Projects/Notes/")
-  (setq-default org-roam-index-file "index.org")
-  (setq-default org-agenda-files '("~/Projects/Notes/todo.org"))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq-default org-directory "~/Projects/Notes")
+     (setq-default org-roam-directory "~/Projects/Notes/")
+     (setq-default org-roam-index-file "index.org")
+     (setq-default org-agenda-files '("~/Projects/Notes/todo.org"))
+   #+END_SRC
 
 ** Airbase
-#+BEGIN_SRC emacs-lisp
-  ;; (defun airbase-djangoserver () (interactive)
-  ;;        "Start django runserver on a terminal"
-  ;;        (setq buffer-name "airbase-djangoserver")
-  ;;        (sane-term-create)
-  ;;        (rename-buffer buffer-name t)
-  ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
-  ;;        (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
-  ;;        (comint-send-string buffer-name "python manage.py runserver\n")
-  ;;        )
-  ;; (defun airbase-celery () (interactive)
-  ;;        "Start celery worker on a terminal"
-  ;;        (setq buffer-name "airbase-celery")
-  ;;        (sane-term-create)
-  ;;        (rename-buffer buffer-name t)
-  ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
-  ;;        (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
-  ;;        (comint-send-string buffer-name "celery --app=airbase_backend worker --loglevel=info -Ofair --queues=celery,fast\n")
-  ;;        )
-  ;; (defun airbase-reactserver () (interactive)
-  ;;        "Start react frontend on a terminal"
-  ;;        (setq buffer-name "airbase-reactserver")
-  ;;        (sane-term-create)
-  ;;        (rename-buffer buffer-name t)
-  ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-frontend\n")
-  ;;        (comint-send-string buffer-name "BROWSER=none yarn start\n")
-  ;;        )
-  ;; (defun airbase-djangoshell () (interactive)
-  ;;        "Start django shell on a terminal"
-  ;;        (setq buffer-name "airbase-djangoshell")
-  ;;        (sane-term-create)
-  ;;        (rename-buffer buffer-name t)
-  ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
-  ;;        (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
-  ;;        ;; (comint-send-string buffer-name "source ~/.profile\n")
-  ;;        ;;(comint-send-string buffer-name "python manage.py shell_plus\n")
-  ;;        )
-  ;; (defun airbase-daemons () (interactive)
-  ;;        "Start all daemons on a terminal"
-  ;;        (airbase-djangoserver)
-  ;;        (airbase-djangoshell)
-  ;;        (airbase-reactserver)
-  ;;        )
+   #+BEGIN_SRC emacs-lisp
+     ;; (defun airbase-djangoserver () (interactive)
+     ;;        "Start django runserver on a terminal"
+     ;;        (setq buffer-name "airbase-djangoserver")
+     ;;        (sane-term-create)
+     ;;        (rename-buffer buffer-name t)
+     ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
+     ;;        (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
+     ;;        (comint-send-string buffer-name "python manage.py runserver\n")
+     ;;        )
+     ;; (defun airbase-celery () (interactive)
+     ;;        "Start celery worker on a terminal"
+     ;;        (setq buffer-name "airbase-celery")
+     ;;        (sane-term-create)
+     ;;        (rename-buffer buffer-name t)
+     ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
+     ;;        (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
+     ;;        (comint-send-string buffer-name "celery --app=airbase_backend worker --loglevel=info -Ofair --queues=celery,fast\n")
+     ;;        )
+     ;; (defun airbase-reactserver () (interactive)
+     ;;        "Start react frontend on a terminal"
+     ;;        (setq buffer-name "airbase-reactserver")
+     ;;        (sane-term-create)
+     ;;        (rename-buffer buffer-name t)
+     ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-frontend\n")
+     ;;        (comint-send-string buffer-name "BROWSER=none yarn start\n")
+     ;;        )
+     ;; (defun airbase-djangoshell () (interactive)
+     ;;        "Start django shell on a terminal"
+     ;;        (setq buffer-name "airbase-djangoshell")
+     ;;        (sane-term-create)
+     ;;        (rename-buffer buffer-name t)
+     ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
+     ;;        (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
+     ;;        ;; (comint-send-string buffer-name "source ~/.profile\n")
+     ;;        ;;(comint-send-string buffer-name "python manage.py shell_plus\n")
+     ;;        )
+     ;; (defun airbase-daemons () (interactive)
+     ;;        "Start all daemons on a terminal"
+     ;;        (airbase-djangoserver)
+     ;;        (airbase-djangoshell)
+     ;;        (airbase-reactserver)
+     ;;        )
 
-  (defun airbase-enable () (interactive)
-         ;; JS
-         (setq web-mode-code-indent-offset 2)
-         (setq web-mode-markup-indent-offset 2)
-         (setq web-mode-css-indent-offset 2)
-         (setq web-mode-js-indent-offset 2)
-         ;;(prettier-js-mode 1)
-         (setq prettier-args '())
+     (defun custom-ag-args () (interactive)
+            (setq-default ag-arguments '(
+                                         "--smart-case"
+                                         "--stats"
+                                         "--ignore-dir" "migrations"
+                                         "--ignore-dir" "node_modules"
+                                         "--ignore-dir" "elpa"
+                                         "--ignore-dir" "lib"
+                                         "--ignore-dir" "build"
+                                         "--ignore" "\pdf_purchase_order.html"
+                                         "--ignore" "\*.min.js"
+                                         "--ignore" "\*.min.css"
+                                         "--ignore" "\*.csv"
+                                         "--ignore" "\*.svg"
+                                         "--ignore" "\*.json"
+                                         "--ignore" "\*.yaml"
+                                         "--ignore" "\*.yml"
+                                         ))
+            )
 
-         ;; Python
-         (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.7")
-         (add-hook 'before-save-hook 'py-isort-before-save)
-         (add-hook 'python-mode-hook 'blacken-mode)
+     (defun airbase-enable () (interactive)
+            ;; JS
+            (setq web-mode-code-indent-offset 2)
+            (setq web-mode-markup-indent-offset 2)
+            (setq web-mode-css-indent-offset 2)
+            (setq web-mode-js-indent-offset 2)
+            ;;(prettier-js-mode 1)
+            (setq prettier-args '())
 
-         (defun custom-python-flycheck-setup ()
-           (setq-default flycheck-disabled-checkers
-                         (append flycheck-disabled-checkers
-                                 '(python-pylint)))
+            ;; Python
+            (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.7")
+            (add-hook 'before-save-hook 'py-isort-before-save)
+            (add-hook 'python-mode-hook 'blacken-mode)
 
-           (setq-default flycheck-disabled-checkers
-                         (append flycheck-disabled-checkers
-                                 '(python-flake8)))
-           (flycheck-select-checker 'python-prospector))
+            (defun custom-python-flycheck-setup ()
+              (setq-default flycheck-disabled-checkers
+                            (append flycheck-disabled-checkers
+                                    '(python-pylint)))
 
-         (add-hook 'python-mode-hook #'custom-python-flycheck-setup)
+              (setq-default flycheck-disabled-checkers
+                            (append flycheck-disabled-checkers
+                                    '(python-flake8)))
+              (flycheck-select-checker 'python-prospector))
 
-         ;; (add-hook 'python-mode-local-vars-hook
-         ;;           (lambda ()
-         ;;             (when (flycheck-may-enable-checker 'python-prospector)
-         ;;               (flycheck-select-checker 'python-prospector))))
+            (add-hook 'python-mode-hook #'custom-python-flycheck-setup)
+
+            ;; (add-hook 'python-mode-local-vars-hook
+            ;;           (lambda ()
+            ;;             (when (flycheck-may-enable-checker 'python-prospector)
+            ;;               (flycheck-select-checker 'python-prospector))))
 
 
-         ;;(add-hook 'python-mode-hook 'eglot-ensure)
-         ;; (setq python-shell-completion-native-enable nil
-         ;;       python-shell-interpreter "~/Projects/Airbase/airbase-backend/venv/bin/python"
-         ;;       python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")
+            ;;(add-hook 'python-mode-hook 'eglot-ensure)
+            ;; (setq python-shell-completion-native-enable nil
+            ;;       python-shell-interpreter "~/Projects/Airbase/airbase-backend/venv/bin/python"
+            ;;       python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")
 
-         ;; unset run-python shortcut, interferes with helm-projectile open file
-         (global-unset-key (kbd "C-c C-p"))
-         )
+            ;; unset run-python shortcut, interferes with helm-projectile open file
+            (global-unset-key (kbd "C-c C-p"))
+            )
 
-  (defun airbase-disable () (interactive)
-         )
+     (defun airbase-disable () (interactive)
+            )
 
-  ;; Forcing django mode on all html
-  ;; TODO: Better way to do this?
-  (setq-default web-mode-engines-alist
-                '(("django"    . "\\.html\\'")))
-#+END_SRC
+     ;; Forcing django mode on all html
+     ;; TODO: Better way to do this?
+     (setq-default web-mode-engines-alist
+                   '(("django"    . "\\.html\\'")))
+   #+END_SRC
 ** CoreEcon
    #+BEGIN_SRC emacs-lisp
      (defun econ-enable () (interactive)
