@@ -974,9 +974,9 @@
         ;; Change the font in vterm buffers to a mono-spaced font (the fixed-pitch face)
         ;; if the default font in Emacs is a proportional font.
         (add-hook 'vterm-mode-hook
-          (lambda ()
-            (set (make-local-variable 'buffer-face-mode-face) 'fixed-pitch)
-                 (buffer-face-mode t)))
+                  (lambda ()
+                    (set (make-local-variable 'buffer-face-mode-face) 'fixed-pitch)
+                    (buffer-face-mode t)))
         )
     #+END_SRC
 
@@ -1074,13 +1074,33 @@
         (global-diff-hl-mode)
         )
     #+END_SRC
-** COMMENT Language Server Protocol (LSP)
-   #+BEGIN_SRC emacs-lisp
-     (use-package eglot)
-   #+END_SRC
+** Language Server Protocol (LSP)
+*** emacs-lsp
+    #+BEGIN_SRC emacs-lisp
+      ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+      ;; (setq lsp-keymap-prefix "s-l")
 
-*** TODO Install LSP packages
-    npm install -g typescript-language-server typescript vue-language-server
+      (use-package lsp-mode
+        :hook (
+               (python-mode . lsp-deferred)
+               (lsp-mode . lsp-enable-which-key-integration))
+        :commands lsp lsp-deferred)
+
+      (use-package lsp-ui :commands lsp-ui-mode)
+      (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+      (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+      ;; optionally if you want to use debugger
+      (use-package dap-mode)
+      ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+    #+END_SRC
+
+*** COMMENT eglot
+    Currently using emacs-lsp over eglot.
+    #+BEGIN_SRC emacs-lisp
+      (use-package eglot)
+    #+END_SRC
+
 
 ** Coverage
    #+BEGIN_SRC emacs-lisp
@@ -1121,23 +1141,23 @@
                   (setq-default python-indent-guess-indent-offset nil)
                   (setq python-indent-offset 4)))
     #+END_SRC
+*** lsp-mode
+    pip install 'python-language-server[all]'
+
 *** pyvenv
     #+BEGIN_SRC emacs-lisp
-      (use-package pyvenv
-        )
+      (use-package pyvenv)
     #+END_SRC
 
 *** isort
     #+BEGIN_SRC emacs-lisp
       ;; pip install isort
-      (use-package py-isort
-        :config
-        ;;(add-hook 'before-save-hook 'py-isort-before-save)
-        )
+      (use-package py-isort)
     #+END_SRC
 
 *** black
     #+BEGIN_SRC emacs-lisp
+      ;; pip install black
       (use-package blacken)
     #+END_SRC
 
@@ -1170,6 +1190,8 @@
    #+END_SRC
 
 ** HTML/Javascript
+*** lsp-mode
+    npm install -g typescript-language-server typescript vue-language-server
 *** web-mode
     #+BEGIN_SRC emacs-lisp
       (use-package web-mode
@@ -1401,6 +1423,19 @@
        )
    #+END_SRC
 
+* Multimedia
+** eradio
+   eradio is a simple internet radio player for Emacs.
+   https://github.com/olav35/eradio
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package eradio
+       :config
+       ;;(global-set-key (kbd "C-c r p") 'eradio-play)
+       ;;(global-set-key (kbd "C-c r s") 'eradio-stop)
+       )
+   #+END_SRC
+
 * My Helpers
 ** COMMENT Pretty print json
    Pretty prints the selection on a json document. It uses python.
@@ -1609,6 +1644,7 @@
             ;; Python
             (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.7")
             (add-hook 'before-save-hook 'py-isort-before-save)
+            (add-hook 'python-mode-hook 'blacken-mode)
             (add-hook 'python-mode-hook 'blacken-mode)
 
             (defun custom-python-flycheck-setup ()
