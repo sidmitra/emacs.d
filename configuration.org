@@ -1089,6 +1089,8 @@
       (use-package lsp-ui :commands lsp-ui-mode)
       (use-package helm-lsp :commands helm-lsp-workspace-symbol)
       (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+      (use-package company-lsp
+        :config (push 'company-lsp company-backends))
 
       ;; optionally if you want to use debugger
       (use-package dap-mode)
@@ -1100,7 +1102,6 @@
     #+BEGIN_SRC emacs-lisp
       (use-package eglot)
     #+END_SRC
-
 
 ** Coverage
    #+BEGIN_SRC emacs-lisp
@@ -1142,8 +1143,7 @@
                   (setq python-indent-offset 4)))
     #+END_SRC
 *** lsp-mode
-    pip install 'python-language-server[all]'
-
+    pip install 'python-language-server[all]' pyls-mypy pyls-isort pyls-black
 *** pyvenv
     #+BEGIN_SRC emacs-lisp
       (use-package pyvenv)
@@ -1645,7 +1645,6 @@
             (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.7")
             (add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'blacken-mode)
-            (add-hook 'python-mode-hook 'blacken-mode)
 
             (defun custom-python-flycheck-setup ()
               (setq-default flycheck-disabled-checkers
@@ -1658,11 +1657,6 @@
               (flycheck-select-checker 'python-prospector))
 
             (add-hook 'python-mode-hook #'custom-python-flycheck-setup)
-
-            ;; (add-hook 'python-mode-local-vars-hook
-            ;;           (lambda ()
-            ;;             (when (flycheck-may-enable-checker 'python-prospector)
-            ;;               (flycheck-select-checker 'python-prospector))))
 
 
             ;;(add-hook 'python-mode-hook 'eglot-ensure)
