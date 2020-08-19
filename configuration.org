@@ -1126,7 +1126,8 @@
                (lsp-mode . lsp-enable-which-key-integration))
         :commands lsp lsp-deferred
         ;; is lsp-clients needed? Saw it here: https://www.reddit.com/r/rust/comments/a3da5g/my_entire_emacs_config_for_rust_in_fewer_than_20/
-        :config (require 'lsp-clients))
+        ;; :config (require 'lsp-clients)
+        )
 
       (use-package lsp-ui :commands lsp-ui-mode)
       (use-package helm-lsp :commands helm-lsp-workspace-symbol)
