@@ -884,6 +884,7 @@
      some context information, and use that to rank candidates the
      next time you have to choose — hopefully showing you likelier
      candidates at the top of the list.
+
      #+BEGIN_SRC emacs-lisp
        (use-package company-statistics
          :config
@@ -901,9 +902,48 @@
 
 **** COMMENT company-box
      A company front-end with icons.
+
      #+BEGIN_SRC emacs-lisp
        (use-package company-box
-         :hook (company-mode . company-box-mode))
+         :after company
+         :diminish
+         :hook (company-mode . company-box-mode)
+         :init (setq company-box-icons-alist 'company-box-icons-all-the-icons)
+         :config
+         (setq company-box-backends-colors nil)
+         (setq company-box-show-single-candidate t)
+         (setq company-box-max-candidates 50)
+         (with-eval-after-load 'all-the-icons
+           (declare-function all-the-icons-faicon 'all-the-icons)
+           (declare-function all-the-icons-material 'all-the-icons)
+           (setq company-box-icons-all-the-icons
+                 `((Unknown . ,(all-the-icons-material "find_in_page" :height 0.9 :v-adjust -0.2))
+                   (Text . ,(all-the-icons-faicon "text-width" :height 0.85 :v-adjust -0.05))
+                   (Method . ,(all-the-icons-faicon "cube" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-purple))
+                   (Function . ,(all-the-icons-faicon "cube" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-purple))
+                   (Constructor . ,(all-the-icons-faicon "cube" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-purple))
+                   (Field . ,(all-the-icons-faicon "tag" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-lblue))
+                   (Variable . ,(all-the-icons-faicon "tag" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-lblue))
+                   (Class . ,(all-the-icons-material "settings_input_component" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-orange))
+                   (Interface . ,(all-the-icons-material "share" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
+                   (Module . ,(all-the-icons-material "view_module" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
+                   (Property . ,(all-the-icons-faicon "wrench" :height 0.85 :v-adjust -0.05))
+                   (Unit . ,(all-the-icons-material "settings_system_daydream" :height 0.9 :v-adjust -0.2))
+                   (Value . ,(all-the-icons-material "format_align_right" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
+                   (Enum . ,(all-the-icons-material "storage" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-orange))
+                   (Keyword . ,(all-the-icons-material "filter_center_focus" :height 0.9 :v-adjust -0.2))
+                   (Snippet . ,(all-the-icons-material "format_align_center" :height 0.9 :v-adjust -0.2))
+                   (Color . ,(all-the-icons-material "palette" :height 0.9 :v-adjust -0.2))
+                   (File . ,(all-the-icons-faicon "file-o" :height 0.9 :v-adjust -0.05))
+                   (Reference . ,(all-the-icons-material "collections_bookmark" :height 0.9 :v-adjust -0.2))
+                   (Folder . ,(all-the-icons-faicon "folder-open" :height 0.9 :v-adjust -0.05))
+                   (EnumMember . ,(all-the-icons-material "format_align_right" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
+                   (Constant . ,(all-the-icons-faicon "square-o" :height 0.9 :v-adjust -0.05))
+                   (Struct . ,(all-the-icons-material "settings_input_component" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-orange))
+                   (Event . ,(all-the-icons-faicon "bolt" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-orange))
+                   (Operator . ,(all-the-icons-material "control_point" :height 0.9 :v-adjust -0.2))
+                   (TypeParameter . ,(all-the-icons-faicon "arrows" :height 0.85 :v-adjust -0.05))
+                   (Template . ,(all-the-icons-material "format_align_center" :height 0.9 :v-adjust -0.2))))))
      #+END_SRC
 
 ** neotree
@@ -1084,11 +1124,12 @@
         :hook (
                (python-mode . lsp-deferred)
                (lsp-mode . lsp-enable-which-key-integration))
-        :commands lsp lsp-deferred)
+        :commands lsp lsp-deferred
+        ;; is lsp-clients needed? Saw it here: https://www.reddit.com/r/rust/comments/a3da5g/my_entire_emacs_config_for_rust_in_fewer_than_20/
+        :config (require 'lsp-clients))
 
       (use-package lsp-ui :commands lsp-ui-mode)
       (use-package helm-lsp :commands helm-lsp-workspace-symbol)
-      (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
       (use-package company-lsp
         :config (push 'company-lsp company-backends))
 
@@ -1132,6 +1173,21 @@
         (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode)
         (flycheck-posframe-configure-pretty-defaults))
     #+END_SRC
+** JSON
+   #+BEGIN_SRC emacs-lisp
+     ;;(use-package json-navigator)
+     ;;(use-package tree-mode)  ;; Does this work in the json-navigator hierarcy window??
+   #+END_SRC
+** YAML
+   #+BEGIN_SRC emacs-lisp
+     (use-package yaml-mode
+       :mode (("\\.yaml$" . yaml-mode)))
+   #+END_SRC
+
+** TOML
+   #+BEGIN_SRC emacs-lisp
+     (use-package toml-mode)
+   #+END_SRC
 ** Python
 *** Python Mode
     #+BEGIN_SRC emacs-lisp
@@ -1161,7 +1217,7 @@
       (use-package blacken)
     #+END_SRC
 
-*** pytest
+*** COMMENT pytest
     #+BEGIN_SRC emacs-lisp
       (use-package python-pytest)
     #+END_SRC
@@ -1170,25 +1226,6 @@
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck-prospector)
     #+END_SRC
-** R/ESS
-   #+BEGIN_SRC emacs-lisp
-     ;; (use-package ess
-     ;;   :commands R
-     ;;   :init (progn
-     ;;           ;; TODO: why doesn't use-package require it for us?
-     ;;           (require 'ess)
-
-     ;;           (setq ess-eval-visibly-p nil
-     ;;                 ess-use-tracebug t
-     ;;                 ;; ess-use-auto-complete t
-     ;;                 ess-help-own-frame 'one
-     ;;                 ess-ask-for-ess-directory nil)
-     ;;           (setq-default ess-dialect "R")
-     ;;           ))
-     ;; ;; (ess-toggle-underscore t)))
-     ;; (add-to-list 'company-backends 'company-ess)
-   #+END_SRC
-
 ** HTML/Javascript
 *** lsp-mode
     npm install -g typescript-language-server typescript vue-language-server
@@ -1253,6 +1290,38 @@
     #+BEGIN_SRC emacs-lisp
       (use-package emmet-mode)
     #+END_SRC
+** Rust
+   #+BEGIN_SRC emacs-lisp
+     (use-package rust-mode
+       :hook (rust-mode . lsp))
+
+     ;; Add keybindings for interacting with Cargo
+     (use-package cargo
+       :hook (rust-mode . cargo-minor-mode))
+
+     (use-package flycheck-rust
+       :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+   #+END_SRC
+
+** R/ESS
+   #+BEGIN_SRC emacs-lisp
+     ;; (use-package ess
+     ;;   :commands R
+     ;;   :init (progn
+     ;;           ;; TODO: why doesn't use-package require it for us?
+     ;;           (require 'ess)
+
+     ;;           (setq ess-eval-visibly-p nil
+     ;;                 ess-use-tracebug t
+     ;;                 ;; ess-use-auto-complete t
+     ;;                 ess-help-own-frame 'one
+     ;;                 ess-ask-for-ess-directory nil)
+     ;;           (setq-default ess-dialect "R")
+     ;;           ))
+     ;; ;; (ess-toggle-underscore t)))
+     ;; (add-to-list 'company-backends 'company-ess)
+   #+END_SRC
+
 ** COMMENT Elm
    Install npm packages using "npm install -g elm elm-format"
 
@@ -1298,17 +1367,6 @@
        :custom
        (flutter-sdk-path "~/bin/flutter/"))
 
-   #+END_SRC
-
-** JSON
-   #+BEGIN_SRC emacs-lisp
-     (use-package json-navigator)
-     (use-package tree-mode)  ;; Does this work in the json-navigator hierarcy window??
-   #+END_SRC
-** YAML
-   #+BEGIN_SRC emacs-lisp
-     (use-package yaml-mode
-       :mode (("\\.yaml$" . yaml-mode)))
    #+END_SRC
 
 ** Markdown
@@ -1375,11 +1433,29 @@
         :config
         (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
     #+END_SRC
+
 *** org-super-agenda
     #+BEGIN_SRC emacs-lisp
       (use-package org-super-agenda
         :config
         )
+    #+END_SRC
+
+*** org-pretty-tags
+    Add emojis to org tags.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-pretty-tags
+        :config
+        (setq org-pretty-tags-surrogate-strings
+              (quote
+               (
+                ("idea" . "💡")
+                ("learn" . "📖")
+                ("blog" . "✍")
+                ("music" . "🎵")
+                )))
+        (org-pretty-tags-global-mode))
     #+END_SRC
 
 *** DOCT: Declarative Org Capture Templates
@@ -1434,6 +1510,13 @@
        ;;(global-set-key (kbd "C-c r p") 'eradio-play)
        ;;(global-set-key (kbd "C-c r s") 'eradio-stop)
        )
+
+
+     (setq eradio-channels
+           '(
+             ("secretagent - somafm" . "http://somafm.com/secretagent130.pls")
+             ("groovesalad - somafm"   . "http://somafm.com/groovesalad130.pls")
+             ))
    #+END_SRC
 
 * My Helpers
