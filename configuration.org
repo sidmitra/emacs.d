@@ -513,6 +513,16 @@
        (global-set-key (kbd "C-=") 'er/expand-region))
    #+END_SRC
 
+** Commenting
+*** comment-dwim-2
+    https://github.com/remyferre/comment-dwim-2
+    comment-dwim-2 is a replacement for the Emacs' built-in command comment-dwim
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package comment-dwim-2
+        :config
+        (global-set-key (kbd "M-;") 'comment-dwim-2))
+    #+END_SRC
 ** COMMENT Move cursor inside brackets after adding
    #+BEGIN_SRC emacs-lisp
      (use-package cursor-in-brackets
@@ -815,10 +825,12 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package helm-posframe
+        :after helm
         :config
-        (setq helm-posframe-parameters
-              '((left-fringe . 10)
-                (right-fringe . 10)))
+        (setq helm-posframe-poshandler 'posframe-poshandler-window-bottom-left-corner
+              helm-posframe-height 100
+              helm-posframe-width (round (* (frame-width) 0.80))
+              helm-posframe-parameters '((internal-border-width . 10)))
         (helm-posframe-enable)
         )
     #+END_SRC
@@ -891,13 +903,13 @@
          (company-statistics-mode))
      #+END_SRC
 
-**** company-posframe
-     company-posframe is a company extension, which let company use
-     child frame as its candidate menu.
+**** COMMENT company-posframe
+     Let company use child frame as its candidate menu.
+
      #+BEGIN_SRC emacs-lisp
-       (use-package which-key-posframe
+       (use-package company-posframe
          :config
-         (which-key-posframe-mode))
+         (company-posframe-mode))
      #+END_SRC
 
 **** COMMENT company-box
@@ -1088,6 +1100,13 @@
     #+BEGIN_SRC emacs-lisp
       (use-package vc-msg)
     #+END_SRC
+*** browse-at-remote
+    #+BEGIN_SRC emacs-lisp
+      (use-package browse-at-remote
+        :bind ("C-c g g" . browse-at-remote)
+        )
+    #+END_SRC
+
 *** magit-delta
     Use magit + delta to show diffs.
     https://github.com/dandavison/magit-delta
@@ -1548,6 +1567,32 @@
           "import ast; import json; import sys; x=ast.literal_eval(sys.argv[1]); print(json.dumps(x,indent=4)")
          selection)
        (pop-to-buffer new-buffer-name))
+   #+END_SRC
+
+** Revert all buffers and ignore errors
+   #+BEGIN_SRC emacs-lisp
+     (defun sidmitra/revert-all-file-buffers ()
+       "Refresh all open file buffers without confirmation.
+     Buffers in modified (not yet saved) state in emacs will not be reverted. They
+     will be reverted though if they were modified outside emacs.
+     Buffers visiting files which do not exist any more or are no longer readable
+     will be killed."
+       (interactive)
+       (dolist (buf (buffer-list))
+         (let ((filename (buffer-file-name buf)))
+           ;; Revert only buffers containing files, which are not modified;
+           ;; do not try to revert non-file buffers like *Messages*.
+           (when (and filename
+                      (not (buffer-modified-p buf)))
+             (if (file-readable-p filename)
+                 ;; If the file exists and is readable, revert the buffer.
+                 (with-current-buffer buf
+                   (revert-buffer :ignore-auto :noconfirm :preserve-modes))
+               ;; Otherwise, kill the buffer.
+               (let (kill-buffer-query-functions) ; No query done when killing buffer
+                 (kill-buffer buf)
+                 (message "Killed non-existing/unreadable file buffer: %s" filename))))))
+       (message "Finished reverting buffers containing unmodified files."))
    #+END_SRC
 
 ** Quote lines
