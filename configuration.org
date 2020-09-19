@@ -1,13 +1,19 @@
 #+TITLE: Emacs configuration
 
 * Initialize
-** gc-cons
-   #+BEGIN_SRC emacs-lisp
-     (setq gc-cons-threshold 64000000)
-     (add-hook 'after-init-hook (lambda ()
-                                  ;; restore after startup
-                                  (setq gc-cons-threshold 800000)))
-   #+END_SRC
+** Perf config
+*** Increase gc-cons-threshold
+    Adjust gc-cons-threshold. The default setting is too low for lsp-mode's needs due to the fact that client/server communication generates a lot of memory/garbage.
+    #+BEGIN_SRC emacs-lisp
+      (setq gc-cons-threshold 100000000)
+    #+END_SRC
+*** Increase read-output max
+    Increase the amount of data which Emacs reads from the process. Again the emacs default is too low 4k considering that the some of the language server responses are in 800k - 3M range.
+
+    #+BEGIN_SRC emacs-lisp
+      (setq read-process-output-max (* 1024 1024)) ;; 1mb
+    #+END_SRC
+
 
 ** Add custom load path
    #+BEGIN_SRC emacs-lisp
@@ -449,6 +455,13 @@
       (setq save-interprogram-paste-before-kill t)
     #+END_SRC
 
+*** browse-kill-ring
+    Look through everything you've killed recently
+    https://github.com/browse-kill-ring/browse-kill-ring
+    #+BEGIN_SRC emacs-lisp
+      (use-package browse-kill-ring)
+    #+END_SRC
+
 *** Overwrite active region
     #+BEGIN_SRC emacs-lisp
       (delete-selection-mode t)
@@ -480,13 +493,6 @@
      (global-set-key (kbd "M-\"") 'insert-pair)
    #+END_SRC
 
-** Enable moving line or region, up or down
-   #+BEGIN_SRC emacs-lisp
-     (use-package move-text
-       :config
-       (move-text-default-bindings))
-   #+END_SRC
-
 ** Editor config
    #+BEGIN_SRC emacs-lisp
      (use-package editorconfig
@@ -506,12 +512,29 @@
      (global-set-key (kbd "C-c M-s") 'sort-lines)
    #+END_SRC
 
-** Expand region
-   #+BEGIN_SRC emacs-lisp
+** Region
+*** Operate on whole line or region
+    https://github.com/purcell/whole-line-or-region/
+
+    This minor mode allows functions to operate on the current line if they would normally operate on a region and region is currently undefined.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package whole-line-or-region)
+    #+END_SRC
+
+*** Enable moving line or region, up or down
+    #+BEGIN_SRC emacs-lisp
+      (use-package move-text
+        :config
+        (move-text-default-bindings))
+    #+END_SRC
+
+*** Expand region
+    #+BEGIN_SRC emacs-lisp
      (use-package expand-region
        :config
        (global-set-key (kbd "C-=") 'er/expand-region))
-   #+END_SRC
+    #+END_SRC
 
 ** Commenting
 *** comment-dwim-2
@@ -829,7 +852,9 @@
         :config
         (setq helm-posframe-poshandler 'posframe-poshandler-window-bottom-left-corner
               helm-posframe-height 100
-              helm-posframe-width (round (* (frame-width) 0.80))
+              helm-posframe-width 150
+              helm-posframe-border-width 1
+              ;;helm-posframe-width (round (* (frame-width) 0.80))
               helm-posframe-parameters '((internal-border-width . 10)))
         (helm-posframe-enable)
         )
@@ -1040,12 +1065,19 @@
                ))
     #+END_SRC
 
-*** sane-term
+*** shx
+    #+BEGIN_SRC emacs-lisp
+      (use-package shx
+        :config
+        (shx-global-mode 1))
+    #+END_SRC
+
+*** COMMENT sane-term
     #+BEGIN_SRC emacs-lisp
       (use-package sane-term)
     #+END_SRC
 
-*** Start a terminal and rename buffer
+*** COMMENT Start a terminal and rename buffer
     #+BEGIN_SRC emacs-lisp
       (defun terminal (buffer-name)
         "Start a terminal and rename buffer."
@@ -1053,13 +1085,6 @@
         (sane-term-create)
         (rename-buffer buffer-name t))
       (global-set-key (kbd "C-c t") 'terminal)
-    #+END_SRC
-
-*** shx
-    #+BEGIN_SRC emacs-lisp
-      (use-package shx
-        :config
-        (shx-global-mode 1))
     #+END_SRC
 
 *** COMMENT multi-term
@@ -1141,22 +1166,24 @@
 
       (use-package lsp-mode
         :hook (
-               (python-mode . lsp-deferred)
+               ;; (python-mode . lsp-deferred)
                (lsp-mode . lsp-enable-which-key-integration))
         :commands lsp lsp-deferred
-        ;; is lsp-clients needed? Saw it here: https://www.reddit.com/r/rust/comments/a3da5g/my_entire_emacs_config_for_rust_in_fewer_than_20/
-        ;; :config (require 'lsp-clients)
+        :config
+        (setq lsp-idle-delay 0.500)
+        (setq lsp-completion-provider :capf)
         )
 
       (use-package lsp-ui :commands lsp-ui-mode)
       (use-package helm-lsp :commands helm-lsp-workspace-symbol)
-      (use-package company-lsp
-        :config (push 'company-lsp company-backends))
 
       ;; optionally if you want to use debugger
       (use-package dap-mode)
       ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
     #+END_SRC
+
+**** References
+     https://emacs-lsp.github.io/lsp-mode/page/performance/
 
 *** COMMENT eglot
     Currently using emacs-lsp over eglot.
@@ -1208,6 +1235,12 @@
    #+BEGIN_SRC emacs-lisp
      (use-package toml-mode)
    #+END_SRC
+** Env
+   #+BEGIN_SRC emacs-lisp
+     (use-package dotenv-mode
+       :mode (("\\.env$" . dotenv-mode)))
+   #+END_SRC
+
 ** Python
 *** Python Mode
     #+BEGIN_SRC emacs-lisp
@@ -1219,21 +1252,58 @@
                   (setq python-indent-offset 4)))
     #+END_SRC
 *** lsp-mode
-    pip install 'python-language-server[all]' pyls-mypy pyls-isort pyls-black
+**** pyright
+     npm -g install pyright
+     #+BEGIN_SRC emacs-lisp
+       (use-package lsp-pyright
+         ;; :hook (python-mode . (lambda ()
+         ;;                        (require 'lsp-pyright)
+         ;;                        (lsp-deferred)))
+         )
+     #+END_SRC
+
+**** COMMENT Palantir LSP
+     pip install 'python-language-server[all]' pyls-mypy pyls-isort pyls-black
+
 *** pyvenv
     #+BEGIN_SRC emacs-lisp
-      (use-package pyvenv)
+      (use-package pyvenv
+        :after python
+        )
+
+      ;; https://old.reddit.com/r/emacs/comments/ijmgtx/tip_how_to_use_a_stable_and_fast_environment_to/
+      ;; (use-package pyenv-mode
+      ;;   :after python
+      ;;   :hook ((python-mode . pyenv-mode)
+      ;;          (projectile-switch-project . projectile-pyenv-mode-set))
+      ;;   :custom (pyenv-mode-set "3.8.5")
+      ;;   :preface
+      ;;   (defun projectile-pyenv-mode-set ()
+      ;;     "Set pyenv version matching project name."
+      ;;     (let ((project (projectile-project-name)))
+      ;;       (if (member project (pyenv-mode-versions))
+      ;;           (pyenv-mode-set project)
+      ;;         (pyenv-mode-unset)))))
+
+      ;; (use-package pyvenv
+      ;;   :after python
+      ;;   :hook (python-mode . pyvenv-mode)
+      ;;   :custom
+      ;;   (pyvenv-default-virtual-env-name "env")
+      ;;   (pyvenv-mode-line-indicator '(pyvenv-virtual-env-name ("[venv:"
+      ;;                                                          pyvenv-virtual-env-name "]"))))
     #+END_SRC
 
 *** isort
+    pip install isort
+
     #+BEGIN_SRC emacs-lisp
-      ;; pip install isort
       (use-package py-isort)
     #+END_SRC
 
 *** black
+    pip install black
     #+BEGIN_SRC emacs-lisp
-      ;; pip install black
       (use-package blacken)
     #+END_SRC
 
@@ -1408,10 +1478,9 @@
 
 ** dockerfile-mode
    #+BEGIN_SRC emacs-lisp
-     (use-package dockerfile-mode
-       :mode "Dockerfile$")
-   #+END_SRC
-
+   (use-package dockerfile-mode
+   :mode "Dockerfile$")
+   #+END_S
 * Notes
 ** org
 *** Main config
@@ -1771,9 +1840,14 @@
             (setq prettier-args '())
 
             ;; Python
-            (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.7")
+            ;; (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.7")
+            (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.8")
             (add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'blacken-mode)
+            (add-hook 'python-mode-hook 'blacken-mode)
+            (add-hook 'python-mode-hook 'lsp-deferred)
+            (setq lsp-enable-file-watchers nil)
+
 
             (defun custom-python-flycheck-setup ()
               (setq-default flycheck-disabled-checkers
