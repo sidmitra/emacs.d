@@ -1280,6 +1280,7 @@
                (lsp-mode . lsp-enable-which-key-integration))
         :commands lsp lsp-deferred
         :config
+        (setq lsp-use-plists t)
         (setq lsp-idle-delay 0.500)
         (setq lsp-completion-provider :capf)
         )
