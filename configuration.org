@@ -574,6 +574,8 @@
    #+END_SRC
 
 ** Key Bindings
+   Utilities/helpers for key-bindings.
+
 *** Which Key
 **** Main
      #+BEGIN_SRC emacs-lisp
@@ -644,7 +646,6 @@
    #+END_SRC
 
 ** Refresh buffer from filesystem periodically
-
    #+BEGIN_SRC emacs-lisp
      (global-auto-revert-mode t)
    #+END_SRC
@@ -674,18 +675,105 @@
    #+END_SRC
 
 * Tools
-** projectile
-   #+BEGIN_SRC emacs-lisp
-     (use-package projectile
-       :diminish projectile-mode
-       :init
-       (setq projectile-keymap-prefix (kbd "C-c p"))
-       :config
-       (projectile-global-mode)
-       (setq projectile-completion-system 'default)
-       (setq projectile-enable-caching t)
-       )
-   #+END_SRC
+** Project Navigation
+*** Bookmarks
+    #+BEGIN_SRC emacs-lisp
+      (use-package bm
+        :demand t
+
+        :init
+        ;; restore on load (even before you require bm)
+        (setq bm-restore-repository-on-load t)
+
+
+        :config
+        ;; Allow cross-buffer 'next'
+        (setq bm-cycle-all-buffers t)
+
+        ;; where to store persistant files
+        (setq bm-repository-file "~/.emacs.d/bm-repository")
+
+        ;; save bookmarks
+        (setq-default bm-buffer-persistence t)
+
+        ;; Loading the repository from file when on start up.
+        (add-hook' after-init-hook 'bm-repository-load)
+
+        ;; Restoring bookmarks when on file find.
+        (add-hook 'find-file-hooks 'bm-buffer-restore)
+
+        ;; Saving bookmarks
+        (add-hook 'kill-buffer-hook #'bm-buffer-save)
+
+        ;; Saving the repository to file when on exit.
+        ;; kill-buffer-hook is not called when Emacs is killed, so we
+        ;; must save all bookmarks first.
+        (add-hook 'kill-emacs-hook #'(lambda nil
+                                       (bm-buffer-save-all)
+                                       (bm-repository-save)))
+
+        ;; The `after-save-hook' is not necessary to use to achieve persistence,
+        ;; but it makes the bookmark data in repository more in sync with the file
+        ;; state.
+        (add-hook 'after-save-hook #'bm-buffer-save)
+
+        ;; Restoring bookmarks
+        (add-hook 'find-file-hooks   #'bm-buffer-restore)
+        (add-hook 'after-revert-hook #'bm-buffer-restore)
+
+        ;; The `after-revert-hook' is not necessary to use to achieve persistence,
+        ;; but it makes the bookmark data in repository more in sync with the file
+        ;; state. This hook might cause trouble when using packages
+        ;; that automatically reverts the buffer (like vc after a check-in).
+        ;; This can easily be avoided if the package provides a hook that is
+        ;; called before the buffer is reverted (like `vc-before-checkin-hook').
+        ;; Then new bookmarks can be saved before the buffer is reverted.
+        ;; Make sure bookmarks is saved before check-in (and revert-buffer)
+        (add-hook 'vc-before-checkin-hook #'bm-buffer-save)
+
+        ;; Use mouse + left fring to handle bookmarks
+        (global-set-key (kbd "<left-fringe> <mouse-1>") 'bm-toggle-mouse)
+        (global-set-key (kbd "C-<mouse-4>") 'bm-next-mouse)
+        ;; (global-set-key (kbd "C-<mouse-3>") 'bm-previous-mouse)
+
+        :bind (("C-x p n" . bm-next)
+               ("C-x p p" . bm-previous)
+               ("C-x p t" . bm-toggle))
+        )
+    #+END_SRC
+*** projectile
+    #+BEGIN_SRC emacs-lisp
+      (use-package projectile
+        :diminish projectile-mode
+        :init
+        (setq projectile-keymap-prefix (kbd "C-c p"))
+        :config
+        (projectile-global-mode)
+        (setq projectile-completion-system 'default)
+        (setq projectile-enable-caching t)
+        )
+    #+END_SRC
+
+*** dump-jump
+    #+BEGIN_SRC emacs-lisp
+      (use-package dumb-jump
+        :config
+        (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+    #+END_SRC
+*** neotree
+    #+BEGIN_SRC emacs-lisp
+      (use-package neotree
+        :config
+        (global-set-key [f8] 'neotree-toggle)
+        (setq neo-smart-open t)
+        (setq-default neo-show-hidden-files t)
+        (setq neo-theme 'icons)
+        ;; (setq projectile-switch-project-action 'neotree-projectile-action)
+        )
+
+      (defun text-scale-twice ()(interactive)(progn(text-scale-adjust 0)(text-scale-decrease 2)))
+      (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-twice)))
+    #+END_SRC
 
 ** COMMENT Helm Completion
 *** COMMENT helm
@@ -811,10 +899,10 @@
         :commands helm-lsp-workspace-symbol)
     #+END_SRC
 
-** Minibuffer completion
+** COMMENT Minibuffer completion
    https://writequit.org/denver-emacs/presentations/2017-04-11-ivy.html
 
-*** Ivy
+*** COMMENT Ivy
     Ivy is a generic completion mechanism for Emacs. While it operates similarly to other completion schemes such as icomplete-mode, Ivy aims to be more efficient, smaller, simpler, and smoother to use yet highly customizable.
     https://github.com/abo-abo/swiper
 
@@ -832,7 +920,7 @@
         )
     #+END_SRC
 
-*** ivy-rich
+*** COMMENT ivy-rich
     More friendly interface for ivy
     https://github.com/Yevgnen/ivy-rich
 
@@ -849,7 +937,7 @@
         :init (ivy-rich-mode))
     #+END_SRC
 
-*** swiper
+*** COMMENT swiper
     Ivy-enhanced alternative to isearch
     https://github.com/abo-abo/swiper
 
@@ -860,7 +948,7 @@
                ("C-r" . swiper)))
     #+END_SRC
 
-*** counsel
+*** COMMENT counsel
     A collection of Ivy-enhanced versions of common GNU Emacs commands
     #+BEGIN_SRC emacs-lisp
       (use-package counsel
@@ -882,7 +970,7 @@
         :config (counsel-mode))
     #+END_SRC
 
-*** counsel-projectile
+*** COMMENT counsel-projectile
     Counsel-projectile provides further ivy integration into projectile by taking
     advantage of ivy's support for selecting from a list of actions and applying an
     action without leaving the completion session.
@@ -897,7 +985,7 @@
         )
     #+END_SRC
 
-*** all-the-icons-ivy-rich
+*** COMMENT all-the-icons-ivy-rich
     To display icons correctly, you should run M-x all-the-icons-install-fonts to install the necessary fonts.
     https://github.com/seagle0128/all-the-icons-ivy-rich
 
@@ -907,203 +995,166 @@
         :init (all-the-icons-ivy-rich-mode 1))
     #+END_SRC
 
-** Format code
-*** format-all-the-code
-    Auto-format source code in many languages using the same command for all languages.
-    https://github.com/lassik/emacs-format-all-the-code
+** Incremental narrowing
+*** selectrum
+    https://github.com/raxod502/selectrum
 
     #+BEGIN_SRC emacs-lisp
-      (use-package format-all)
+  (use-package selectrum
+    :config
+    (selectrum-mode +1))
     #+END_SRC
 
+*** prescient
+    Simple but effective sorting and filtering for Emacs.
+    https://github.com/raxod502/prescient.el
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package prescient)
+      (use-package selectrum-prescient
+        :config
+        (selectrum-prescient-mode t)
+        (prescient-persist-mode t)
+        )
+    #+END_SRC
+** Search
+*** ctrlf
+    CTRLF (pronounced "control F") is an intuitive and efficient solution for single-buffer text search in Emacs.
+    https://github.com/raxod502/ctrlf
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package ctrlf
+        :config
+        (ctrlf-mode +1))
+    #+END_SRC
+
+*** thesilversearcher - ag
+    #+BEGIN_SRC emacs-lisp
+      (use-package ag
+        :config
+        ;; (setq-default ag-reuse-window 't)
+        (setq-default ag-reuse-buffers 't)
+        (setq-default ag-arguments '(
+                                     "--smart-case"
+                                     "--stats"
+                                     "--ignore-dir" "migrations"
+                                     "--ignore-dir" "node_modules"
+                                     "--ignore-dir" "elpa"
+                                     "--ignore-dir" "lib"
+                                     "--ignore-dir" "build"
+                                     "--ignore" "\*.min.js"
+                                     "--ignore" "\*.min.css"
+                                     "--ignore" "\*.csv"
+                                     "--ignore" "\*.svg"
+                                     "--ignore" "\*.json"
+                                     "--ignore" "\*.yaml"
+                                     "--ignore" "\*.yml"
+                                     ))
+        (global-set-key "\C-c\C-g" 'ag-project))
+    #+END_SRC
+
+** Completion
+*** company
+    #+BEGIN_SRC emacs-lisp
+      (use-package company
+        :config
+        (add-hook 'after-init-hook 'global-company-mode)
+        (setq company-idle-delay 0.2
+              company-minimum-prefix-length 1
+              company-selection-wrap-around t
+              company-tooltip-align-annotations t
+              company-tooltip-flip-when-above nil
+              company-tooltip-limit 10
+              company-tooltip-minimum 3
+              company-tooltip-margin 1
+              company-transformers '(company-sort-by-occurrence)
+              company-dabbrev-downcase nil)
+
+        ;; Add yasnippet support for all company backends
+        ;; https://github.com/syl20bnr/spacemacs/pull/179
+        (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+        (defun company-mode/backend-with-yas (backend)
+          (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+              backend
+            (append (if (consp backend) backend (list backend))
+                    '(:with company-yasnippet))))
+        )
+    #+END_SRC
+
+***** company-statistics
+      Company-statistics is a global minor mode built on top of the
+      in-buffer completion system company-mode. The idea is to keep a
+      log of a certain number of completions you choose, along with
+      some context information, and use that to rank candidates the
+      next time you have to choose — hopefully showing you likelier
+      candidates at the top of the list.
+
+      #+BEGIN_SRC emacs-lisp
+        (use-package company-statistics
+          :config
+          (company-statistics-mode))
+      #+END_SRC
+
+***** COMMENT company-posframe
+      Let company use child frame as its candidate menu.
+
+      #+BEGIN_SRC emacs-lisp
+        (use-package company-posframe
+          :config
+          (company-posframe-mode))
+      #+END_SRC
+
+***** COMMENT company-box
+      A company front-end with icons.
+
+      #+BEGIN_SRC emacs-lisp
+        (use-package company-box
+          :after company
+          :diminish
+          :hook (company-mode . company-box-mode)
+          :init (setq company-box-icons-alist 'company-box-icons-all-the-icons)
+          :config
+          (setq company-box-backends-colors nil)
+          (setq company-box-show-single-candidate t)
+          (setq company-box-max-candidates 50)
+          (with-eval-after-load 'all-the-icons
+            (declare-function all-the-icons-faicon 'all-the-icons)
+            (declare-function all-the-icons-material 'all-the-icons)
+            (setq company-box-icons-all-the-icons
+                  `((Unknown . ,(all-the-icons-material "find_in_page" :height 0.9 :v-adjust -0.2))
+                    (Text . ,(all-the-icons-faicon "text-width" :height 0.85 :v-adjust -0.05))
+                    (Method . ,(all-the-icons-faicon "cube" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-purple))
+                    (Function . ,(all-the-icons-faicon "cube" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-purple))
+                    (Constructor . ,(all-the-icons-faicon "cube" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-purple))
+                    (Field . ,(all-the-icons-faicon "tag" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-lblue))
+                    (Variable . ,(all-the-icons-faicon "tag" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-lblue))
+                    (Class . ,(all-the-icons-material "settings_input_component" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-orange))
+                    (Interface . ,(all-the-icons-material "share" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
+                    (Module . ,(all-the-icons-material "view_module" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
+                    (Property . ,(all-the-icons-faicon "wrench" :height 0.85 :v-adjust -0.05))
+                    (Unit . ,(all-the-icons-material "settings_system_daydream" :height 0.9 :v-adjust -0.2))
+                    (Value . ,(all-the-icons-material "format_align_right" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
+                    (Enum . ,(all-the-icons-material "storage" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-orange))
+                    (Keyword . ,(all-the-icons-material "filter_center_focus" :height 0.9 :v-adjust -0.2))
+                    (Snippet . ,(all-the-icons-material "format_align_center" :height 0.9 :v-adjust -0.2))
+                    (Color . ,(all-the-icons-material "palette" :height 0.9 :v-adjust -0.2))
+                    (File . ,(all-the-icons-faicon "file-o" :height 0.9 :v-adjust -0.05))
+                    (Reference . ,(all-the-icons-material "collections_bookmark" :height 0.9 :v-adjust -0.2))
+                    (Folder . ,(all-the-icons-faicon "folder-open" :height 0.9 :v-adjust -0.05))
+                    (EnumMember . ,(all-the-icons-material "format_align_right" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
+                    (Constant . ,(all-the-icons-faicon "square-o" :height 0.9 :v-adjust -0.05))
+                    (Struct . ,(all-the-icons-material "settings_input_component" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-orange))
+                    (Event . ,(all-the-icons-faicon "bolt" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-orange))
+                    (Operator . ,(all-the-icons-material "control_point" :height 0.9 :v-adjust -0.2))
+                    (TypeParameter . ,(all-the-icons-faicon "arrows" :height 0.85 :v-adjust -0.05))
+                    (Template . ,(all-the-icons-material "format_align_center" :height 0.9 :v-adjust -0.2))))))
+      #+END_SRC
 ** undo-tree
    #+BEGIN_SRC emacs-lisp
      (use-package undo-tree
      :config
      (global-undo-tree-mode 1)
      )
-   #+END_SRC
-
-** Bookmarks
-   #+BEGIN_SRC emacs-lisp
-     (use-package bm
-       :demand t
-
-       :init
-       ;; restore on load (even before you require bm)
-       (setq bm-restore-repository-on-load t)
-
-
-       :config
-       ;; Allow cross-buffer 'next'
-       (setq bm-cycle-all-buffers t)
-
-       ;; where to store persistant files
-       (setq bm-repository-file "~/.emacs.d/bm-repository")
-
-       ;; save bookmarks
-       (setq-default bm-buffer-persistence t)
-
-       ;; Loading the repository from file when on start up.
-       (add-hook' after-init-hook 'bm-repository-load)
-
-       ;; Restoring bookmarks when on file find.
-       (add-hook 'find-file-hooks 'bm-buffer-restore)
-
-       ;; Saving bookmarks
-       (add-hook 'kill-buffer-hook #'bm-buffer-save)
-
-       ;; Saving the repository to file when on exit.
-       ;; kill-buffer-hook is not called when Emacs is killed, so we
-       ;; must save all bookmarks first.
-       (add-hook 'kill-emacs-hook #'(lambda nil
-                                      (bm-buffer-save-all)
-                                      (bm-repository-save)))
-
-       ;; The `after-save-hook' is not necessary to use to achieve persistence,
-       ;; but it makes the bookmark data in repository more in sync with the file
-       ;; state.
-       (add-hook 'after-save-hook #'bm-buffer-save)
-
-       ;; Restoring bookmarks
-       (add-hook 'find-file-hooks   #'bm-buffer-restore)
-       (add-hook 'after-revert-hook #'bm-buffer-restore)
-
-       ;; The `after-revert-hook' is not necessary to use to achieve persistence,
-       ;; but it makes the bookmark data in repository more in sync with the file
-       ;; state. This hook might cause trouble when using packages
-       ;; that automatically reverts the buffer (like vc after a check-in).
-       ;; This can easily be avoided if the package provides a hook that is
-       ;; called before the buffer is reverted (like `vc-before-checkin-hook').
-       ;; Then new bookmarks can be saved before the buffer is reverted.
-       ;; Make sure bookmarks is saved before check-in (and revert-buffer)
-       (add-hook 'vc-before-checkin-hook #'bm-buffer-save)
-
-       ;; Use mouse + left fring to handle bookmarks
-       (global-set-key (kbd "<left-fringe> <mouse-1>") 'bm-toggle-mouse)
-       (global-set-key (kbd "C-<mouse-4>") 'bm-next-mouse)
-       ;; (global-set-key (kbd "C-<mouse-3>") 'bm-previous-mouse)
-
-       :bind (("C-x p n" . bm-next)
-              ("C-x p p" . bm-previous)
-              ("C-x p t" . bm-toggle))
-       )
-   #+END_SRC
-** dump-jump
-   #+BEGIN_SRC emacs-lisp
-     (use-package dumb-jump
-       :config
-       (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
-   #+END_SRC
-** company
-   #+BEGIN_SRC emacs-lisp
-     (use-package company
-       :config
-       (add-hook 'after-init-hook 'global-company-mode)
-       (setq company-idle-delay 0.2
-             company-minimum-prefix-length 1
-             company-selection-wrap-around t
-             company-tooltip-align-annotations t
-             company-tooltip-flip-when-above nil
-             company-tooltip-limit 10
-             company-tooltip-minimum 3
-             company-tooltip-margin 1
-             company-transformers '(company-sort-by-occurrence)
-             company-dabbrev-downcase nil)
-
-       ;; Add yasnippet support for all company backends
-       ;; https://github.com/syl20bnr/spacemacs/pull/179
-       (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
-       (defun company-mode/backend-with-yas (backend)
-         (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-             backend
-           (append (if (consp backend) backend (list backend))
-                   '(:with company-yasnippet))))
-       )
-   #+END_SRC
-
-**** company-statistics
-     Company-statistics is a global minor mode built on top of the
-     in-buffer completion system company-mode. The idea is to keep a
-     log of a certain number of completions you choose, along with
-     some context information, and use that to rank candidates the
-     next time you have to choose — hopefully showing you likelier
-     candidates at the top of the list.
-
-     #+BEGIN_SRC emacs-lisp
-       (use-package company-statistics
-         :config
-         (company-statistics-mode))
-     #+END_SRC
-
-**** COMMENT company-posframe
-     Let company use child frame as its candidate menu.
-
-     #+BEGIN_SRC emacs-lisp
-       (use-package company-posframe
-         :config
-         (company-posframe-mode))
-     #+END_SRC
-
-**** COMMENT company-box
-     A company front-end with icons.
-
-     #+BEGIN_SRC emacs-lisp
-       (use-package company-box
-         :after company
-         :diminish
-         :hook (company-mode . company-box-mode)
-         :init (setq company-box-icons-alist 'company-box-icons-all-the-icons)
-         :config
-         (setq company-box-backends-colors nil)
-         (setq company-box-show-single-candidate t)
-         (setq company-box-max-candidates 50)
-         (with-eval-after-load 'all-the-icons
-           (declare-function all-the-icons-faicon 'all-the-icons)
-           (declare-function all-the-icons-material 'all-the-icons)
-           (setq company-box-icons-all-the-icons
-                 `((Unknown . ,(all-the-icons-material "find_in_page" :height 0.9 :v-adjust -0.2))
-                   (Text . ,(all-the-icons-faicon "text-width" :height 0.85 :v-adjust -0.05))
-                   (Method . ,(all-the-icons-faicon "cube" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-purple))
-                   (Function . ,(all-the-icons-faicon "cube" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-purple))
-                   (Constructor . ,(all-the-icons-faicon "cube" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-purple))
-                   (Field . ,(all-the-icons-faicon "tag" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-lblue))
-                   (Variable . ,(all-the-icons-faicon "tag" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-lblue))
-                   (Class . ,(all-the-icons-material "settings_input_component" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-orange))
-                   (Interface . ,(all-the-icons-material "share" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
-                   (Module . ,(all-the-icons-material "view_module" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
-                   (Property . ,(all-the-icons-faicon "wrench" :height 0.85 :v-adjust -0.05))
-                   (Unit . ,(all-the-icons-material "settings_system_daydream" :height 0.9 :v-adjust -0.2))
-                   (Value . ,(all-the-icons-material "format_align_right" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
-                   (Enum . ,(all-the-icons-material "storage" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-orange))
-                   (Keyword . ,(all-the-icons-material "filter_center_focus" :height 0.9 :v-adjust -0.2))
-                   (Snippet . ,(all-the-icons-material "format_align_center" :height 0.9 :v-adjust -0.2))
-                   (Color . ,(all-the-icons-material "palette" :height 0.9 :v-adjust -0.2))
-                   (File . ,(all-the-icons-faicon "file-o" :height 0.9 :v-adjust -0.05))
-                   (Reference . ,(all-the-icons-material "collections_bookmark" :height 0.9 :v-adjust -0.2))
-                   (Folder . ,(all-the-icons-faicon "folder-open" :height 0.9 :v-adjust -0.05))
-                   (EnumMember . ,(all-the-icons-material "format_align_right" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
-                   (Constant . ,(all-the-icons-faicon "square-o" :height 0.9 :v-adjust -0.05))
-                   (Struct . ,(all-the-icons-material "settings_input_component" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-orange))
-                   (Event . ,(all-the-icons-faicon "bolt" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-orange))
-                   (Operator . ,(all-the-icons-material "control_point" :height 0.9 :v-adjust -0.2))
-                   (TypeParameter . ,(all-the-icons-faicon "arrows" :height 0.85 :v-adjust -0.05))
-                   (Template . ,(all-the-icons-material "format_align_center" :height 0.9 :v-adjust -0.2))))))
-     #+END_SRC
-
-** neotree
-   #+BEGIN_SRC emacs-lisp
-     (use-package neotree
-       :config
-       (global-set-key [f8] 'neotree-toggle)
-       (setq neo-smart-open t)
-       (setq-default neo-show-hidden-files t)
-       (setq neo-theme 'icons)
-       ;; (setq projectile-switch-project-action 'neotree-projectile-action)
-       )
-
-     (defun text-scale-twice ()(interactive)(progn(text-scale-adjust 0)(text-scale-decrease 2)))
-     (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-twice)))
    #+END_SRC
 
 ** keyfreq
@@ -1113,38 +1164,6 @@
        (keyfreq-mode 1)
        (keyfreq-autosave-mode 1))
    #+END_SRC
-** COMMENT ctrlf
-   #+BEGIN_SRC emacs-lisp
-     (use-package ctrlf
-       :config
-       (ctrlf-mode +1))
-   #+END_SRC
-
-** thesilversearcher - ag
-   #+BEGIN_SRC emacs-lisp
-     (use-package ag
-       :config
-       ;; (setq-default ag-reuse-window 't)
-       (setq-default ag-reuse-buffers 't)
-       (setq-default ag-arguments '(
-                                    "--smart-case"
-                                    "--stats"
-                                    "--ignore-dir" "migrations"
-                                    "--ignore-dir" "node_modules"
-                                    "--ignore-dir" "elpa"
-                                    "--ignore-dir" "lib"
-                                    "--ignore-dir" "build"
-                                    "--ignore" "\*.min.js"
-                                    "--ignore" "\*.min.css"
-                                    "--ignore" "\*.csv"
-                                    "--ignore" "\*.svg"
-                                    "--ignore" "\*.json"
-                                    "--ignore" "\*.yaml"
-                                    "--ignore" "\*.yml"
-                                    ))
-       (global-set-key "\C-c\C-g" 'ag-project))
-   #+END_SRC
-
 ** Terminal
 *** vterm
     #+BEGIN_SRC emacs-lisp
@@ -1212,6 +1231,15 @@
 
      (use-package yasnippet-snippets)
    #+END_SRC
+** Formatting
+*** format-all-the-code
+    Auto-format source code in many languages using the same command for all languages.
+    https://github.com/lassik/emacs-format-all-the-code
+
+    #+BEGIN_SRC emacs-lisp
+       (use-package format-all)
+    #+END_SRC
+
 ** Version Control (git)
 *** magit
     #+BEGIN_SRC emacs-lisp
