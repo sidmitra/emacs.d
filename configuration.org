@@ -794,8 +794,11 @@
       (use-package selectrum-prescient
         :config
         (selectrum-prescient-mode t)
-        (prescient-persist-mode t)
-        )
+        (prescient-persist-mode t))
+      (use-package company-prescient
+        :after company
+        :config
+        (company-prescient-mode t))
     #+END_SRC
 ** Search
 *** ctrlf
