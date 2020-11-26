@@ -347,9 +347,20 @@
         ("C-<prior>" . centaur-tabs-backward)
         ("C-<next>" . centaur-tabs-forward))
     #+END_SRC
-** COMMENT Show beacon on cursor
+** Show beacon on cursor
    A light that follows your cursor around so you don't lose it!
 
+   #+BEGIN_SRC emacs-lisp
+     (defun pulse-line (&rest _)
+       "Pulse the current line."
+       (pulse-momentary-highlight-one-line (point)))
+
+     (dolist (command '(scroll-up-command scroll-down-command
+                                          recenter-top-bottom other-window))
+       (advice-add command :after #'pulse-line))
+   #+END_SRC
+
+*** COMMENT beacon
    #+BEGIN_SRC emacs-lisp
      (use-package beacon
        :config
@@ -1245,6 +1256,7 @@
                ("\\.js$" . web-mode)
                ("\\.json$" . web-mode)
                ("\\.jsx$" . web-mode)
+               ("\\.tsx$" . web-mode)
                ("\\.vue$" . web-mode)
                ("\\.scss$" . web-mode)
                ("\\.less$" . web-mode))
@@ -1403,7 +1415,9 @@
 *** Main config
     #+BEGIN_SRC emacs-lisp
       (use-package org
-        :bind ("C-c a" . org-agenda)
+        :bind (
+               ("C-c a" . org-agenda)
+               ("C-c k" . org-capture))
         :config
         ;; Change ... to downward arrow when there's stuff under a header.
         (setq org-hide-leading-stars t)
@@ -1424,7 +1438,7 @@
         ;; Save archive file after something is archived.
         (setq org-archive-subtree-save-file-p t)
 
-        ;; (global-set-key (kbd "C-c a") ')
+        ;; (global-set-key (kbd "C-c a") 'org-agenda)
 
         )
     #+END_SRC
@@ -1444,7 +1458,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package org-super-agenda
         :config
-        )
+        (org-super-agenda-mode))
     #+END_SRC
 
 *** org-pretty-tags
