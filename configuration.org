@@ -681,8 +681,6 @@
 ** COMMENT Group buffers
    #+BEGIN_SRC emacs-lisp
      (use-package bufler)
-     ;; (use-package helm-bufler)
-     ;; (helm :sources '(helm-bufler-source))
    #+END_SRC
 
 * Tools
@@ -1417,36 +1415,34 @@
       (use-package org
         :bind (
                ("C-c a" . org-agenda)
-               ("C-c k" . org-capture))
+               ("C-c k" . org-capture)
+               )
         :config
+        ;; (global-set-key (kbd "C-c a") 'org-agenda)
+
         ;; Change ... to downward arrow when there's stuff under a header.
         (setq org-hide-leading-stars t)
 
         ;; Use syntax highlighting in source blocks while editing.
-        ;; (setq org-src-fontify-natively t)
+        (setq org-src-fontify-natively t)
         (font-lock-flush)
 
         ;; Make TAB act as if it were issued in a buffer of the language's major mode.
         (setq org-src-tab-acts-natively t)
 
-        (setq org-support-shift-select t)
+        (setq org-support-shift-select 'always)
+
+        ;; Highlight some keywords
         (setq org-todo-keyword-faces
               '(("TODO" . (:foreground "yellow" :weight bold))
                 ("DONE" . "green")
                 ))
 
-        ;; Save archive file after something is archived.
+        ;; ;; Save archive file after something is archived.
         (setq org-archive-subtree-save-file-p t)
-
-        ;; (global-set-key (kbd "C-c a") 'org-agenda)
 
         )
     #+END_SRC
-*** COMMENT org-tempo
-    #+BEGIN_SRC emacs-lisp
-      (use-package org-tempo)
-    #+END_SRC
-
 *** org-superstar
     #+BEGIN_SRC emacs-lisp
       (use-package org-superstar
@@ -1771,14 +1767,14 @@
             (setq prettier-args '())
 
             ;; Python
-            ;; (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.7")
             (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.8")
+            ;; tru this instead of pyvenv later
+            ;; (python-shell-interpreter "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.8/bin/python")
             (add-hook 'before-save-hook 'py-isort-before-save)
             (add-hook 'python-mode-hook 'blacken-mode)
             (add-hook 'python-mode-hook 'blacken-mode)
             (add-hook 'python-mode-hook 'lsp-deferred)
             (setq lsp-enable-file-watchers nil)
-
 
             (defun custom-python-flycheck-setup ()
               (setq-default flycheck-disabled-checkers
@@ -1791,7 +1787,6 @@
               (flycheck-select-checker 'python-prospector))
 
             (add-hook 'python-mode-hook #'custom-python-flycheck-setup)
-
 
             ;;(add-hook 'python-mode-hook 'eglot-ensure)
             ;; (setq python-shell-completion-native-enable nil
@@ -1810,6 +1805,7 @@
      (setq-default web-mode-engines-alist
                    '(("django"    . "\\.html\\'")))
    #+END_SRC
+
 ** CoreEcon
    #+BEGIN_SRC emacs-lisp
      (defun econ-enable () (interactive)
