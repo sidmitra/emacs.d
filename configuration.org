@@ -2,25 +2,23 @@
 
 * Initialize
 ** Perf config
-*** Increase gc-cons-threshold
-    Adjust gc-cons-threshold. The default setting is too low for lsp-mode's needs due to the fact that client/server communication generates a lot of memory/garbage.
-    #+BEGIN_SRC emacs-lisp
-      (setq gc-cons-threshold 100000000)
-    #+END_SRC
-*** Increase read-output max
-    Increase the amount of data which Emacs reads from the process. Again the emacs default is too low 4k considering that the some of the language server responses are in 800k - 3M range.
+   Adjust gc-cons-threshold. The default setting is too low for lsp-mode's needs due to the fact that client/server communication generates a lot of memory/garbage.
+   #+BEGIN_SRC emacs-lisp
+     (setq gc-cons-threshold 100000000)
+   #+END_SRC
 
-    #+BEGIN_SRC emacs-lisp
-      (setq read-process-output-max (* 1024 1024)) ;; 1mb
-    #+END_SRC
-
+   Increase the amount of data which Emacs reads from the process. Again the emacs default is too low 4k considering that the some of the language server responses are in 800k - 3M range.
+   #+BEGIN_SRC emacs-lisp
+     (setq read-process-output-max (* 1024 1024)) ;; 1mb
+   #+END_SRC
 
 ** Add custom load path
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'load-path (expand-file-name "my-packages" user-emacs-directory))
    #+END_SRC
 
-** Install use-package
+** use-package
+   Setup basic use-package interface
    #+BEGIN_SRC emacs-lisp
      (setq core-packages
            '(use-package))
@@ -33,13 +31,24 @@
      (ensure-packages core-packages)
    #+END_SRC
 
-** Enable auto-installing of packages using use-package
+   Enable auto-installing of packages using use-package
    #+BEGIN_SRC emacs-lisp
+     (require 'use-package-ensure)
      (setq use-package-always-ensure t)
      (require 'use-package)
    #+END_SRC
 
-** Use paradox as the default package interface
+   :ensure will install a package if it is not already installed, but it does not keep it up-to-date.
+   To keep your packages updated automatically, one option is to use auto-package-update
+   #+BEGIN_SRC elisp
+     (use-package auto-package-update
+       :config
+       (setq auto-package-update-delete-old-versions t)
+       (setq auto-package-update-hide-results t)
+       (auto-package-update-maybe))
+   #+END_SRC
+
+   Use paradox as the default package interface
    #+BEGIN_SRC emacs-lisp
      (use-package paradox
        :config
@@ -294,61 +303,23 @@
            (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
      #+END_SRC
 
-** Highlight hex color strings
+*** Highlight hex color strings
 
-   This minor mode sets background color to strings that match color.
-   https://elpa.gnu.org/packages/rainbow-mode.html
+    This minor mode sets background color to strings that match color.
+    https://elpa.gnu.org/packages/rainbow-mode.html
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package rainbow-mode
-       :init
-       (setq rainbow-html-colors-major-mode-list '(css-mode
-                                                   html-mode
-                                                   less-css-mode
-                                                   nxml-mode
-                                                   php-mode
-                                                   sass-mode
-                                                   scss-mode
-                                                   web-mode
-                                                   xml-mode))
-       (dolist (mode rainbow-html-colors-major-mode-list)
-         (add-hook (intern (format "%s-hook" mode)) 'rainbow-mode)))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package rainbow-mode
+        :hook (css-mode sass-mode scss-mode web-mode html-mode))
+    #+END_SRC
 
 ** Manage layout
-*** winner-mode
-    #+BEGIN_SRC emacs-lisp
-      (winner-mode 1)
-    #+END_SRC
-*** eyebrowse
-    #+BEGIN_SRC emacs-lisp
-      (use-package eyebrowse
-        :config
-        (eyebrowse-mode 1))
-    #+END_SRC
-** Show beacon on cursor
-   A light that follows your cursor around so you don't lose it!
 
+   Save window layout history.
    #+BEGIN_SRC emacs-lisp
-     (defun pulse-line (&rest _)
-       "Pulse the current line."
-       (pulse-momentary-highlight-one-line (point)))
-
-     (dolist (command '(scroll-up-command scroll-down-command
-                                          recenter-top-bottom other-window))
-       (advice-add command :after #'pulse-line))
+     (winner-mode 1)
    #+END_SRC
 
-*** COMMENT beacon
-    #+BEGIN_SRC emacs-lisp
-     (use-package beacon
-       :config
-       (setq beacon-dont-blink-major-modes
-             '(magit-status-mode magit-popup-mode eshell-mode term-mode elfeed-show-mode))
-       (beacon-mode t))
-    #+END_SRC
-
-*** TODO Disable beacon on term-mode, ansi-term mode. The above config doesn't seem to work
 ** Show line/col Numbers
 *** Show Line col numbers
     #+BEGIN_SRC emacs-lisp
@@ -503,20 +474,20 @@
 
 *** Expand region
     #+BEGIN_SRC emacs-lisp
-     (use-package expand-region
-       :config
-       (global-set-key (kbd "C-=") 'er/expand-region))
+      (use-package expand-region
+        :config
+        (global-set-key (kbd "C-=") 'er/expand-region))
     #+END_SRC
 
 ** Commenting
-    https://github.com/remyferre/comment-dwim-2
-    comment-dwim-2 is a replacement for the Emacs' built-in command comment-dwim
+   https://github.com/remyferre/comment-dwim-2
+   comment-dwim-2 is a replacement for the Emacs' built-in command comment-dwim
 
-    #+BEGIN_SRC emacs-lisp
-      (use-package comment-dwim-2
-        :config
-        (global-set-key (kbd "M-;") 'comment-dwim-2))
-    #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package comment-dwim-2
+       :config
+       (global-set-key (kbd "M-;") 'comment-dwim-2))
+   #+END_SRC
 
 ** Key Bindings
    Utilities/helpers for key-bindings.
@@ -610,11 +581,6 @@
      (use-package uniquify
        :ensure nil
        :config (setq uniquify-buffer-name-style 'forward))
-   #+END_SRC
-
-** COMMENT Group buffers
-   #+BEGIN_SRC emacs-lisp
-     (use-package bufler)
    #+END_SRC
 
 * Tools
@@ -723,9 +689,9 @@
     https://github.com/raxod502/selectrum
 
     #+BEGIN_SRC emacs-lisp
-  (use-package selectrum
-    :config
-    (selectrum-mode +1))
+      (use-package selectrum
+        :config
+        (selectrum-mode +1))
     #+END_SRC
 
 *** prescient
@@ -878,9 +844,9 @@
 ** undo-tree
    #+BEGIN_SRC emacs-lisp
      (use-package undo-tree
-     :config
-     (global-undo-tree-mode 1)
-     )
+       :config
+       (global-undo-tree-mode 1)
+       )
    #+END_SRC
 
 ** keyfreq
@@ -924,16 +890,14 @@
        (yas-global-mode 1)
        (add-hook 'term-mode-hook (lambda()
                                    (setq yas-dont-activate-functions t))))
-
      (use-package yasnippet-snippets)
    #+END_SRC
 ** Formatting
-*** format-all-the-code
     Auto-format source code in many languages using the same command for all languages.
     https://github.com/lassik/emacs-format-all-the-code
 
     #+BEGIN_SRC emacs-lisp
-       (use-package format-all)
+      (use-package format-all)
     #+END_SRC
 
 ** Version Control (git)
@@ -943,6 +907,19 @@
         :config
         (setq magit-auto-revert-mode nil)
         (setq magit-last-seen-setup-instructions "1.4.0"))
+    #+END_SRC
+
+*** magit-delta
+    Use magit + delta to show diffs.
+    https://github.com/dandavison/magit-delta
+
+    Install delta via instructions here:
+    https://github.com/dandavison/delta
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package magit-delta
+        :config
+        (magit-delta-mode))
     #+END_SRC
 
 *** forge
@@ -962,19 +939,6 @@
         )
     #+END_SRC
 
-*** magit-delta
-    Use magit + delta to show diffs.
-    https://github.com/dandavison/magit-delta
-
-    Install delta via instructions here:
-    https://github.com/dandavison/delta
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package magit-delta
-        :config
-        (magit-delta-mode))
-    #+END_SRC
-
 *** git-timemachine
     #+BEGIN_SRC emacs-lisp
       (use-package git-timemachine
@@ -992,91 +956,90 @@
    https://emacs-lsp.github.io/lsp-mode/page/performance/
 
    #+BEGIN_SRC emacs-lisp
-      (use-package lsp-mode
-        :hook (
-               (lsp-mode . lsp-enable-which-key-integration))
-        :commands lsp lsp-deferred
-        :config
-        (setq
-         lsp-use-plists t
-         lsp-idle-delay 0.5
-         lsp-enable-symbol-highlighting t
-         lsp-enable-snippet nil  ;; Not supported by company capf, which is the recommended company backend
-         ; lsp-completion-provider :capf
+     (use-package lsp-mode
+       :hook (python-mode lsp-enable-which-key-integration)
+       ;; :hook ((lsp-mode . lsp-enable-which-key-integration))
+       :commands lsp lsp-deferred
+       :config
+       (setq
+        lsp-use-plists t
+        lsp-idle-delay 0.5
+        lsp-enable-symbol-highlighting t
+        lsp-enable-snippet nil  ;; Not supported by company capf, which is the recommended company backend
+                                             ; lsp-completion-provider :capf
+        )
+
+       ;; TODO: Move to python block
+       (lsp-register-custom-settings
+        '(("pyls.plugins.pyls_mypy.enabled" t t)
+          ("pyls.plugins.pyls_mypy.live_mode" nil t)
+          ("pyls.plugins.pyls_black.enabled" t t)
+          ("pyls.plugins.pyls_isort.enabled" t t)
+
+          ;; Disable these as they're duplicated by flake8
+          ("pyls.plugins.pycodestyle.enabled" nil t)
+          ("pyls.plugins.mccabe.enabled" nil t)
+          ("pyls.plugins.pyflakes.enabled" nil t)))
+
+       (use-package lsp-ui
+         :config (setq lsp-ui-sideline-show-hover t
+                       lsp-ui-sideline-delay 0.5
+                       lsp-ui-doc-delay 5
+                       lsp-ui-sideline-ignore-duplicates t
+                       lsp-ui-doc-position 'bottom
+                       lsp-ui-doc-alignment 'frame
+                       lsp-ui-doc-header nil
+                       lsp-ui-doc-include-signature t
+                       lsp-ui-doc-use-childframe t)
+         :commands lsp-ui-mode
          )
 
-        ;; TODO: Move to python block
-        (lsp-register-custom-settings
-         '(("pyls.plugins.pyls_mypy.enabled" t t)
-           ("pyls.plugins.pyls_mypy.live_mode" nil t)
-           ("pyls.plugins.pyls_black.enabled" t t)
-           ("pyls.plugins.pyls_isort.enabled" t t)
+       ;; optionally if you want to use debugger
+       (use-package dap-mode
+         :config
+         (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
-           ;; Disable these as they're duplicated by flake8
-           ("pyls.plugins.pycodestyle.enabled" nil t)
-           ("pyls.plugins.mccabe.enabled" nil t)
-           ("pyls.plugins.pyflakes.enabled" nil t)))
-
-        (use-package lsp-ui
-          :config (setq lsp-ui-sideline-show-hover t
-                        lsp-ui-sideline-delay 0.5
-                        lsp-ui-doc-delay 5
-                        lsp-ui-sideline-ignore-duplicates t
-                        lsp-ui-doc-position 'bottom
-                        lsp-ui-doc-alignment 'frame
-                        lsp-ui-doc-header nil
-                        lsp-ui-doc-include-signature t
-                        lsp-ui-doc-use-childframe t)
-          :commands lsp-ui-mode
-          )
-
-        ;; optionally if you want to use debugger
-        (use-package dap-mode
-          :config
-          (setq dap-auto-configure-features '(sessions locals controls tooltip)))
-
-        ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-        ;; (setq lsp-keymap-prefix "s-l")
-        )
+       ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+       ;; (setq lsp-keymap-prefix "s-l")
+       )
    #+END_SRC
 
 ** Python
-*** Python Mode
-    pip install python-language-server[all]
+   pip install python-language-server[all]
 
-    #+BEGIN_SRC emacs-lisp
-      (use-package python-mode
-        :ensure t
-        :hook (python-mode . lsp-deferred)
-        :custom
-        ;; NOTE: Set these if Python 3 is called "python3" on your system!
-        ;; (python-shell-interpreter "python3")
-        ;; (dap-python-executable "python3")
-        (dap-python-debugger 'debugpy)
-        :config
-        (require 'dap-python)
-        )
+   #+BEGIN_SRC emacs-lisp
+     ;; (use-package python-mode
+     ;;   :ensure nil
+     ;;   :hook (python-mode . lsp-deferred)
+     ;;   :custom
+     ;;   ;; NOTE: Set these if Python 3 is called "python3" on your system!
+     ;;   ;; (python-shell-interpreter "python3")
+     ;;   ;; (dap-python-executable "python3")
+     ;;   (dap-python-debugger 'debugpy)
+     ;;   :config
+     ;;   (require 'dap-python)
+     ;;   )
 
-      ;; TODO: Move to use-package block
-      (add-hook 'python-mode-hook
-                (lambda ()
-                  (setq indent-tabs-mode nil)
-                  (setq tab-width 4)
-                  (setq-default python-indent-guess-indent-offset nil)
-                  (setq python-indent-offset 4)))
-    #+END_SRC
+     ;; TODO: Move to use-package block
+     (add-hook 'python-mode-hook
+               (lambda ()
+                 (setq indent-tabs-mode nil)
+                 (setq tab-width 4)
+                 (setq-default python-indent-guess-indent-offset nil)
+                 (setq python-indent-offset 4)))
+   #+END_SRC
 
-*** pyvenv
-    #+BEGIN_SRC emacs-lisp
-      (use-package pyvenv
-        :after python
-        :config
-        (pyvenv-mode 1))
-    #+END_SRC
-*** flycheck-prospector
-    #+BEGIN_SRC emacs-lisp
-      (use-package flycheck-prospector)
-    #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package pyvenv
+       :hook python-mode
+       :config
+       (pyvenv-mode 1))
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package flycheck-prospector)
+   #+END_SRC
+
 ** Coverage
    #+BEGIN_SRC emacs-lisp
      ;;(add-to-list 'load-path "~/.emacs.d/coverage-mode/")
@@ -1225,8 +1188,8 @@
 
 ** dockerfile-mode
    #+BEGIN_SRC emacs-lisp
-   (use-package dockerfile-mode
-   :mode "Dockerfile$")
+     (use-package dockerfile-mode
+       :mode "Dockerfile$")
    #+END_SRC
 
 * Notes
@@ -1298,7 +1261,6 @@
 *** DOCT: Declarative Org Capture Templates
     #+BEGIN_SRC emacs-lisp
       (use-package doct
-        :ensure t
         ;;recommended: defer until calling doct
         :commands (doct))
     #+END_SRC
@@ -1497,7 +1459,7 @@
 
             ;; Python
             (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.8")
-            (lsp-deferred)
+            ;; (lsp-deferred)
 
             ;; (add-hook 'before-save-hook 'py-isort-before-save)
             ;; (add-hook 'python-mode-hook 'blacken-mode)
