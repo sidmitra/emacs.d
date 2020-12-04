@@ -98,10 +98,6 @@
      (defalias 'yes-or-no-p 'y-or-n-p)
    #+END_SRC
 
-** COMMENT Set default tramp method to SSH
-   #+BEGIN_SRC emacs-lisp
-     (setq tramp-default-method "ssh")
-   #+END_SRC
 ** Shell/exec-path-from-shell
    #+BEGIN_SRC emacs-lisp
      ;; exec-path-from-shell
@@ -330,23 +326,6 @@
         :config
         (eyebrowse-mode 1))
     #+END_SRC
-** Enable tabs
-*** COMMENT centaur-tabs
-    #+BEGIN_SRC emacs-lisp
-      (use-package centaur-tabs
-        :config
-        (setq centaur-tabs-height 32)
-        (setq centaur-tabs-set-icons t)
-        (setq centaur-tabs-style "slant")
-        ;; (setq centaur-tabs-set-bar 'left)
-        (setq centaur-tabs-set-bar 'over)
-        (setq centaur-tabs-set-modified-marker t)
-        (centaur-tabs-headline-match)
-        (centaur-tabs-mode t)
-        :bind
-        ("C-<prior>" . centaur-tabs-backward)
-        ("C-<next>" . centaur-tabs-forward))
-    #+END_SRC
 ** Show beacon on cursor
    A light that follows your cursor around so you don't lose it!
 
@@ -370,13 +349,6 @@
     #+END_SRC
 
 *** TODO Disable beacon on term-mode, ansi-term mode. The above config doesn't seem to work
-** COMMENT volatile-highlights
-   Minor mode for visual feedback on some operations in Emacs
-   #+BEGIN_SRC emacs-lisp
-     (use-package volatile-highlights
-       :config
-       (volatile-highlights-mode t))
-   #+END_SRC
 ** Show line/col Numbers
 *** Show Line col numbers
     #+BEGIN_SRC emacs-lisp
@@ -422,17 +394,6 @@
         :config
         (mode-icons-mode))
     #+END_SRC
-** COMMENT Distinguish file buffers from others
-   #+BEGIN_SRC emacs-lisp
-     (use-package solaire-mode
-       :hook
-       ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
-       (minibuffer-setup . solaire-mode-in-minibuffer)
-       :config
-       (solaire-global-mode +1)
-       (solaire-mode-swap-bg))
-   #+END_SRC
-
 * Editing
 ** Set default tab char's display width to 4 spaces
    #+BEGIN_SRC emacs-lisp
@@ -548,7 +509,6 @@
     #+END_SRC
 
 ** Commenting
-*** comment-dwim-2
     https://github.com/remyferre/comment-dwim-2
     comment-dwim-2 is a replacement for the Emacs' built-in command comment-dwim
 
@@ -557,32 +517,6 @@
         :config
         (global-set-key (kbd "M-;") 'comment-dwim-2))
     #+END_SRC
-** COMMENT Move cursor inside brackets after adding
-   #+BEGIN_SRC emacs-lisp
-     (use-package cursor-in-brackets
-       :config
-       (add-hook 'prog-mode-hook 'cursor-in-brackets-mode))
-   #+END_SRC
-
-** COMMENT Enable code folding
-   #+BEGIN_SRC emacs-lisp
-   #+END_SRC
-
-** COMMENT Move to beginning of line
-   #+BEGIN_SRC emacs-lisp
-     (defun smart-line-beginning ()
-       "Move point to the beginning of text on the current line; if that is already
-          the current position of point, then move it to the beginning of the line."
-       (interactive)
-       (let ((pt (point)))
-         (beginning-of-line-text)
-         (when (eq pt (point))
-           (beginning-of-line))))
-
-     ;; (global-set-key [remap move-beginning-of-line]
-     ;;                 'smart-line-beginning)
-     (define-key global-map [remap beginning-of-visual-line] 'smart-line-beginning)
-   #+END_SRC
 
 ** Key Bindings
    Utilities/helpers for key-bindings.
@@ -982,36 +916,6 @@
                ))
     #+END_SRC
 
-*** shx
-    #+BEGIN_SRC emacs-lisp
-      (use-package shx
-        :config
-        (shx-global-mode 1))
-    #+END_SRC
-
-*** COMMENT sane-term
-    #+BEGIN_SRC emacs-lisp
-      (use-package sane-term)
-    #+END_SRC
-
-*** COMMENT Start a terminal and rename buffer
-    #+BEGIN_SRC emacs-lisp
-      (defun terminal (buffer-name)
-        "Start a terminal and rename buffer."
-        (interactive "sbuffer name: ")
-        (sane-term-create)
-        (rename-buffer buffer-name t))
-      (global-set-key (kbd "C-c t") 'terminal)
-    #+END_SRC
-
-*** COMMENT multi-term
-    For now i'm using sane-term instead of this
-    #+BEGIN_SRC emacs-lisp
-      (use-package multi-term)
-      (setq multi-term-program "/bin/bash")
-      (defalias 'term 'multi-term)
-    #+END_SRC
-
 * Programming
 ** Snippets
    #+BEGIN_SRC emacs-lisp
@@ -1098,7 +1002,7 @@
          lsp-idle-delay 0.5
          lsp-enable-symbol-highlighting t
          lsp-enable-snippet nil  ;; Not supported by company capf, which is the recommended company backend
-         lsp-completion-provider :capf
+         ; lsp-completion-provider :capf
          )
 
         ;; TODO: Move to python block
@@ -1136,6 +1040,43 @@
         )
    #+END_SRC
 
+** Python
+*** Python Mode
+    pip install python-language-server[all]
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package python-mode
+        :ensure t
+        :hook (python-mode . lsp-deferred)
+        :custom
+        ;; NOTE: Set these if Python 3 is called "python3" on your system!
+        ;; (python-shell-interpreter "python3")
+        ;; (dap-python-executable "python3")
+        (dap-python-debugger 'debugpy)
+        :config
+        (require 'dap-python)
+        )
+
+      ;; TODO: Move to use-package block
+      (add-hook 'python-mode-hook
+                (lambda ()
+                  (setq indent-tabs-mode nil)
+                  (setq tab-width 4)
+                  (setq-default python-indent-guess-indent-offset nil)
+                  (setq python-indent-offset 4)))
+    #+END_SRC
+
+*** pyvenv
+    #+BEGIN_SRC emacs-lisp
+      (use-package pyvenv
+        :after python
+        :config
+        (pyvenv-mode 1))
+    #+END_SRC
+*** flycheck-prospector
+    #+BEGIN_SRC emacs-lisp
+      (use-package flycheck-prospector)
+    #+END_SRC
 ** Coverage
    #+BEGIN_SRC emacs-lisp
      ;;(add-to-list 'load-path "~/.emacs.d/coverage-mode/")
@@ -1186,106 +1127,10 @@
        :mode (("\\.env$" . dotenv-mode)))
    #+END_SRC
 
-** Python
-*** Python Mode
-    pip install python-language-server[all]
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package python-mode
-        :ensure t
-        ;; :hook (python-mode . lsp-deferred)
-        :custom
-        ;; NOTE: Set these if Python 3 is called "python3" on your system!
-        ;; (python-shell-interpreter "python3")
-        ;; (dap-python-executable "python3")
-        (dap-python-debugger 'debugpy)
-        :config
-        (require 'dap-python)
-        )
-
-      ;; TODO: Move to use-package block
-      (add-hook 'python-mode-hook
-                (lambda ()
-                  (setq indent-tabs-mode nil)
-                  (setq tab-width 4)
-                  (setq-default python-indent-guess-indent-offset nil)
-                  (setq python-indent-offset 4)))
-    #+END_SRC
-
-*** pyvenv
-    #+BEGIN_SRC emacs-lisp
-      (use-package pyvenv
-        :after python
-        :config
-        (pyvenv-mode 1))
-
-      ;; https://old.reddit.com/r/emacs/comments/ijmgtx/tip_how_to_use_a_stable_and_fast_environment_to/
-      ;; (use-package pyenv-mode
-      ;;   :after python
-      ;;   :hook ((python-mode . pyenv-mode)
-      ;;          (projectile-switch-project . projectile-pyenv-mode-set))
-      ;;   :custom (pyenv-mode-set "3.8.5")
-      ;;   :preface
-      ;;   (defun projectile-pyenv-mode-set ()
-      ;;     "Set pyenv version matching project name."
-      ;;     (let ((project (projectile-project-name)))
-      ;;       (if (member project (pyenv-mode-versions))
-      ;;           (pyenv-mode-set project)
-      ;;         (pyenv-mode-unset)))))
-
-      ;; (use-package pyvenv
-      ;;   :after python
-      ;;   :hook (python-mode . pyvenv-mode)
-      ;;   :custom
-      ;;   (pyvenv-default-virtual-env-name "env")
-      ;;   (pyvenv-mode-line-indicator '(pyvenv-virtual-env-name ("[venv:"
-      ;;                                                          pyvenv-virtual-env-name "]"))))
-    #+END_SRC
-
-*** with-venv
-    https://10sr.github.io/with-venv-el/
-
-    Execute with Python virtual environment activated.
-    with-venv macro executes BODY with Python virtual environment activated.
-    #+BEGIN_SRC elisp
-      (use-package with-venv)
-    #+END_SRC
-
-*** pyright
-     npm -g install pyright
-     #+BEGIN_SRC emacs-lisp
-       (use-package lsp-pyright
-         ;; :hook (python-mode . (lambda ()
-         ;;                        (require 'lsp-pyright)
-         ;;                        (lsp-deferred)))
-         )
-     #+END_SRC
-
-*** isort
-    pip install isort
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package py-isort)
-    #+END_SRC
-
-*** black
-    pip install black
-    #+BEGIN_SRC emacs-lisp
-      (use-package blacken)
-    #+END_SRC
-
-*** COMMENT pytest
-    #+BEGIN_SRC emacs-lisp
-      (use-package python-pytest)
-    #+END_SRC
-
-*** flycheck-prospector
-    #+BEGIN_SRC emacs-lisp
-      (use-package flycheck-prospector)
-    #+END_SRC
 ** HTML/Javascript
 *** lsp-mode
     npm install -g typescript-language-server typescript vue-language-server
+
 *** web-mode
     #+BEGIN_SRC emacs-lisp
       (use-package web-mode
@@ -1361,72 +1206,6 @@
        :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
    #+END_SRC
 
-** R/ESS
-   #+BEGIN_SRC emacs-lisp
-     ;; (use-package ess
-     ;;   :commands R
-     ;;   :init (progn
-     ;;           ;; TODO: why doesn't use-package require it for us?
-     ;;           (require 'ess)
-
-     ;;           (setq ess-eval-visibly-p nil
-     ;;                 ess-use-tracebug t
-     ;;                 ;; ess-use-auto-complete t
-     ;;                 ess-help-own-frame 'one
-     ;;                 ess-ask-for-ess-directory nil)
-     ;;           (setq-default ess-dialect "R")
-     ;;           ))
-     ;; ;; (ess-toggle-underscore t)))
-     ;; (add-to-list 'company-backends 'company-ess)
-   #+END_SRC
-
-** COMMENT Elm
-   Install npm packages using "npm install -g elm elm-format"
-
-   #+BEGIN_SRC elisp
-     (use-package elm-mode
-       :mode ("\\.elm\\'" . elm-mode)
-       :after company
-       :config
-       (when (executable-find "elm-format")
-         (setq-default elm-format-on-save t))
-       (add-to-list 'company-backends 'company-elm)
-       )
-
-     (use-package flycheck-elm
-       :after elm-mode flycheck
-       :config
-       (eval-after-load 'flycheck
-         '(add-hook 'flycheck-mode-hook #'flycheck-elm-setup))
-       )
-
-     (use-package elm-yasnippets)
-   #+END_SRC
-
-** COMMENT Golang
-   #+BEGIN_SRC emacs-lisp
-     (use-package go-mode)
-   #+END_SRC
-
-** COMMENT Dart
-   #+BEGIN_SRC emacs-lisp
-     ;; (use-package lsp-dart)
-
-     (use-package dart-mode
-       :custom
-       (dart-format-on-save t)
-       (dart-enable-analysis-server t)
-       (dart-sdk-path "~/bin/flutter/bin/cache/dart-sdk"))
-
-     (use-package flutter
-       :after dart-mode
-       :bind (:map dart-mode-map
-                   ("C-M-x" . #'flutter-run-or-hot-reload))
-       :custom
-       (flutter-sdk-path "~/bin/flutter/"))
-
-   #+END_SRC
-
 ** Markdown
    #+BEGIN_SRC emacs-lisp
      (use-package markdown-mode)
@@ -1448,7 +1227,8 @@
    #+BEGIN_SRC emacs-lisp
    (use-package dockerfile-mode
    :mode "Dockerfile$")
-   #+END
+   #+END_SRC
+
 * Notes
 ** org
 *** Main config
@@ -1577,35 +1357,6 @@
    #+END_SRC
 
 * My Helpers
-** COMMENT Pretty print json
-   Pretty prints the selection on a json document. It uses python.
-   Adjust the python path and executable.
-   See http://stackoverflow.com/questions/1548605/emacs-lisp-shell-command-on-region
-
-   #+BEGIN_SRC emacs-lisp
-     (defun pretty-print-json(&optional b e)
-       (interactive "r")
-       (shell-command-on-region b e "python -m json.tool" (current-buffer) t)
-       )
-   #+END_SRC
-
-** COMMENT Pretty print python
-   #+BEGIN_SRC emacs-lisp
-     (defun pretty-print-python ()
-       (interactive)
-       (let ( (new-buffer-name "*pprint*") (selection (buffer-substring-no-properties (region-beginning) (region-end))))
-         (if (bufferp new-buffer-name)
-             (kill-buffer new-buffer-name))
-         (call-process
-          "python"
-          nil
-          new-buffer-name nil
-          "-c"
-          "import ast; import json; import sys; x=ast.literal_eval(sys.argv[1]); print(json.dumps(x,indent=4)")
-         selection)
-       (pop-to-buffer new-buffer-name))
-   #+END_SRC
-
 ** Revert all buffers and ignore errors
    #+BEGIN_SRC emacs-lisp
      (defun sidmitra/revert-all-file-buffers ()
