@@ -1,6 +1,17 @@
 #+TITLE: Emacs configuration
 
 * Initialize
+** Package managers
+   Use paradox as the default package interface
+   #+BEGIN_SRC emacs-lisp
+     (setq straight-use-package-by-default t)
+     (straight-use-package 'use-package)
+
+     (use-package paradox
+       :config
+       (paradox-enable))
+   #+END_SRC
+
 ** Perf config
    Adjust gc-cons-threshold. The default setting is too low for lsp-mode's needs due to the fact that client/server communication generates a lot of memory/garbage.
    #+BEGIN_SRC emacs-lisp
@@ -10,49 +21,6 @@
    Increase the amount of data which Emacs reads from the process. Again the emacs default is too low 4k considering that the some of the language server responses are in 800k - 3M range.
    #+BEGIN_SRC emacs-lisp
      (setq read-process-output-max (* 1024 1024)) ;; 1mb
-   #+END_SRC
-
-** Add custom load path
-   #+BEGIN_SRC emacs-lisp
-     (add-to-list 'load-path (expand-file-name "my-packages" user-emacs-directory))
-   #+END_SRC
-
-** use-package
-   Setup basic use-package interface
-   #+BEGIN_SRC emacs-lisp
-     (setq core-packages
-           '(use-package))
-
-     (defun ensure-packages (packages)
-       (dolist (package packages)
-         (unless (package-installed-p package)
-           (package-install package))))
-
-     (ensure-packages core-packages)
-   #+END_SRC
-
-   Enable auto-installing of packages using use-package
-   #+BEGIN_SRC emacs-lisp
-     (require 'use-package-ensure)
-     (setq use-package-always-ensure t)
-     (require 'use-package)
-   #+END_SRC
-
-   :ensure will install a package if it is not already installed, but it does not keep it up-to-date.
-   To keep your packages updated automatically, one option is to use auto-package-update
-   #+BEGIN_SRC elisp
-     (use-package auto-package-update
-       :config
-       (setq auto-package-update-delete-old-versions t)
-       (setq auto-package-update-hide-results t)
-       (auto-package-update-maybe))
-   #+END_SRC
-
-   Use paradox as the default package interface
-   #+BEGIN_SRC emacs-lisp
-     (use-package paradox
-       :config
-       (paradox-enable))
    #+END_SRC
 
 * Post Init
@@ -114,6 +82,7 @@
        :config
        (exec-path-from-shell-initialize))
    #+END_SRC
+
 ** Character Encodings
    #+BEGIN_SRC emacs-lisp
      (set-default-coding-systems 'utf-8)
@@ -126,6 +95,7 @@
      (when (display-graphic-p)
        (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
    #+END_SRC
+
 * Config Helpers
 ** Enable minor mode
    #+BEGIN_SRC emacs-lisp
@@ -220,6 +190,7 @@
    #+BEGIN_SRC emacs-lisp
      (setq-default whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
    #+END_SRC
+
 ** Enable soft-wrap lines
    #+BEGIN_SRC emacs-lisp
      (global-visual-line-mode t)
@@ -576,13 +547,6 @@
      (global-set-key [C-f1] 'show-file-name)
    #+END_SRC
 
-** Make buffer names unique
-   #+BEGIN_SRC emacs-lisp
-     (use-package uniquify
-       :ensure nil
-       :config (setq uniquify-buffer-name-style 'forward))
-   #+END_SRC
-
 * Tools
 ** Project Navigation
 *** Bookmarks
@@ -746,32 +710,31 @@
     #+END_SRC
 
 ** Completion
-*** company
-    #+BEGIN_SRC emacs-lisp
-      (use-package company
-        :config
-        (add-hook 'after-init-hook 'global-company-mode)
-        (setq company-idle-delay 0.2
-              company-minimum-prefix-length 1
-              company-selection-wrap-around t
-              company-tooltip-align-annotations t
-              company-tooltip-flip-when-above nil
-              company-tooltip-limit 10
-              company-tooltip-minimum 3
-              company-tooltip-margin 1
-              company-transformers '(company-sort-by-occurrence)
-              company-dabbrev-downcase nil)
+   #+BEGIN_SRC emacs-lisp
+     (use-package company
+       :config
+       (add-hook 'after-init-hook 'global-company-mode)
+       (setq company-idle-delay 0.2
+             company-minimum-prefix-length 1
+             company-selection-wrap-around t
+             company-tooltip-align-annotations t
+             company-tooltip-flip-when-above nil
+             company-tooltip-limit 10
+             company-tooltip-minimum 3
+             company-tooltip-margin 1
+             company-transformers '(company-sort-by-occurrence)
+             company-dabbrev-downcase nil)
 
-        ;; Add yasnippet support for all company backends
-        ;; https://github.com/syl20bnr/spacemacs/pull/179
-        (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
-        (defun company-mode/backend-with-yas (backend)
-          (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-              backend
-            (append (if (consp backend) backend (list backend))
-                    '(:with company-yasnippet))))
-        )
-    #+END_SRC
+       ;; Add yasnippet support for all company backends
+       ;; https://github.com/syl20bnr/spacemacs/pull/179
+       (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+       (defun company-mode/backend-with-yas (backend)
+         (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+             backend
+           (append (if (consp backend) backend (list backend))
+                   '(:with company-yasnippet))))
+       )
+   #+END_SRC
 
 ***** company-statistics
       Company-statistics is a global minor mode built on top of the
@@ -845,17 +808,9 @@
    #+BEGIN_SRC emacs-lisp
      (use-package undo-tree
        :config
-       (global-undo-tree-mode 1)
-       )
+       (global-undo-tree-mode 1))
    #+END_SRC
 
-** keyfreq
-   #+BEGIN_SRC emacs-lisp
-     (use-package keyfreq
-       :config
-       (keyfreq-mode 1)
-       (keyfreq-autosave-mode 1))
-   #+END_SRC
 ** Terminal
 *** vterm
     #+BEGIN_SRC emacs-lisp
@@ -882,6 +837,14 @@
                ))
     #+END_SRC
 
+** keyfreq
+   #+BEGIN_SRC emacs-lisp
+     (use-package keyfreq
+       :config
+       (keyfreq-mode 1)
+       (keyfreq-autosave-mode 1))
+   #+END_SRC
+
 * Programming
 ** Snippets
    #+BEGIN_SRC emacs-lisp
@@ -893,12 +856,12 @@
      (use-package yasnippet-snippets)
    #+END_SRC
 ** Formatting
-    Auto-format source code in many languages using the same command for all languages.
-    https://github.com/lassik/emacs-format-all-the-code
+   Auto-format source code in many languages using the same command for all languages.
+   https://github.com/lassik/emacs-format-all-the-code
 
-    #+BEGIN_SRC emacs-lisp
-      (use-package format-all)
-    #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package format-all)
+   #+END_SRC
 
 ** Version Control (git)
 *** magit
