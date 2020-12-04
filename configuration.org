@@ -1188,10 +1188,12 @@
 
 ** Python
 *** Python Mode
+    pip install python-language-server[all]
+
     #+BEGIN_SRC emacs-lisp
       (use-package python-mode
         :ensure t
-        :hook (python-mode . lsp-deferred)
+        ;; :hook (python-mode . lsp-deferred)
         :custom
         ;; NOTE: Set these if Python 3 is called "python3" on your system!
         ;; (python-shell-interpreter "python3")
@@ -1208,15 +1210,6 @@
                   (setq tab-width 4)
                   (setq-default python-indent-guess-indent-offset nil)
                   (setq python-indent-offset 4)))
-    #+END_SRC
-
-*** with-venv
-    https://10sr.github.io/with-venv-el/
-
-    Execute with Python virtual environment activated.
-    with-venv macro executes BODY with Python virtual environment activated.
-    #+BEGIN_SRC elisp
-      (use-package with-venv)
     #+END_SRC
 
 *** pyvenv
@@ -1249,8 +1242,16 @@
       ;;                                                          pyvenv-virtual-env-name "]"))))
     #+END_SRC
 
-*** lsp-mode
-**** pyright
+*** with-venv
+    https://10sr.github.io/with-venv-el/
+
+    Execute with Python virtual environment activated.
+    with-venv macro executes BODY with Python virtual environment activated.
+    #+BEGIN_SRC elisp
+      (use-package with-venv)
+    #+END_SRC
+
+*** pyright
      npm -g install pyright
      #+BEGIN_SRC emacs-lisp
        (use-package lsp-pyright
@@ -1259,9 +1260,6 @@
          ;;                        (lsp-deferred)))
          )
      #+END_SRC
-
-**** COMMENT Palantir LSP
-     pip install 'python-language-server[all]' pyls-mypy pyls-isort pyls-black
 
 *** isort
     pip install isort
@@ -1748,6 +1746,7 @@
 
             ;; Python
             (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.8")
+            (lsp-deferred)
 
             ;; (add-hook 'before-save-hook 'py-isort-before-save)
             ;; (add-hook 'python-mode-hook 'blacken-mode)
