@@ -130,6 +130,7 @@
         (doom-themes-org-config)
         )
     #+END_SRC
+
 ** Icons
    #+BEGIN_SRC emacs-lisp
      (use-package all-the-icons)
@@ -284,6 +285,15 @@
         :hook (css-mode sass-mode scss-mode web-mode html-mode))
     #+END_SRC
 
+** Pulse modified region
+   #+BEGIN_SRC elisp
+     (use-package goggles
+       :demand t
+       :config
+       (goggles-mode)
+       (setq-default goggles-pulse t)) ;; set to nil to disable pulsing
+   #+END_SRC
+
 ** Manage layout
 
    Save window layout history.
@@ -317,7 +327,7 @@
       (setq-default column-number-mode t)
     #+END_SRC
 ** Style the modeline
-*** Doom Modeine
+*** Doom Modeline
     #+BEGIN_SRC emacs-lisp
       (use-package doom-modeline
         :hook (after-init . doom-modeline-mode))
@@ -405,13 +415,6 @@
      (global-set-key (kbd "M-[") 'insert-pair)
      (global-set-key (kbd "M-{") 'insert-pair)
      (global-set-key (kbd "M-\"") 'insert-pair)
-   #+END_SRC
-
-** Editor config
-   #+BEGIN_SRC emacs-lisp
-     (use-package editorconfig
-       :config
-       (move-text-default-bindings))
    #+END_SRC
 
 ** Multiple Cursors
@@ -921,16 +924,14 @@
    #+BEGIN_SRC emacs-lisp
      (use-package lsp-mode
        :hook (python-mode lsp-enable-which-key-integration)
-       ;; :hook ((lsp-mode . lsp-enable-which-key-integration))
        :commands lsp lsp-deferred
        :config
-       (setq
-        lsp-use-plists t
-        lsp-idle-delay 0.5
-        lsp-enable-symbol-highlighting t
-        lsp-enable-snippet nil  ;; Not supported by company capf, which is the recommended company backend
-                                             ; lsp-completion-provider :capf
-        )
+       (setq lsp-use-plists t
+             lsp-idle-delay 0.5
+             lsp-enable-symbol-highlighting t
+             lsp-enable-snippet nil  ;; Not supported by company capf, which is the recommended company backend
+             ;; lsp-completion-provider :capf
+             )
 
        ;; TODO: Move to python block
        (lsp-register-custom-settings
@@ -994,7 +995,6 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package pyvenv
-       :hook python-mode
        :config
        (pyvenv-mode 1))
    #+END_SRC
@@ -1165,7 +1165,6 @@
                ("C-c k" . org-capture)
                )
         :config
-        ;; (global-set-key (kbd "C-c a") 'org-agenda)
 
         ;; Change ... to downward arrow when there's stuff under a header.
         (setq org-hide-leading-stars t)
