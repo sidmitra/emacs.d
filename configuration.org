@@ -708,7 +708,7 @@
 
      https://github.com/minad/marginalia
 
-    #+BEGIN_SRC emacs-elisp
+    #+BEGIN_SRC emacs-lisp
       (use-package marginalia
         :bind (:map minibuffer-local-map
                     ("C-M-a" . marginalia-cycle)
@@ -738,7 +738,7 @@
     #+END_SRC
 
 *** embark
-    #+BEGIN_SRC emacs-elisp
+    #+BEGIN_SRC emacs-lisp
       (use-package embark
         :bind
         ("C-S-a" . embark-act)               ; pick some comfortable binding
@@ -765,7 +765,7 @@
     #+END_SRC
 
 *** consult
-    #+BEGIN_SRC elisp
+    #+BEGIN_SRC emacs-lisp
       (use-package consult
         ;; Replace bindings. Lazily loaded due by `use-package'.
         :bind (("C-x M-:" . consult-complex-command)
