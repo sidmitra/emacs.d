@@ -1,4 +1,5 @@
 #+TITLE: Emacs configuration
+#+STARTUP: overview
 
 * Initialize
 ** Package managers
@@ -136,11 +137,21 @@
      (use-package all-the-icons)
    #+END_SRC
 
-** Fonts
+** COMMENT Fonts
    #+BEGIN_SRC emacs-lisp
      (use-package unicode-fonts
        :config
        (unicode-fonts-setup))
+   #+END_SRC
+
+   Enable emoji font
+   https://old.reddit.com/r/emacs/comments/mvlid5/native_emojis_in_emacs_just_some_pure_fun/
+   #+BEGIN_SRC emacs-lisp
+     ;; Emoji: 😄, 🤦, 🏴󠁧󠁢󠁳󠁣󠁴󠁿
+     (set-fontset-font t 'symbol "Apple Color Emoji")
+     (set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
+     (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
+     (set-fontset-font t 'symbol "Symbola" nil 'append)
    #+END_SRC
 
 ** Set font, size
@@ -407,7 +418,9 @@
        (next-line 1)
        (yank)
        )
-     (global-set-key (kbd "C-c d") 'duplicate-line)
+
+     ;; Why is this not working here? Moving to the bottom
+     ;; (global-set-key (kbd "C-c d") 'duplicate-line)
    #+END_SRC
 
 ** Insert pair of chars
@@ -704,9 +717,9 @@
     #+END_SRC
 
 *** marginalia
-     Marginalia are marks or annotations placed at the margin of the page of a book or in this case helpful colorful annotations placed at the margin of the minibuffer for your completion candidates. Marginalia can only add annotations to be displayed with the completion candidates. It cannot modify the appearance of the candidates themselves, which are shown as supplied by the original commands.
+    Marginalia are marks or annotations placed at the margin of the page of a book or in this case helpful colorful annotations placed at the margin of the minibuffer for your completion candidates. Marginalia can only add annotations to be displayed with the completion candidates. It cannot modify the appearance of the candidates themselves, which are shown as supplied by the original commands.
 
-     https://github.com/minad/marginalia
+    https://github.com/minad/marginalia
 
     #+BEGIN_SRC emacs-lisp
       (use-package marginalia
@@ -828,13 +841,14 @@
 
         ;; Optionally enable previews. Note that individual previews can be disabled
         ;; via customization variables.
-        (consult-preview-mode))
+        ;; (consult-preview-mode)
+        )
 
       ;; Enable Consult-Selectrum integration.
       ;; This package should be installed if Selectrum is used.
-      (use-package consult-selectrum
-        :after selectrum
-        :demand t)
+                                              ;(use-package consult-selectrum
+                                              ;  :after selectrum
+                                              ;  :demand t)
 
       ;; Optionally add the `consult-flycheck' command.
       (use-package consult-flycheck
@@ -1086,7 +1100,6 @@
     #+END_SRC
 ** Language Server Protocol (LSP)
    https://emacs-lsp.github.io/lsp-mode/page/performance/
-
    #+BEGIN_SRC emacs-lisp
      (use-package lsp-mode
        :hook (python-mode lsp-enable-which-key-integration)
@@ -1133,7 +1146,7 @@
        ;; (setq lsp-keymap-prefix "s-l")
        )
    #+END_SRC
-
+*** TODO consult-lsp
 ** Python
    pip install python-language-server[all]
 
@@ -1189,7 +1202,7 @@
         (setq-default flycheck-display-errors-delay 0))
     #+END_SRC
 
-*** flycheck-posframe
+*** COMMENT flycheck-posframe
     Display flycheck error messages via posframe.
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck-posframe
@@ -1299,6 +1312,12 @@
    #+END_SRC
 
 ** Markdown
+   Install CLI markdown first
+   #+BEGIN_SRC bash
+     brew install markdown
+     # apt-get install pandoc
+   #+END_SRC
+
    #+BEGIN_SRC emacs-lisp
      (use-package markdown-mode)
      (add-hook 'markdown-mode-hook
@@ -1326,6 +1345,7 @@
 *** Main config
     #+BEGIN_SRC emacs-lisp
       (use-package org
+        :defer t
         :bind (
                ("C-c a" . org-agenda)
                ("C-c k" . org-capture)
@@ -1358,9 +1378,21 @@
 
         )
     #+END_SRC
+**** Eisenhower matrix
+     #+BEGIN_SRC emacs-lisp
+       (setq org-tag-alist '(("important" . ?i)
+                             ("urgent"    . ?u)))
+
+       (setq org-agenda-custom-commands
+             '(("1" "Q1" tags-todo "+important+urgent")
+               ("2" "Q2" tags-todo "+important-urgent")
+               ("3" "Q3" tags-todo "-important+urgent")
+               ("4" "Q4" tags-todo "-important-urgent")))
+     #+END_SRC
 *** org-superstar
     #+BEGIN_SRC emacs-lisp
       (use-package org-superstar
+        :defer t
         :config
         (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
     #+END_SRC
@@ -1368,6 +1400,7 @@
 *** org-super-agenda
     #+BEGIN_SRC emacs-lisp
       (use-package org-super-agenda
+        :defer t
         :config
         (org-super-agenda-mode))
     #+END_SRC
@@ -1377,6 +1410,7 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package org-pretty-tags
+        :defer t
         :config
         (setq org-pretty-tags-surrogate-strings
               (quote
@@ -1386,16 +1420,47 @@
                 ("blog" . "✍")
                 ("music" . "🎵")
                 )))
-        (org-pretty-tags-global-mode))
+        (org-pretty-tags-globals-mode))
     #+END_SRC
 
 *** DOCT: Declarative Org Capture Templates
     #+BEGIN_SRC emacs-lisp
       (use-package doct
+        :defer t
         ;;recommended: defer until calling doct
         :commands (doct))
     #+END_SRC
-** org-roam
+*** org-babel
+    #+begin_src emacs-lisp
+      (setq org-babel-python-command "python3")
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((python . t)))
+    #+end_src
+
+** deft
+   Searching/Filtering notes
+   #+BEGIN_SRC emacs-lisp
+     (use-package deft
+       :custom
+       (deft-extensions '("org" "txt" "md"))
+       (deft-directory "~/Projects/Notes/")
+       (deft-recursive t)
+       (deft-use-filename-as-title t)
+       :config
+       (global-set-key [f9] 'deft)
+       )
+   #+END_SRC
+** zetteldeft
+   [[https://www.eliasstorms.net/zetteldeft/#org02cc025][Tutorial]]
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package zetteldeft
+       :after deft
+       :config (zetteldeft-set-classic-keybindings))
+   #+END_SRC
+
+** COMMENT org-roam
    #+BEGIN_SRC emacs-lisp
      (use-package org-roam
        :hook
@@ -1409,17 +1474,6 @@
 
      ;; (use-package org-roam-protocol)
    #+END_SRC
-** deft
-   Searching/Filtering notes
-   #+BEGIN_SRC emacs-lisp
-     (use-package deft
-       :config
-       (setq deft-extensions '("txt" "org"))
-       (setq deft-directory "~/Projects/Notes/")
-       (setq deft-recursive t)
-       (global-set-key [f9] 'deft)
-       )
-   #+END_SRC
 ** org-journal
    #+BEGIN_SRC emacs-lisp
      (use-package org-journal
@@ -1429,7 +1483,31 @@
        )
    #+END_SRC
 
-* Multimedia
+*** Links
+    #+BEGIN_SRC emacs-lisp
+      (defvar yt-iframe-format
+        ;; You may want to change your width and height.
+        (concat "<iframe width=\"440\""
+                " height=\"335\""
+                " src=\"https://www.youtube.com/embed/%s\""
+                " frameborder=\"0\""
+                " allowfullscreen>%s</iframe>"))
+
+      (org-add-link-type
+       "yt"
+       (lambda (handle)
+         (browse-url
+          (concat "https://www.youtube.com/embed/"
+                  handle)))
+       (lambda (path desc backend)
+         (cl-case backend
+           (html (format yt-iframe-format
+                         path (or desc "")))
+           (latex (format "\href{%s}{%s}"
+                          path (or desc "video"))))))
+    #+END_SRC
+
+* External Services
 ** eradio
    eradio is a simple internet radio player for Emacs.
    https://github.com/olav35/eradio
@@ -1437,6 +1515,8 @@
    #+BEGIN_SRC emacs-lisp
      (use-package eradio
        :config
+       ;; (setq eradio-player '("mpv" "--no-video" "--no-terminal"))
+       (setq eradio-player '("/Applications/VLC.app/Contents/MacOS/VLC" "--no-video" "-I" "rc"))
        ;;(global-set-key (kbd "C-c r p") 'eradio-play)
        ;;(global-set-key (kbd "C-c r s") 'eradio-stop)
        )
@@ -1446,13 +1526,57 @@
            '(
              ("secretagent - somafm" . "http://somafm.com/secretagent130.pls")
              ("groovesalad - somafm"   . "http://somafm.com/groovesalad130.pls")
+             ("groovesalad - somafm"   . "http://somafm.com/groovesalad130.pls")
+             ("defcon - somafm"   . "https://somafm.com/defcon130.pls")
+             ("cafe - lainon"     . "https://lainon.life/radio/cafe.ogg.m3u")
              ))
    #+END_SRC
+
+** pinboard
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package pinboard
+       :config
+       (add-to-list 'auth-sources "~/.authinfo" t)
+       )
+   #+END_SRC
+
+   https://gist.github.com/khinsen/7ed357eed9b27f142e4fa6f5c4ad45dd
+   #+BEGIN_SRC emacs-lisp
+     (defun org-pinboard-store-link ()
+       "Store a link taken from a pinboard buffer."
+       (when (eq major-mode 'pinboard-mode)
+         (pinboard-with-current-pin pin
+           (org-store-link-props
+            :type "pinboard"
+            :link (alist-get 'href pin)
+            :description (alist-get 'description pin)))))
+
+     (org-link-set-parameters "pinboard"
+                              :follow #'browse-url
+                              :store #'org-pinboard-store-link)
+   #+END_SRC
+
+** RSS Feeds
+*** elfeed
+   #+begin_src emacs-lisp
+     (use-package elfeed-org
+       :config
+       (setq-default elfeed-search-filter "@2-days-ago +unread")
+       (setq-default elfeed-search-title-max-width 100)
+       (setq-default elfeed-search-title-min-width 100)
+       )
+
+
+     (use-package elfeed-org
+       :config
+       (elfeed-org))
+   #+end_src
 
 * My Helpers
 ** Revert all buffers and ignore errors
    #+BEGIN_SRC emacs-lisp
-     (defun sidmitra/revert-all-file-buffers ()
+     (defun sm/revert-all-file-buffers ()
        "Refresh all open file buffers without confirmation.
      Buffers in modified (not yet saved) state in emacs will not be reverted. They
      will be reverted though if they were modified outside emacs.
@@ -1575,10 +1699,24 @@
      (setq-default org-roam-directory "~/Projects/Notes/")
      (setq-default org-roam-index-file "index.org")
      (setq-default org-agenda-files '("~/Projects/Notes/todo.org"))
+     (setq-default rmh-elfeed-org-files '("~/Projects/Notes/elfeed.org"))
+   #+END_SRC
+
+** Shortcuts
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-c d") 'duplicate-line)
    #+END_SRC
 
 ** Airbase
    #+BEGIN_SRC emacs-lisp
+     (defun eventbus-enable () (interactive)
+            ;; Python
+            (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/eventbusk-It3kPIr7-py3.9")
+            (setq flycheck-pylintrc "~/Projects/Airbase/eventbusk/pyproject.toml")
+            (setq flycheck-flake8rc "~/Projects/Airbase/eventbusk/.flake8")
+            (setq flycheck-python-mypy-config "~/Projects/Airbase/eventbusk/.mypy.ini")
+            )
+
      (defun airbase-enable () (interactive)
             ;; JS
             (setq web-mode-code-indent-offset 2)
@@ -1589,7 +1727,10 @@
             (setq prettier-args '())
 
             ;; Python
-            (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.8")
+            (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.9")
+            (setq flycheck-pylintrc "~/Projects/Airbase/airbase-backend/pyproject.toml")
+            (setq flycheck-flake8rc "~/Projects/Airbase/airbase-backend/ci_scripts/.flake8")
+            (setq flycheck-python-mypy-config "~/Projects/Airbase/airbase-backend/ci_scripts/mypy.ini")
             ;; (lsp-deferred)
 
             ;; (add-hook 'before-save-hook 'py-isort-before-save)
@@ -1627,44 +1768,6 @@
             )
 
      (defun airbase-disable () (interactive)
-            )
-
-     (defun airbase-enable-old () (interactive)
-            ;; JS
-            (setq web-mode-code-indent-offset 2)
-            (setq web-mode-markup-indent-offset 2)
-            (setq web-mode-css-indent-offset 2)
-            (setq web-mode-js-indent-offset 2)
-            ;;(prettier-js-mode 1)
-            (setq prettier-args '())
-
-            ;; Python
-            (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.8")
-            (setq python-shell-interpreter "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.8/bin/python")
-            (add-hook 'before-save-hook 'py-isort-before-save)
-            (add-hook 'python-mode-hook 'blacken-mode)
-            (add-hook 'python-mode-hook 'lsp-deferred)
-            (setq lsp-enable-file-watchers nil)
-
-            (defun custom-python-flycheck-setup ()
-              (setq-default flycheck-disabled-checkers
-                            (append flycheck-disabled-checkers
-                                    '(python-pylint)))
-
-              (setq-default flycheck-disabled-checkers
-                            (append flycheck-disabled-checkers
-                                    '(python-flake8)))
-              (flycheck-select-checker 'python-prospector))
-
-            (add-hook 'python-mode-hook #'custom-python-flycheck-setup)
-
-            ;;(add-hook 'python-mode-hook 'eglot-ensure)
-            ;; (setq python-shell-completion-native-enable nil
-            ;;       python-shell-interpreter "~/Projects/Airbase/airbase-backend/venv/bin/python"
-            ;;       python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")
-
-            ;; unset run-python shortcut, interferes with helm-projectile open file
-            (global-unset-key (kbd "C-c C-p"))
             )
 
      ;; (defun airbase-djangoserver () (interactive)
@@ -1730,6 +1833,19 @@
                                          "--ignore" "\*.yml"
                                          ))
             )
+
+
+     (defun org-eww-enable () (interactive)
+            (setq browse-url-browser-function 'eww-browse-url)
+            )
+
+     ;; https://erick.navarro.io/blog/using-compilation-mode-to-run-all-the-things/
+     (defun sm/run-pytest ()
+       "Run  pytest over the current project."
+       (interactive)
+       (let ((default-directory (projectile-project-root)))
+         (compile "poetry run pytest tests/test_bus.py")))
+
 
      ;; Forcing django mode on all html
      ;; TODO: Better way to do this?
