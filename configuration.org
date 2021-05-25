@@ -137,7 +137,7 @@
      (use-package all-the-icons)
    #+END_SRC
 
-** COMMENT Fonts
+** Fonts
    #+BEGIN_SRC emacs-lisp
      (use-package unicode-fonts
        :config
@@ -1570,7 +1570,9 @@
 
      (use-package elfeed-org
        :config
-       (elfeed-org))
+       (elfeed-org)
+       (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org"))
+       )
    #+end_src
 
 * My Helpers
