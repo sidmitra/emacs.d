@@ -1508,6 +1508,12 @@
     #+END_SRC
 
 * External Services
+** browser
+   #+begin_src emacs-lisp
+     (defun eww-default () (interactive)
+            (setq browse-url-browser-function 'eww-browse-url))
+   #+end_src
+
 ** eradio
    eradio is a simple internet radio player for Emacs.
    https://github.com/olav35/eradio
@@ -1559,21 +1565,18 @@
 
 ** RSS Feeds
 *** elfeed
-   #+begin_src emacs-lisp
-     (use-package elfeed-org
-       :config
-       (setq-default elfeed-search-filter "@2-days-ago +unread")
-       (setq-default elfeed-search-title-max-width 100)
-       (setq-default elfeed-search-title-min-width 100)
-       )
-
-
-     (use-package elfeed-org
-       :config
-       (elfeed-org)
-       (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org"))
-       )
-   #+end_src
+    #+begin_src emacs-lisp
+      (setq elfeed-feeds
+            '("https://sobolevn.me/feed.xml"
+              "https://www.mattduck.com/feed.xml"
+              "https://jvns.ca/atom.xml"
+              "http://antirez.com/rss"
+              "https://feeds.feedburner.com/martinkl?format=xml"
+              "https://www.allthingsdistributed.com/index.xml"
+              "https://blog.acolyer.org/feed/"
+              ))
+      (use-package elfeed)
+    #+end_src
 
 * My Helpers
 ** Revert all buffers and ignore errors
@@ -1836,10 +1839,6 @@
                                          ))
             )
 
-
-     (defun org-eww-enable () (interactive)
-            (setq browse-url-browser-function 'eww-browse-url)
-            )
 
      ;; https://erick.navarro.io/blog/using-compilation-mode-to-run-all-the-things/
      (defun sm/run-pytest ()
