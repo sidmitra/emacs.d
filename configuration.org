@@ -1055,6 +1055,13 @@
         (setq magit-last-seen-setup-instructions "1.4.0"))
     #+END_SRC
 
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'magit-log-edit-mode-hook
+                '(lambda ()
+                   (shell-command "./.git/hooks/pre-commit")))
+
+    #+END_SRC
+
 *** magit-delta
     Use magit + delta to show diffs.
     https://github.com/dandavison/magit-delta
@@ -1574,6 +1581,8 @@
               "https://feeds.feedburner.com/martinkl?format=xml"
               "https://www.allthingsdistributed.com/index.xml"
               "https://blog.acolyer.org/feed/"
+              "https://arpitbhayani.me/feed.xml"
+              "https://www.blog.pythonlibrary.org/feed/"
               ))
       (use-package elfeed)
     #+end_src
