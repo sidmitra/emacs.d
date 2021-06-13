@@ -1583,6 +1583,8 @@
               "https://blog.acolyer.org/feed/"
               "https://arpitbhayani.me/feed.xml"
               "https://www.blog.pythonlibrary.org/feed/"
+              "https://pythonspeed.com/atom.xml"
+              "https://rachelbythebay.com/w/atom.xml"
               ))
       (use-package elfeed)
     #+end_src
