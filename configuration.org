@@ -666,6 +666,9 @@
 
 ** Incremental narrowing
 *** orderless
+    https://github.com/oantolin/orderless
+    This package provides an orderless completion style that divides the pattern into space-separated components, and matches candidates that match all of the components in any order. Each component can match in any one of several ways: literally, as a regexp, as an initialism, in the flex style, or as multiple word prefixes. By default, regexp and literal matches are enabled.
+
     #+BEGIN_SRC elisp
       (use-package orderless
         ;; :init (icomplete-mode) ; optional but recommended!
@@ -674,6 +677,7 @@
 
 *** selectrum
     https://github.com/raxod502/selectrum
+    Selectrum aims to provide a better completion UI using standard Emacs APIs. In essence it is an interface for selecting items from a list.
 
     #+BEGIN_SRC emacs-lisp
       (use-package selectrum
@@ -933,60 +937,6 @@
           (company-statistics-mode))
       #+END_SRC
 
-***** COMMENT company-posframe
-      Let company use child frame as its candidate menu.
-
-      #+BEGIN_SRC emacs-lisp
-        (use-package company-posframe
-          :config
-          (company-posframe-mode))
-      #+END_SRC
-
-***** COMMENT company-box
-      A company front-end with icons.
-
-      #+BEGIN_SRC emacs-lisp
-        (use-package company-box
-          :after company
-          :diminish
-          :hook (company-mode . company-box-mode)
-          :init (setq company-box-icons-alist 'company-box-icons-all-the-icons)
-          :config
-          (setq company-box-backends-colors nil)
-          (setq company-box-show-single-candidate t)
-          (setq company-box-max-candidates 50)
-          (with-eval-after-load 'all-the-icons
-            (declare-function all-the-icons-faicon 'all-the-icons)
-            (declare-function all-the-icons-material 'all-the-icons)
-            (setq company-box-icons-all-the-icons
-                  `((Unknown . ,(all-the-icons-material "find_in_page" :height 0.9 :v-adjust -0.2))
-                    (Text . ,(all-the-icons-faicon "text-width" :height 0.85 :v-adjust -0.05))
-                    (Method . ,(all-the-icons-faicon "cube" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-purple))
-                    (Function . ,(all-the-icons-faicon "cube" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-purple))
-                    (Constructor . ,(all-the-icons-faicon "cube" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-purple))
-                    (Field . ,(all-the-icons-faicon "tag" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-lblue))
-                    (Variable . ,(all-the-icons-faicon "tag" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-lblue))
-                    (Class . ,(all-the-icons-material "settings_input_component" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-orange))
-                    (Interface . ,(all-the-icons-material "share" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
-                    (Module . ,(all-the-icons-material "view_module" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
-                    (Property . ,(all-the-icons-faicon "wrench" :height 0.85 :v-adjust -0.05))
-                    (Unit . ,(all-the-icons-material "settings_system_daydream" :height 0.9 :v-adjust -0.2))
-                    (Value . ,(all-the-icons-material "format_align_right" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
-                    (Enum . ,(all-the-icons-material "storage" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-orange))
-                    (Keyword . ,(all-the-icons-material "filter_center_focus" :height 0.9 :v-adjust -0.2))
-                    (Snippet . ,(all-the-icons-material "format_align_center" :height 0.9 :v-adjust -0.2))
-                    (Color . ,(all-the-icons-material "palette" :height 0.9 :v-adjust -0.2))
-                    (File . ,(all-the-icons-faicon "file-o" :height 0.9 :v-adjust -0.05))
-                    (Reference . ,(all-the-icons-material "collections_bookmark" :height 0.9 :v-adjust -0.2))
-                    (Folder . ,(all-the-icons-faicon "folder-open" :height 0.9 :v-adjust -0.05))
-                    (EnumMember . ,(all-the-icons-material "format_align_right" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-lblue))
-                    (Constant . ,(all-the-icons-faicon "square-o" :height 0.9 :v-adjust -0.05))
-                    (Struct . ,(all-the-icons-material "settings_input_component" :height 0.9 :v-adjust -0.2 :face 'all-the-icons-orange))
-                    (Event . ,(all-the-icons-faicon "bolt" :height 0.85 :v-adjust -0.05 :face 'all-the-icons-orange))
-                    (Operator . ,(all-the-icons-material "control_point" :height 0.9 :v-adjust -0.2))
-                    (TypeParameter . ,(all-the-icons-faicon "arrows" :height 0.85 :v-adjust -0.05))
-                    (Template . ,(all-the-icons-material "format_align_center" :height 0.9 :v-adjust -0.2))))))
-      #+END_SRC
 ** undo-tree
    #+BEGIN_SRC emacs-lisp
      (use-package undo-tree
@@ -1243,6 +1193,31 @@
 *** lsp-mode
     npm install -g typescript-language-server typescript vue-language-server
 
+*** Typescript
+    #+BEGIN_SRC emacs-lisp
+      (use-package tide
+        :after (typescript-mode company flycheck)
+        :hook (
+               (typescript-mode . tide-setup)
+               (typescript-mode . tide-hl-identifier-mode)
+               (before-save . tide-format-before-save))
+        :config
+        (flycheck-add-mode 'typescript-tslint)
+        )
+    #+END_SRC
+
+*** Javascript
+**** Prettier
+     #+BEGIN_SRC emacs-lisp
+       (use-package prettier-js
+         :config
+         ;;(add-hook 'web-mode-hook 'prettier-js-mode)
+         (add-hook 'web-mode-hook #'(lambda ()
+                                      (enable-minor-mode
+                                       '("\\.jsx?\\'" . prettier-js-mode))))
+         )
+     #+END_SRC
+
 *** web-mode
     #+BEGIN_SRC emacs-lisp
       (use-package web-mode
@@ -1250,6 +1225,7 @@
                ("\\.css$" . web-mode)
                ("\\.html$" . web-mode)
                ("\\.js$" . web-mode)
+               ("\\.ts$" . web-mode)
                ("\\.json$" . web-mode)
                ("\\.jsx$" . web-mode)
                ("\\.tsx$" . web-mode)
@@ -1272,33 +1248,16 @@
         (setq web-mode-js-indent-offset 2)
         (setq web-mode-markup-indent-offset 2)
         (setq web-mode-content-types-alist
-              '(("jsx" . "\\.js[x]?\\'")))
-
+              '(("jsx" . "\\.js[x]?\\'")
+                ;;("tsx" . "\\.ts[x]?\\'")
+                )
+              )
         ;; Default comment to //
         (setq-default web-mode-comment-formats (remove '("javascript" . "/*") web-mode-comment-formats))
         (add-to-list 'web-mode-comment-formats '("javascript" . "//"))
         )
 
       (use-package company-web);
-    #+END_SRC
-*** Javascript
-**** Prettier
-     #+BEGIN_SRC emacs-lisp
-       (use-package prettier-js
-         :config
-         ;;(add-hook 'web-mode-hook 'prettier-js-mode)
-         (add-hook 'web-mode-hook #'(lambda ()
-                                      (enable-minor-mode
-                                       '("\\.jsx?\\'" . prettier-js-mode))))
-         )
-     #+END_SRC
-*** Typescript
-    #+BEGIN_SRC
-    (use-package tide
-      :after (typescript-mode company flycheck)
-      :hook ((typescript-mode . tide-setup)
-             (typescript-mode . tide-hl-identifier-mode)
-             (before-save . tide-format-before-save)))
     #+END_SRC
 
 *** Emmet(Zencoding)
@@ -1585,6 +1544,7 @@
               "https://www.blog.pythonlibrary.org/feed/"
               "https://pythonspeed.com/atom.xml"
               "https://rachelbythebay.com/w/atom.xml"
+              "https://hynek.me/index.xml"
               ))
       (use-package elfeed)
     #+end_src
