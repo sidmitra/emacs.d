@@ -1306,6 +1306,27 @@
        :mode "Dockerfile$")
    #+END_SRC
 
+** sql
+   Activate babel languages
+   #+begin_src emacs-lisp
+     (org-babel-do-load-languages
+      'org-babel-load-languages
+      '((emacs-lisp . t)
+        (shell . t)
+        (screen . t)
+        (R . t)
+        (C . t)
+        (css . t)
+        (python . t)
+        (js . t)
+        (haskell . t)
+        (clojure . t)
+        (lisp . t)
+        (org . t)
+        (sql . t)
+        ))
+   #+end_src
+
 * Notes
 ** org
 *** Main config
@@ -1545,6 +1566,7 @@
               "https://pythonspeed.com/atom.xml"
               "https://rachelbythebay.com/w/atom.xml"
               "https://hynek.me/index.xml"
+              "https://rednafi.github.io/digressions/feed.xml"
               ))
       (use-package elfeed)
     #+end_src
