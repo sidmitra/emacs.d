@@ -1365,6 +1365,7 @@
 
         )
     #+END_SRC
+
 **** Eisenhower matrix
      #+BEGIN_SRC emacs-lisp
        (setq org-tag-alist '(("important" . ?i)
@@ -1376,12 +1377,13 @@
                ("3" "Q3" tags-todo "-important+urgent")
                ("4" "Q4" tags-todo "-important-urgent")))
      #+END_SRC
+
 *** org-superstar
     #+BEGIN_SRC emacs-lisp
       (use-package org-superstar
         :defer t
-        :config
-        (add-hook 'org-mode-hook (lambda () (org-superstar-mode t))))
+        :hook (org-mode . org-superstar-mode)
+        )
     #+END_SRC
 
 *** org-super-agenda
