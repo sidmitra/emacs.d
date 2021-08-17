@@ -1,8 +1,6 @@
 *
 !.gitignore
 !.gitmodules
-!configuration.org
+!README.org
 !init.el
 !yasnippet-snippets
-
-

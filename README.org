@@ -1,5 +1,7 @@
-#+TITLE: Emacs configuration
+#+TITLE: Emacs Configuration
 #+STARTUP: overview
+
+This is my emacs config written as a literate program via org-babel.
 
 * Initialize
 ** Package managers
@@ -1689,7 +1691,7 @@
 ** Registers
    #+BEGIN_SRC emacs-lisp
      (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
-     (set-register ?i (cons 'file "~/.emacs.d/configuration.org"))
+     (set-register ?i (cons 'file "~/.emacs.d/README.org"))
      (set-register ?s (cons 'file "~/Projects/Notes/scratch.org"))
    #+END_SRC
 
