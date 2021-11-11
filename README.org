@@ -109,6 +109,14 @@ This is my emacs config written as a literate program via org-babel.
                (funcall (cdr my-pair)))))
    #+END_SRC
 
+** Load org-mode errors due to loading built in version of org-mode
+    See [[https://github.com/raxod502/straight.el#the-wrong-version-of-my-package-was-loaded][The wrong version of my package was loaded]]
+    #+begin_src emacs-lisp
+      (straight-use-package 'org)
+      (straight-use-package 'org-contrib)
+    #+end_src
+
+
 * Appearance/Visual
 ** Load colour theme
 *** doom-themes
@@ -132,6 +140,25 @@ This is my emacs config written as a literate program via org-babel.
         ;; Corrects (and improves) org-mode's native fontification.
         (doom-themes-org-config)
         )
+    #+END_SRC
+
+*** COMMENT nano-theme
+    #+BEGIN_SRC emacs-lisp
+      (straight-use-package '(nano-theme :type git :host github
+                   :repo "rougier/nano-theme"))
+
+      (straight-use-package '(nano-modeline :type git :host github
+                                   :repo "rougier/nano-modeline"))
+
+      (straight-use-package '(nano-agenda :type git :host github
+                                         :repo "rougier/nano-agenda"))
+
+      (load-theme 'nano-dark t)
+      (nano-modeline-mode)
+
+      ;; (use-package nano-theme)
+      ;; (use-package nano-modeline)
+      ;; (use-package nano-agenda)
     #+END_SRC
 
 ** Icons
@@ -340,7 +367,7 @@ This is my emacs config written as a literate program via org-babel.
       (setq-default column-number-mode t)
     #+END_SRC
 ** Style the modeline
-*** Doom Modeline
+*** COMMENT Doom Modeline
     #+BEGIN_SRC emacs-lisp
       (use-package doom-modeline
         :hook (after-init . doom-modeline-mode))
@@ -642,6 +669,7 @@ This is my emacs config written as a literate program via org-babel.
         (projectile-global-mode)
         (setq projectile-completion-system 'default)
         (setq projectile-enable-caching t)
+        (setq projectile-indexing-method 'alien)
         )
     #+END_SRC
 
@@ -963,8 +991,24 @@ This is my emacs config written as a literate program via org-babel.
                     (buffer-face-mode t)))
         )
     #+END_SRC
+*** vterm-eshell
+    An Emacs global minor mode allowing eshell to use vterm for visual commands.
+    https://github.com/iostapyshyn/eshell-vterm
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package eshell-vterm
+        :after eshell
+        :config
+        (eshell-vterm-mode))
+    #+END_SRC
+
 
 *** better-shell
+    This package simplifies shell management and sudo access by providing the following commands.
+    better-shell-for-current-dir
+    better-shell-for-projectile-root - Like better-shell-for-current-dir, except you are taken to the projectile root of the current directory, provided you have projectile installed.
+    better-shell-shell - cycle through existing shell buffers
+    https://github.com/killdash9/better-shell
     #+BEGIN_SRC emacs-lisp
       (use-package better-shell
         :bind (("C-'" . better-shell-shell)
@@ -979,6 +1023,23 @@ This is my emacs config written as a literate program via org-babel.
        (keyfreq-mode 1)
        (keyfreq-autosave-mode 1))
    #+END_SRC
+
+** COMMENT Emacs Application Framework
+   pyenv global 3.9.6
+   #+begin_src emacs-lisp
+     (use-package eaf
+       :straight (eaf :type git :fetcher github :repo "emacs-eaf/emacs-application-framework" :files (:defaults "app" "core" "*.py"))
+       :custom
+       (eaf-browser-continue-where-left-off t)
+       :config
+       (eaf-setq eaf-browser-enable-adblocker "true")
+       (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+       (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+       (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+       (eaf-bind-key nil "M-q" eaf-browser-keybinding))
+     ;; (require 'eaf-browser)
+     ;; (require 'eaf-pdf-viewer)
+   #+end_src
 
 * Programming
 ** Snippets
@@ -1388,7 +1449,7 @@ This is my emacs config written as a literate program via org-babel.
         )
     #+END_SRC
 
-*** org-super-agenda
+*** COMMENT org-super-agenda
     #+BEGIN_SRC emacs-lisp
       (use-package org-super-agenda
         :defer t
@@ -1498,6 +1559,16 @@ This is my emacs config written as a literate program via org-babel.
                           path (or desc "video"))))))
     #+END_SRC
 
+*** COMMENT boxy
+    #+BEGIN_SRC emacs-lisp
+      (use-package boxy)
+      (use-package boxy-headings
+        :config
+        (define-key org-mode-map (kbd "C-c r o") 'boxy-headings)
+        )
+
+    #+END_SRC
+
 * External Services
 ** browser
    #+begin_src emacs-lisp
@@ -1562,6 +1633,7 @@ This is my emacs config written as a literate program via org-babel.
               "https://www.mattduck.com/feed.xml"
               "https://jvns.ca/atom.xml"
               "http://antirez.com/rss"
+              "https://increment.com/feed.xml"
               "https://feeds.feedburner.com/martinkl?format=xml"
               "https://www.allthingsdistributed.com/index.xml"
               "https://blog.acolyer.org/feed/"
