@@ -8,6 +8,7 @@ This is my emacs config written as a literate program via org-babel.
    Use paradox as the default package interface
    #+BEGIN_SRC emacs-lisp
      (setq straight-use-package-by-default t)
+     (setq straight-vc-git-default-protocol 'ssh)
      (straight-use-package 'use-package)
 
      (use-package paradox
@@ -109,13 +110,12 @@ This is my emacs config written as a literate program via org-babel.
                (funcall (cdr my-pair)))))
    #+END_SRC
 
-** Load org-mode errors due to loading built in version of org-mode
+** COMMENT Load org-mode errors due to loading built in version of org-mode
     See [[https://github.com/raxod502/straight.el#the-wrong-version-of-my-package-was-loaded][The wrong version of my package was loaded]]
     #+begin_src emacs-lisp
       (straight-use-package 'org)
       (straight-use-package 'org-contrib)
     #+end_src
-
 
 * Appearance/Visual
 ** Load colour theme
@@ -165,6 +165,23 @@ This is my emacs config written as a literate program via org-babel.
    #+BEGIN_SRC emacs-lisp
      (use-package all-the-icons)
    #+END_SRC
+
+*** kind-icons
+    This emacs package adds configurable icon or text-based completion prefixes based on
+    the :company-kind property that many completion backends (such as lsp-mode and Emacs
+    28's elisp-mode) provide.
+
+    #+begin_src emacs-lisp
+      (straight-use-package '(kind-icon :type git :host github
+                                        :repo "jdtsmith/kind-icon"))
+      (use-package kind-icon
+        :ensure t
+        :after corfu
+        :custom
+        (kind-icon-default-face 'corfu-background) ; to compute blended background correctly
+        :config
+        (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+    #+end_src
 
 ** Fonts
    #+BEGIN_SRC emacs-lisp
@@ -694,20 +711,77 @@ This is my emacs config written as a literate program via org-babel.
       (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-twice)))
     #+END_SRC
 
-** Incremental narrowing
+** recentf
+   https://www.emacswiki.org/emacs/RecentFiles
+   Recentf is a minor mode that builds a list of recently opened files. This list is is
+   automatically saved across sessions on exiting Emacs - you can then access this list
+   through a command or the menu.
+
+   #+begin_src emacs-lisp
+     (recentf-mode 1)
+     (setq recentf-max-menu-items 25)
+     (setq recentf-max-saved-items 25)
+     ;;(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+   #+end_src
+
+** Incremental narrowing, completion
+*** corfu
+    #+begin_src emacs-lisp
+      (use-package corfu
+        ;; Optional customizations
+        ;; :custom
+        ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+        ;; (corfu-auto t)                 ;; Enable auto completion
+        ;; (corfu-commit-predicate nil)   ;; Do not commit selected candidates on next input
+        ;; (corfu-quit-at-boundary t)     ;; Automatically quit at word boundary
+        ;; (corfu-quit-no-match t)        ;; Automatically quit if there is no match
+        ;; (corfu-echo-documentation nil) ;; Do not show documentation in the echo area
+        ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+        ;; (corfu-preview-current nil)    ;; Do not preview current candidate
+
+        ;; Optionally use TAB for cycling, default is `corfu-complete'.
+        ;; :bind (:map corfu-map
+        ;;        ("TAB" . corfu-next)
+        ;;        ([tab] . corfu-next)
+        ;;        ("S-TAB" . corfu-previous)
+        ;;        ([backtab] . corfu-previous))
+
+        ;; You may want to enable Corfu only for certain modes.
+        ;; :hook ((prog-mode . corfu-mode)
+        ;;        (shell-mode . corfu-mode)
+        ;;        (eshell-mode . corfu-mode))
+
+        ;; Recommended: Enable Corfu globally.
+        ;; This is recommended since dabbrev can be used globally (M-/).
+        :init
+        (corfu-global-mode))
+    #+end_src
+
 *** orderless
     https://github.com/oantolin/orderless
-    This package provides an orderless completion style that divides the pattern into space-separated components, and matches candidates that match all of the components in any order. Each component can match in any one of several ways: literally, as a regexp, as an initialism, in the flex style, or as multiple word prefixes. By default, regexp and literal matches are enabled.
+    This package provides an orderless completion style that divides the pattern into
+    space-separated components, and matches candidates that match all of the components
+    in any order. Each component can match in any one of several ways: literally, as a
+    regexp, as an initialism, in the flex style, or as multiple word prefixes. By
+    default, regexp and literal matches are enabled.
 
     #+BEGIN_SRC elisp
       (use-package orderless
+        :init
         ;; :init (icomplete-mode) ; optional but recommended!
-        :custom (completion-styles '(orderless)))
+
+        ;; Configure a custom style dispatcher (see the Consult wiki)
+        ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
+        ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+        (setq completion-styles '(orderless)
+              completion-category-defaults nil
+              completion-category-overrides '((file (styles . (partial-completion))))))
     #+END_SRC
 
 *** selectrum
     https://github.com/raxod502/selectrum
-    Selectrum aims to provide a better completion UI using standard Emacs APIs. In essence it is an interface for selecting items from a list.
+    Selectrum aims to provide a better completion UI using standard Emacs APIs. In
+    essence it is an interface for selecting items from a list.
 
     #+BEGIN_SRC emacs-lisp
       (use-package selectrum
@@ -812,6 +886,11 @@ This is my emacs config written as a literate program via org-babel.
     #+END_SRC
 
 *** consult
+    Consult provides practical commands based on the Emacs completion function
+    completing-read. Completion allows you to quickly select an item from a list of
+    candidates. Consult offers in particular an advanced buffer switching command
+    consult-buffer to switch between buffers and recently opened files.
+
     #+BEGIN_SRC emacs-lisp
       (use-package consult
         ;; Replace bindings. Lazily loaded due by `use-package'.
@@ -829,7 +908,7 @@ This is my emacs config written as a literate program via org-babel.
                ("M-g l" . consult-line)          ;; "M-s l" is a good alternative.
                ("M-g m" . consult-mark)          ;; I recommend to bind Consult navigation
                ("M-g k" . consult-global-mark)   ;; commands under the "M-g" prefix.
-               ("M-g r" . consult-git-grep)      ;; or consult-grep, consult-ripgrep
+               ("M-g r" . consult-ripgrep)      ;; or consult-grep, consult-ripgrep
                ("M-g f" . consult-find)          ;; or consult-locate, my-fdfind
                ("M-g i" . consult-project-imenu) ;; or consult-imenu
                ("M-g e" . consult-error)
@@ -880,15 +959,20 @@ This is my emacs config written as a literate program via org-babel.
 
       ;; Enable Consult-Selectrum integration.
       ;; This package should be installed if Selectrum is used.
-                                              ;(use-package consult-selectrum
-                                              ;  :after selectrum
-                                              ;  :demand t)
+      ;; (use-package consult-selectrum
+      ;;  :after selectrum
+      ;;  :demand t)
 
       ;; Optionally add the `consult-flycheck' command.
       (use-package consult-flycheck
         :bind (:map flycheck-command-map
                     ("!" . consult-flycheck)))
     #+END_SRC
+
+*** misc
+    #+begin_src emacs-lisp
+      (setq completion-cycle-threshold 3)
+    #+end_src
 
 ** Search
 *** ctrlf
@@ -924,6 +1008,13 @@ This is my emacs config written as a literate program via org-babel.
                                      "--ignore" "\*.yml"
                                      ))
         (global-set-key "\C-c\C-g" 'ag-project))
+    #+END_SRC
+
+*** deadgrep
+    #+BEGIN_SRC emacs-lisp
+      (use-package deadgrep
+        :config
+        (global-set-key (kbd "<f5>") #'deadgrep))
     #+END_SRC
 
 ** Completion
@@ -1428,7 +1519,6 @@ This is my emacs config written as a literate program via org-babel.
 
         )
     #+END_SRC
-
 **** Eisenhower matrix
      #+BEGIN_SRC emacs-lisp
        (setq org-tag-alist '(("important" . ?i)
@@ -1441,6 +1531,11 @@ This is my emacs config written as a literate program via org-babel.
                ("4" "Q4" tags-todo "-important-urgent")))
      #+END_SRC
 
+*** org-contrib
+    #+begin_src emacs-lisp
+      (straight-use-package 'org-contrib)
+    #+end_src
+
 *** org-superstar
     #+BEGIN_SRC emacs-lisp
       (use-package org-superstar
@@ -1449,7 +1544,7 @@ This is my emacs config written as a literate program via org-babel.
         )
     #+END_SRC
 
-*** COMMENT org-super-agenda
+*** org-super-agenda
     #+BEGIN_SRC emacs-lisp
       (use-package org-super-agenda
         :defer t
