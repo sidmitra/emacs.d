@@ -166,7 +166,7 @@ This is my emacs config written as a literate program via org-babel.
      (use-package all-the-icons)
    #+END_SRC
 
-*** kind-icons
+*** COMMENT kind-icons
     This emacs package adds configurable icon or text-based completion prefixes based on
     the :company-kind property that many completion backends (such as lsp-mode and Emacs
     28's elisp-mode) provide.
@@ -725,7 +725,7 @@ This is my emacs config written as a literate program via org-babel.
    #+end_src
 
 ** Incremental narrowing, completion
-*** corfu
+*** COMMENT corfu
     #+begin_src emacs-lisp
       (use-package corfu
         ;; Optional customizations
