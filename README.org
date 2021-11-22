@@ -1544,7 +1544,7 @@ This is my emacs config written as a literate program via org-babel.
         )
     #+END_SRC
 
-*** org-super-agenda
+*** COMMENT org-super-agenda
     #+BEGIN_SRC emacs-lisp
       (use-package org-super-agenda
         :defer t
