@@ -274,7 +274,9 @@ This is my emacs config written as a literate program via org-babel.
    #+BEGIN_SRC emacs-lisp
      (global-font-lock-mode t)
    #+END_SRC
-*** Highlight identifiers
+*** COMMENT Highlight identifiers
+    Temporarily disabled until i finish testing tree-sitter.
+
     Color Identifiers is a minor mode for Emacs that highlights each source code identifier uniquely based on its name.
     https://github.com/ankurdave/color-identifiers-mode
 
@@ -405,7 +407,32 @@ This is my emacs config written as a literate program via org-babel.
     #+END_SRC
 * Editing
 ** Structured Editing
-*** paredit-everywhere
+*** emacs-tree-sitter
+    https://emacs-tree-sitter.github.io/
+
+    TODO: Use after + hook to prog/mode?
+    #+begin_src emacs-lisp
+      (use-package tree-sitter
+        :config (global-tree-sitter-mode)
+        :hook (tree-sitter-after-on . tree-sitter-hl-mode)
+        )
+      (use-package tree-sitter-langs)
+    #+end_src
+*** COMMENT combubulate
+    https://github.com/mickeynp/combobulate
+
+    Combobulate is an Emacs package that provides a standardized framework for manipulating and navigating your source code using tree sitter's concrete syntax tree. Combobulate is language agnostic and should work with little modification almost all languages supported by tree sitter itself.
+
+    #+begin_src emacs-lisp
+      (use-package combobulate
+        ;; Ensure `combobulate-mode` is activated when you launch a mode it supports
+        :hook ((python-mode . combobulate-mode)
+               (js-mode . combobulate-mode)
+               (typescript-mode . combobulate-mode))
+        )
+    #+end_src
+
+*** COMMENT paredit-everywhere
     https://github.com/purcell/paredit-everywhere
     It turns out that a lot of the paredit key bindings work as expected in non-lisp buffers, since many major modes provide reasonable sexp-oriented navigation.
 
