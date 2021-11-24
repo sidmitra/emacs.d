@@ -404,6 +404,18 @@ This is my emacs config written as a literate program via org-babel.
         (mode-icons-mode))
     #+END_SRC
 * Editing
+** Structured Editing
+*** paredit-everywhere
+    https://github.com/purcell/paredit-everywhere
+    It turns out that a lot of the paredit key bindings work as expected in non-lisp buffers, since many major modes provide reasonable sexp-oriented navigation.
+
+This library, then, provides a minor mode which enables a subset of the paredit library's editing commands in non-lisp buffers.
+    #+begin_src emacs-lisp
+      (use-package paredit-everywhere
+        :hook (prog-mode . paredit-everywhere-mode)
+        )
+    #+end_src
+
 ** Set default tab char's display width to 4 spaces
    #+BEGIN_SRC emacs-lisp
      (setq-default tab-width 4)
