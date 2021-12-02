@@ -418,6 +418,17 @@ This is my emacs config written as a literate program via org-babel.
         )
       (use-package tree-sitter-langs)
     #+end_src
+
+*** tree-sitter-fold
+    #+begin_src emacs-lisp
+      ;; (use-package tree-sitter-fold
+      ;;   :straight (host github repo "junyi-hou/tree-sitter-fold"))
+
+      (straight-use-package '(tree-sitter-fold :type git
+                                               :host github
+                                               :repo "junyi-hou/tree-sitter-fold"))
+    #+end_src
+
 *** COMMENT combubulate
     https://github.com/mickeynp/combobulate
 
@@ -765,6 +776,9 @@ This library, then, provides a minor mode which enables a subset of the paredit 
 
 ** Incremental narrowing, completion
 *** COMMENT corfu
+    https://github.com/minad/corfu
+    Corfu enhances the default completion in region function with a completion overlay. The current candidates are shown in a popup below or above the point. Corfu is the minimalistic completion-in-region counterpart of the Vertico minibuffer UI.
+
     #+begin_src emacs-lisp
       (use-package corfu
         ;; Optional customizations
@@ -898,6 +912,8 @@ This library, then, provides a minor mode which enables a subset of the paredit 
     #+END_SRC
 
 *** embark
+    https://github.com/oantolin/embark/
+
     #+BEGIN_SRC emacs-lisp
       (use-package embark
         :bind
@@ -1520,6 +1536,25 @@ This library, then, provides a minor mode which enables a subset of the paredit 
         ))
    #+end_src
 
+** solidity
+   #+begin_src emacs-lisp
+     (use-package solidity-mode
+       :config
+       ;; (setq solidity-comment-style 'slash)
+
+       ;; (setq solidity-solc-path "~/cpp-ethereum/build/solc/solc")
+       ;; (setq solidity-solium-path "~/.npm-global/bin/solium")
+       )
+
+
+     (use-package solidity-flycheck
+       :config
+       ;; (setq solidity-flycheck-solc-checker-active t)
+       ;; or
+       ;; (setq solidity-flycheck-solium-checker-active t)
+       )
+   #+end_src
+
 * Notes
 ** org
 *** Main config
@@ -1917,6 +1952,11 @@ This library, then, provides a minor mode which enables a subset of the paredit 
 
 ** Airbase
    #+BEGIN_SRC emacs-lisp
+     (defun relevize-enable () (interactive)
+            ;; Python
+            (pyvenv-activate "~/Projects/relevize/venv")
+            )
+
      (defun eventbus-enable () (interactive)
             ;; Python
             (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/eventbusk-It3kPIr7-py3.9")
