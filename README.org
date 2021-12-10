@@ -129,7 +129,7 @@ This is my emacs config written as a literate program via org-babel.
 
         ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
         ;; may have their own settings.
-        (load-theme 'doom-dracula t)
+        (load-theme 'doom-flatwhite t)
 
         ;; Enable flashing mode-line on errors
         (doom-themes-visual-bell-config)
@@ -775,41 +775,6 @@ This library, then, provides a minor mode which enables a subset of the paredit 
    #+end_src
 
 ** Incremental narrowing, completion
-*** COMMENT corfu
-    https://github.com/minad/corfu
-    Corfu enhances the default completion in region function with a completion overlay. The current candidates are shown in a popup below or above the point. Corfu is the minimalistic completion-in-region counterpart of the Vertico minibuffer UI.
-
-    #+begin_src emacs-lisp
-      (use-package corfu
-        ;; Optional customizations
-        ;; :custom
-        ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-        ;; (corfu-auto t)                 ;; Enable auto completion
-        ;; (corfu-commit-predicate nil)   ;; Do not commit selected candidates on next input
-        ;; (corfu-quit-at-boundary t)     ;; Automatically quit at word boundary
-        ;; (corfu-quit-no-match t)        ;; Automatically quit if there is no match
-        ;; (corfu-echo-documentation nil) ;; Do not show documentation in the echo area
-        ;; (corfu-scroll-margin 5)        ;; Use scroll margin
-        ;; (corfu-preview-current nil)    ;; Do not preview current candidate
-
-        ;; Optionally use TAB for cycling, default is `corfu-complete'.
-        ;; :bind (:map corfu-map
-        ;;        ("TAB" . corfu-next)
-        ;;        ([tab] . corfu-next)
-        ;;        ("S-TAB" . corfu-previous)
-        ;;        ([backtab] . corfu-previous))
-
-        ;; You may want to enable Corfu only for certain modes.
-        ;; :hook ((prog-mode . corfu-mode)
-        ;;        (shell-mode . corfu-mode)
-        ;;        (eshell-mode . corfu-mode))
-
-        ;; Recommended: Enable Corfu globally.
-        ;; This is recommended since dabbrev can be used globally (M-/).
-        :init
-        (corfu-global-mode))
-    #+end_src
-
 *** orderless
     https://github.com/oantolin/orderless
     This package provides an orderless completion style that divides the pattern into
@@ -917,28 +882,33 @@ This library, then, provides a minor mode which enables a subset of the paredit 
     #+BEGIN_SRC emacs-lisp
       (use-package embark
         :bind
-        ("C-S-a" . embark-act)               ; pick some comfortable binding
+        (("C-." . embark-act)
+         ("C-;" . embark-dwim)
+         ("C-h B;" . embark-bindings))
+        :init
+        ;; Optionally replace the key help with a completing-read interface
+        (setq prefix-help-command #'embark-prefix-help-command)
         :config
-        ;; For Selectrum users:
-        (defun current-candidate+category ()
-          (when selectrum-active-p
-            (cons (selectrum--get-meta 'category)
-                  (selectrum-get-current-candidate))))
 
-        (add-hook 'embark-target-finders #'current-candidate+category)
 
-        (defun current-candidates+category ()
-          (when selectrum-active-p
-            (cons (selectrum--get-meta 'category)
-                  (selectrum-get-current-candidates
-                   ;; Pass relative file names for dired.
-                   minibuffer-completing-file-name))))
-
-        (add-hook 'embark-candidate-collectors #'current-candidates+category)
-
-        ;; No unnecessary computation delay after injection.
-        (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate))
+        ;; Hide the mode line of the Embark live/completions buffers
+        ;; (add-to-list 'display-buffer-alist
+        ;;              '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+        ;;                nil
+        ;;                (window-parameters (mode-line-format . none))))
+        )
     #+END_SRC
+
+**** embark-consult
+     #+begin_src emacs-lisp
+       (use-package embark-consult
+         :after (embark consult)
+         :demand t ; only necessary if you have the hook below
+         ;; if you want to have consult previews as you move around an
+         ;; auto-updating embark collect buffer
+         :hook
+         (embark-collect-mode . consult-preview-at-point-mode))
+     #+end_src
 
 *** consult
     Consult provides practical commands based on the Emacs completion function
@@ -1054,6 +1024,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
                                      "--ignore-dir" "elpa"
                                      "--ignore-dir" "lib"
                                      "--ignore-dir" "build"
+                                     "--ignore" "\*.full.min.js"
                                      "--ignore" "\*.min.js"
                                      "--ignore" "\*.min.css"
                                      "--ignore" "\*.csv"
@@ -1344,6 +1315,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
        (pyvenv-mode 1))
    #+END_SRC
 
+*** COMMENT Prospector
    #+BEGIN_SRC emacs-lisp
      (use-package flycheck-prospector)
    #+END_SRC
@@ -1377,11 +1349,13 @@ This library, then, provides a minor mode which enables a subset of the paredit 
         (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode)
         (flycheck-posframe-configure-pretty-defaults))
     #+END_SRC
+
 ** JSON
    #+BEGIN_SRC emacs-lisp
      ;;(use-package json-navigator)
      ;;(use-package tree-mode)  ;; Does this work in the json-navigator hierarcy window??
    #+END_SRC
+
 ** YAML
    #+BEGIN_SRC emacs-lisp
      (use-package yaml-mode
@@ -1392,6 +1366,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
    #+BEGIN_SRC emacs-lisp
      (use-package toml-mode)
    #+END_SRC
+
 ** Env
    #+BEGIN_SRC emacs-lisp
      (use-package dotenv-mode
@@ -1488,6 +1463,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
 
 ** Markdown
    Install CLI markdown first
+
    #+BEGIN_SRC bash
      brew install markdown
      # apt-get install pandoc
@@ -1580,10 +1556,10 @@ This library, then, provides a minor mode which enables a subset of the paredit 
         (setq org-support-shift-select 'always)
 
         ;; Highlight some keywords
-        (setq org-todo-keyword-faces
-              '(("TODO" . (:foreground "yellow" :weight bold))
-                ("DONE" . "green")
-                ))
+        ;; (setq org-todo-keyword-faces
+        ;;       '(("TODO" . (:foreground "yellow" :weight bold))
+        ;;         ("DONE" . "green")
+        ;;         ))
 
         ;; (setq org-catch-invisible-edits 'smart)
         ;; (setq org-ctrl-k-protect-subtree t)
@@ -1738,7 +1714,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
 
     #+END_SRC
 
-* External Services
+* External Services/Apps
 ** browser
    #+begin_src emacs-lisp
      (defun eww-default () (interactive)
@@ -1815,6 +1791,16 @@ This library, then, provides a minor mode which enables a subset of the paredit 
               ))
       (use-package elfeed)
     #+end_src
+
+** calibre
+   Ebook manager
+   #+begin_src emacs-lisp
+     (use-package calibredb
+       :config
+       (setq calibredb-root-dir "~/Calibre Library/")
+       (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
+       )
+   #+end_src
 
 * My Helpers
 ** Revert all buffers and ignore errors
