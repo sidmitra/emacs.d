@@ -110,13 +110,6 @@ This is my emacs config written as a literate program via org-babel.
                (funcall (cdr my-pair)))))
    #+END_SRC
 
-** COMMENT Load org-mode errors due to loading built in version of org-mode
-    See [[https://github.com/raxod502/straight.el#the-wrong-version-of-my-package-was-loaded][The wrong version of my package was loaded]]
-    #+begin_src emacs-lisp
-      (straight-use-package 'org)
-      (straight-use-package 'org-contrib)
-    #+end_src
-
 * Appearance/Visual
 ** Load colour theme
 *** doom-themes
@@ -129,7 +122,8 @@ This is my emacs config written as a literate program via org-babel.
 
         ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
         ;; may have their own settings.
-        (load-theme 'doom-flatwhite t)
+        ;; (load-theme 'doom-flatwhite t)
+        (load-theme 'doom-dracula t)
 
         ;; Enable flashing mode-line on errors
         (doom-themes-visual-bell-config)
@@ -310,7 +304,7 @@ This is my emacs config written as a literate program via org-babel.
     #+BEGIN_SRC emacs-lisp
       (use-package highlight-indent-guides
         :config
-        (setq highlight-indent-guides-method 'fill)
+        (setq highlight-indent-guides-method 'bitmap)
         (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
     #+END_SRC
 
@@ -1016,6 +1010,16 @@ This library, then, provides a minor mode which enables a subset of the paredit 
         :config
         ;; (setq-default ag-reuse-window 't)
         (setq-default ag-reuse-buffers 't)
+        (setq ag-highlight-search t)
+
+        ;; (setq ag-ignore-list (quote (
+        ;;                              "*migrations/*"
+        ;;                              "*node_modules/*"
+        ;;                              "*elpa/*"
+        ;;                              "*lib/*"
+        ;;                              "*build/*"
+        ;;                              "*static/*"
+        ;;                              )))
         (setq-default ag-arguments '(
                                      "--smart-case"
                                      "--stats"
@@ -1024,14 +1028,15 @@ This library, then, provides a minor mode which enables a subset of the paredit 
                                      "--ignore-dir" "elpa"
                                      "--ignore-dir" "lib"
                                      "--ignore-dir" "build"
-                                     "--ignore" "\*.full.min.js"
-                                     "--ignore" "\*.min.js"
-                                     "--ignore" "\*.min.css"
-                                     "--ignore" "\*.csv"
-                                     "--ignore" "\*.svg"
-                                     "--ignore" "\*.json"
-                                     "--ignore" "\*.yaml"
-                                     "--ignore" "\*.yml"
+                                     "--ignore" "*?.min.js"
+                                     "--ignore" "*?.map"
+                                     "--ignore" "*?.min.js"
+                                     "--ignore" "*?.min.css"
+                                     "--ignore" "*.csv"
+                                     "--ignore" "*.svg"
+                                     "--ignore" "*.json"
+                                     "--ignore" "*.yaml"
+                                     "--ignore" "*.yml"
                                      ))
         (global-set-key "\C-c\C-g" 'ag-project))
     #+END_SRC
@@ -1569,7 +1574,8 @@ This library, then, provides a minor mode which enables a subset of the paredit 
 
         )
     #+END_SRC
-**** Eisenhower matrix
+
+**** COMMENT Eisenhower matrix
      #+BEGIN_SRC emacs-lisp
        (setq org-tag-alist '(("important" . ?i)
                              ("urgent"    . ?u)))
@@ -1587,6 +1593,9 @@ This library, then, provides a minor mode which enables a subset of the paredit 
     #+end_src
 
 *** org-superstar
+    https://github.com/integral-dw/org-superstar-mode
+    Prettify headings and plain lists in Org mode.
+
     #+BEGIN_SRC emacs-lisp
       (use-package org-superstar
         :defer t
@@ -1627,6 +1636,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
         ;;recommended: defer until calling doct
         :commands (doct))
     #+END_SRC
+
 *** org-babel
     #+begin_src emacs-lisp
       (setq org-babel-python-command "python3")
@@ -1648,6 +1658,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
        (global-set-key [f9] 'deft)
        )
    #+END_SRC
+
 ** zetteldeft
    [[https://www.eliasstorms.net/zetteldeft/#org02cc025][Tutorial]]
 
@@ -1671,6 +1682,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
 
      ;; (use-package org-roam-protocol)
    #+END_SRC
+
 ** org-journal
    #+BEGIN_SRC emacs-lisp
      (use-package org-journal
@@ -1711,7 +1723,6 @@ This library, then, provides a minor mode which enables a subset of the paredit 
         :config
         (define-key org-mode-map (kbd "C-c r o") 'boxy-headings)
         )
-
     #+END_SRC
 
 * External Services/Apps
@@ -1750,7 +1761,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
    #+BEGIN_SRC emacs-lisp
      (use-package pinboard
        :config
-       (add-to-list 'auth-sources "~/.authinfo" t)
+       ;; (add-to-list 'auth-sources "~/.authinfo" t)
        )
    #+END_SRC
 
@@ -1771,7 +1782,8 @@ This library, then, provides a minor mode which enables a subset of the paredit 
    #+END_SRC
 
 ** RSS Feeds
-*** elfeed
+*** COMMENT elfeed
+    Moved back to newsblur, not currently using it.
     #+begin_src emacs-lisp
       (setq elfeed-feeds
             '("https://sobolevn.me/feed.xml"
@@ -1788,6 +1800,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
               "https://rachelbythebay.com/w/atom.xml"
               "https://hynek.me/index.xml"
               "https://rednafi.github.io/digressions/feed.xml"
+              "https://cprss.s3.amazonaws.com/postgresweekly.com.xml"
               ))
       (use-package elfeed)
     #+end_src
@@ -1924,6 +1937,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
 
 ** File Paths
    #+BEGIN_SRC emacs-lisp
+     (add-to-list 'auth-sources "~/.authinfo" t) ;; pinboard, magit-forge
      (setq-default org-directory "~/Projects/Notes")
      (setq-default org-roam-directory "~/Projects/Notes/")
      (setq-default org-roam-index-file "index.org")
