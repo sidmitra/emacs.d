@@ -1535,7 +1535,10 @@ This library, then, provides a minor mode which enables a subset of the paredit 
 * Notes
 ** org
 *** Main config
-    This has now moved to init.el to load org before org-babel hits
+    Note that org mode actually is installed first via init.el, to ensure org-babel can
+    process this literate config property with the right version loaded. Otherwise the
+    built-in org gets mixed up with the one via straight.  I'm still leaving the org
+    section and any custom config here.
     #+BEGIN_SRC emacs-lisp
       (use-package org
         :defer t
@@ -1600,7 +1603,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
         )
     #+END_SRC
 
-*** COMMENT org-super-agenda
+*** org-super-agenda
     #+BEGIN_SRC emacs-lisp
       (use-package org-super-agenda
         :defer t

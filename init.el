@@ -34,38 +34,7 @@
 (straight-use-package 'use-package)
 
 ;; Load org before we run rest of the config through org-babel
-(use-package org
-  :defer t
-  :bind (
-         ("C-c a" . org-agenda)
-         ("C-c k" . org-capture)
-         )
-  :config
-
-  ;; ;; Change ... to downward arrow when there's stuff under a header.
-  ;; (setq org-hide-leading-stars t)
-
-  ;; ;; Use syntax highlighting in source blocks while editing.
-  ;; (setq org-src-fontify-natively t)
-  ;; (font-lock-flush)
-
-  ;; ;; Make TAB act as if it were issued in a buffer of the language's major mode.
-  ;; (setq org-src-tab-acts-natively t)
-
-  ;; (setq org-support-shift-select 'always)
-
-  ;; ;; Highlight some keywords
-  ;; ;; (setq org-todo-keyword-faces
-  ;; ;;       '(("TODO" . (:foreground "yellow" :weight bold))
-  ;; ;;         ("DONE" . "green")
-  ;; ;;         ))
-
-  ;; ;; (setq org-catch-invisible-edits 'smart)
-  ;; ;; (setq org-ctrl-k-protect-subtree t)
-
-  ;; ;; ;; Save archive file after something is archived.
-  ;; (setq org-archive-subtree-save-file-p t)
-  )
+(use-package org)
 
 ;; Load my custom configuration
 (org-babel-load-file "~/.emacs.d/README.org")
