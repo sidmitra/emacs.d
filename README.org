@@ -7,10 +7,6 @@ This is my emacs config written as a literate program via org-babel.
 ** Package managers
    Use paradox as the default package interface
    #+BEGIN_SRC emacs-lisp
-     (setq straight-use-package-by-default t)
-     (setq straight-vc-git-default-protocol 'ssh)
-     (straight-use-package 'use-package)
-
      (use-package paradox
        :config
        (paradox-enable))
@@ -1539,6 +1535,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
 * Notes
 ** org
 *** Main config
+    This has now moved to init.el to load org before org-babel hits
     #+BEGIN_SRC emacs-lisp
       (use-package org
         :defer t
@@ -1688,7 +1685,7 @@ This library, then, provides a minor mode which enables a subset of the paredit 
      (use-package org-journal
        :config
        (setq org-journal-dir "~/Projects/Notes/journal/")
-       (setq org-journal-file-type "daily")
+       (setq org-journal-file-type 'daily)
        )
    #+END_SRC
 
