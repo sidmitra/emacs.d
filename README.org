@@ -1581,7 +1581,6 @@ Activate babel languages
                 (push '("|>" . ?\u25B7) prettify-symbols-alist))))
 #+end_src
 
-
 * Notes
 ** org
 *** Main config
@@ -1837,6 +1836,13 @@ Searching/Filtering notes
     )
 #+END_SRC
 
+** mermaid
+Emacs major mode for working with mermaid graphs
+
+#+begin_src emacs-lisp
+(use-package mermaid-mode)
+#+end_src
+
 * External Services/Apps
 ** browser
 #+begin_src emacs-lisp
@@ -1936,6 +1942,10 @@ Ebook manager
     :config
     (pdf-tools-install)
     (setq auto-revert-interval 0.5)
+
+    ;; Fix blurry PDFs on MacOS.
+    ;; From https://github.com/politza/pdf-tools/issues/51
+    (setq pdf-view-use-scaling t)
     )
 #+end_src
 
