@@ -711,10 +711,40 @@ This package is a emacs-which-key extension, which use posframe to show which-ke
     (global-set-key (kbd "C-<mouse-4>") 'bm-next-mouse)
     ;; (global-set-key (kbd "C-<mouse-3>") 'bm-previous-mouse)
 
+    ;; fix Lisp nesting exceeds ‘max-lisp-eval-depth’ in bm-count
+    (setq max-lisp-eval-depth 10000)
+
     :bind (("C-x p n" . bm-next)
            ("C-x p p" . bm-previous)
            ("C-x p t" . bm-toggle))
     )
+
+  ;; HACK: To make bm work in emacs-29
+  ;; https://github.com/joodland/bm/issues/45
+  (defun bm-lists (&optional direction predicate)
+    "Return a pair of lists giving all the bookmarks of the current buffer.
+  The car has all the bookmarks before the overlay center;
+  the cdr has all the bookmarks after the overlay center.
+  A bookmark implementation of `overlay-lists'.
+
+  If optional argument DIRECTION is provided, only return bookmarks
+  in the specified direction.
+
+  If optional argument PREDICATE is provided, it is used as a
+  selection criteria for filtering the lists."
+    (if (null predicate)
+        (setq predicate 'bm-bookmarkp))
+
+    (overlay-recenter (point))
+    (cond ((equal 'forward direction)
+           (cons nil (remq nil (mapcar predicate (overlays-in (point) (point-max))))))
+          ((equal 'backward direction)
+           (cons (remq nil (mapcar predicate (overlays-in (point-min) (point)))) nil))
+          (t
+           (cons
+            (remq nil (mapcar predicate (overlays-in (point-min) (point))))
+            (remq nil (mapcar predicate (overlays-in (point) (point-max))))))))
+
 #+END_SRC
 *** projectile
 #+BEGIN_SRC emacs-lisp
@@ -786,43 +816,41 @@ default, regexp and literal matches are enabled.
           completion-category-overrides '((file (styles . (partial-completion))))))
 #+END_SRC
 
-*** selectrum
-https://github.com/raxod502/selectrum
-Selectrum aims to provide a better completion UI using standard Emacs APIs. In
-essence it is an interface for selecting items from a list.
+*** vertico
+#+begin_src emacs-lisp
+  (use-package vertico
+    :init
+    (vertico-mode)
+    ;; Different scroll margin
+    (setq vertico-scroll-margin 0)
 
-#+BEGIN_SRC emacs-lisp
-  (use-package selectrum
-    :config
-    (selectrum-mode +1)
+    ;; Show more candidates
+    (setq vertico-count 20)
 
-    ;; https://github.com/raxod502/selectrum/wiki/Additional-Configuration#filtering-with-orderless
-    (setq selectrum-refine-candidates-function #'orderless-filter)
-    (setq selectrum-highlight-candidates-function #'orderless-highlight-matches)
-    ;; If you also configure `completion-styles` for orderless you might want to use the
-    ;; following advice because orderless isn't well suited for initial gathering of
-    ;; candidates by completion in region.
-    (advice-add #'completion--category-override :filter-return
-                (defun completion-in-region-style-setup+ (res)
-                  "Fallback to default styles for region completions with orderless."
-                  (or res
-                      ;; Don't use orderless for initial candidate gathering.
-                      (and completion-in-region-mode-predicate
-                           (not (minibufferp))
-                           (equal '(orderless) completion-styles)
-                           '(basic partial-completion emacs22)))))
+    ;; Grow and shrink the Vertico minibuffer
+    (setq vertico-resize t)
+
+    ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+    (setq vertico-cycle t)
     )
-#+END_SRC
+#+end_src
 
 *** prescient
 Simple but effective sorting and filtering for Emacs.
 https://github.com/raxod502/prescient.el
 
+prescient.el is a library which sorts and filters lists of candidates, such as appear when you use a package like Ivy or Company. Extension packages such as ivy-prescient.el and company-prescient.el adapt the library for usage with various frameworks.
+
+prescient.el also provides a completion style (prescient) for filtering candidates via Emacs's generic completion, such as in Icomplete, Vertico, and Corfu. These last two have extension packages to correctly set up filtering and sorting.
+
 #+BEGIN_SRC emacs-lisp
   (use-package prescient)
-  (use-package selectrum-prescient
+  (use-package vertico-prescient
     :config
-    (selectrum-prescient-mode t)
+    ;; cause Vertico to use prescient.el
+    (vertico-prescient-mode t)
+
+    ;; usage statistics to be saved between Emacs sessions
     (prescient-persist-mode t)
     )
 
@@ -852,10 +880,6 @@ https://github.com/minad/marginalia
     ;; Must be in the :init section of use-package such that the mode gets
     ;; enabled right away. Note that this forces loading the package.
     (marginalia-mode)
-
-    ;; When using Selectrum, ensure that Selectrum is refreshed when cycling annotations.
-    (advice-add #'marginalia-cycle :after
-                (lambda () (when (bound-and-true-p selectrum-mode) (selectrum-exhibit))))
 
     ;; Prefer richer, more heavy, annotations over the lighter default variant.
     ;; E.g. M-x will show the documentation string additional to the keybinding.
@@ -972,11 +996,7 @@ consult-buffer to switch between buffers and recently opened files.
     ;; (consult-preview-mode)
     )
 
-  ;; Enable Consult-Selectrum integration.
-  ;; This package should be installed if Selectrum is used.
-  ;; (use-package consult-selectrum
-  ;;  :after selectrum
-  ;;  :demand t)
+    ;; TODO Instal and figure out consult-vertico
 
   ;; Optionally add the `consult-flycheck' command.
   (use-package consult-flycheck
@@ -1043,6 +1063,23 @@ https://github.com/raxod502/ctrlf
     :config
     (global-set-key (kbd "<f5>") #'deadgrep))
 #+END_SRC
+*** fzf
+#+begin_src emacs-lisp
+  (use-package fzf
+    :bind
+    ;; Don't forget to set keybinds!
+    :config
+    (setq fzf/args "-x --color bw --print-query --margin=1,0 --no-hscroll"
+          fzf/executable "fzf"
+          fzf/git-grep-args "-i --line-number %s"
+          ;; command used for `fzf-grep-*` functions
+          ;; example usage for ripgrep:
+          fzf/grep-command "rg --no-heading -nH"
+          ; fzf/grep-command "grep -nrH"
+          ;; If nil, the fzf buffer will appear at the top of the window
+          fzf/position-bottom t
+          fzf/window-height 15))
+#+end_src
 
 ** Completion
 #+BEGIN_SRC emacs-lisp
@@ -1223,11 +1260,19 @@ Forge allows you to work with Git forges, such as Github and Gitlab
     )
 #+END_SRC
 
-*** git-timemachine
+*** COMMENT git-timemachine
 #+BEGIN_SRC emacs-lisp
+  ;; (use-package git-timemachine
+  ;;   :straight (:host nil :type git
+  ;;                    :repo "https://codeberg.org/pidu/git-timemachine")
+  ;;   )
+
+
   (use-package git-timemachine
-    :config)
+    :straight (git-timemachine :type git :host codeberg :repo "pidu/git-timemachine")
+    )
 #+END_SRC
+
 *** diff-hl
 Highlights uncommitted changes on the left side of the window, allows you to jump between and revert them selectively.
 #+BEGIN_SRC emacs-lisp
@@ -1581,6 +1626,13 @@ Activate babel languages
                 (push '("|>" . ?\u25B7) prettify-symbols-alist))))
 #+end_src
 
+** Copilot
+#+begin_src emacs-lisp
+  (use-package copilot
+    :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t)
+#+end_src
+
 * Notes
 ** org
 *** Main config
@@ -1624,13 +1676,14 @@ section and any custom config here.
     ;; Hide emphasis markers */~=+
     (setq org-hide-emphasis-markers t)
 
-
     ;; Ensure org section expands on search
-    (setq org-fold-core-style 'overlays)
+    ;; TODO: not working with ctrl+f still
+    (setq-default org-fold-core-style 'overlays)
     )
 #+END_SRC
 
 **** COMMENT Eisenhower matrix
+This wasn't working. Only taking tags mentioned at the top of org doc in tags section.
 #+BEGIN_SRC emacs-lisp
   (setq org-tag-alist '(("important" . ?i)
                         ("urgent"    . ?u)))
@@ -1795,11 +1848,25 @@ Searching/Filtering notes
 #+END_SRC
 
 ** org-journal
+https://github.com/bastibe/org-journal
 #+BEGIN_SRC emacs-lisp
   (use-package org-journal
     :config
+
+    (defun org-journal-file-header-func (time)
+      "Custom function to create journal header."
+      (concat
+       (pcase org-journal-file-type
+         (`daily "#+TITLE: Daily Journal\n#+STARTUP: showeverything")
+         (`weekly "#+TITLE: Weekly Journal\n#+STARTUP: folded")
+         (`monthly "#+TITLE: Monthly Journal\n#+STARTUP: folded")
+         (`yearly "#+TITLE: Yearly Journal\n#+STARTUP: folded"))))
+
+    (setq org-journal-file-header 'org-journal-file-header-func)
+
     (setq org-journal-dir "~/Projects/Notes/journal/")
     (setq org-journal-file-type 'daily)
+    (setq org-journal-file-format "%Y%m%d.org")
     )
 #+END_SRC
 
@@ -1839,8 +1906,31 @@ Searching/Filtering notes
 ** mermaid
 Emacs major mode for working with mermaid graphs
 
+brew install mermaid-cli
+
 #+begin_src emacs-lisp
 (use-package mermaid-mode)
+#+end_src
+** d2lang
+
+What is D2?
+
+D2 is a diagram scripting language that turns text to diagrams. It stands for Declarative Diagramming. Declarative, as in, you describe what you want diagrammed, it generates the image.
+
+https://d2lang.com/tour/intro/
+
+First install CLI tool
+brew install d2
+
+https://github.com/andorsk/d2-mode
+https://github.com/dmacvicar/ob-d2
+
+#+begin_src emacs-lisp
+  (use-package d2-mode)
+
+  (use-package ob-d2
+    :straight (:type git :host github :repo "dmacvicar/ob-d2")
+    :defer t)
 #+end_src
 
 * External Services/Apps

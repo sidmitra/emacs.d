@@ -28,9 +28,11 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; Replace use-package with straight
+;; Initialize straight
+(add-to-list 'straight-hosts '(codeberg "codeberg.org" ".git")) ;; for git-timemachine
 (setq straight-use-package-by-default t)
 (setq straight-vc-git-default-protocol 'ssh)
+;; Replace use-package with straight
 (straight-use-package 'use-package)
 
 ;; Load org before we run rest of the config through org-babel
