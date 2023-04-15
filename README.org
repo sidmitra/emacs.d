@@ -133,6 +133,10 @@ This is a problem on Macbook where option and command is weirdly placed.
 #+END_SRC
 
 *** COMMENT nano-theme
+
+https://github.com/rougier/nano-theme
+https://github.com/rougier/nano-modeline
+
 #+BEGIN_SRC emacs-lisp
   (straight-use-package '(nano-theme :type git :host github
                                      :repo "rougier/nano-theme"))
@@ -140,15 +144,11 @@ This is a problem on Macbook where option and command is weirdly placed.
   (straight-use-package '(nano-modeline :type git :host github
                                         :repo "rougier/nano-modeline"))
 
-  (straight-use-package '(nano-agenda :type git :host github
-                                      :repo "rougier/nano-agenda"))
+  ;; (straight-use-package '(nano-agenda :type git :host github
+  ;;                                     :repo "rougier/nano-agenda"))
 
-  (load-theme 'nano-dark t)
+  (load-theme 'nano-light t)
   (nano-modeline-mode)
-
-  ;; (use-package nano-theme)
-  ;; (use-package nano-modeline)
-  ;; (use-package nano-agenda)
 #+END_SRC
 
 ** Icons
@@ -417,6 +417,18 @@ TODO: Use after + hook to prog/mode?
   (straight-use-package '(tree-sitter-fold :type git
                                            :host github
                                            :repo "junyi-hou/tree-sitter-fold"))
+#+end_src
+
+*** COMMENT tree-sit
+#+begin_src emacs-lisp
+(use-package treesit
+  :custom (treesit-font-lock-level 4)
+  :straight (:type  built-in))
+
+(use-package treesit-auto
+  :straight (:host github :repo "renzmann/treesit-auto")
+  :config (setq treesit-auto-install 'prompt)
+  (global-treesit-auto-mode))
 #+end_src
 
 *** COMMENT combubulate
@@ -1004,6 +1016,15 @@ consult-buffer to switch between buffers and recently opened files.
                 ("!" . consult-flycheck)))
 #+END_SRC
 
+*** helpful
+https://github.com/Wilfred/helpful
+Helpful is an alternative to the built-in Emacs help that provides much more contextual information.
+
+#+begin_src emacs-lisp
+  (use-package helpful
+    )
+#+end_src
+
 *** misc
 #+begin_src emacs-lisp
   (setq completion-cycle-threshold 3)
@@ -1058,6 +1079,7 @@ https://github.com/raxod502/ctrlf
 #+END_SRC
 
 *** deadgrep
+https://github.com/Wilfred/deadgrep
 #+BEGIN_SRC emacs-lisp
   (use-package deadgrep
     :config
@@ -1179,22 +1201,6 @@ https://github.com/killdash9/better-shell
     (keyfreq-autosave-mode 1))
 #+END_SRC
 
-** COMMENT Emacs Application Framework
-pyenv global 3.9.6
-#+begin_src emacs-lisp
-  (use-package eaf
-    :straight (eaf :type git :fetcher github :repo "emacs-eaf/emacs-application-framework" :files (:defaults "app" "core" "*.py"))
-    :custom
-    (eaf-browser-continue-where-left-off t)
-    :config
-    (eaf-setq eaf-browser-enable-adblocker "true")
-    (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key take_photo "p" eaf-camera-keybinding)
-    (eaf-bind-key nil "M-q" eaf-browser-keybinding))
-  ;; (require 'eaf-browser)
-  ;; (require 'eaf-pdf-viewer)
-#+end_src
 
 * Programming
 ** Snippets
@@ -1263,7 +1269,7 @@ Forge allows you to work with Git forges, such as Github and Gitlab
 *** COMMENT git-timemachine
 #+BEGIN_SRC emacs-lisp
   ;; (use-package git-timemachine
-  ;;   :straight (:host nil :type git
+  ;;   :straigh (:host nil :type git
   ;;                    :repo "https://codeberg.org/pidu/git-timemachine")
   ;;   )
 
@@ -1281,6 +1287,27 @@ Highlights uncommitted changes on the left side of the window, allows you to jum
     (global-diff-hl-mode)
     )
 #+END_SRC
+*** blamer
+https://github.com/Artawower/blamer.el
+A git blame plugin for emacs inspired by VS Code’s GitLens plugin and Vim plugin
+
+#+begin_src emacs-lisp
+  (use-package blamer
+    :straight (:host github :repo "artawower/blamer.el")
+    :bind (("s-i" . blamer-show-posframe-commit-info))
+    :custom
+    (blamer-idle-time 0.3)
+    (blamer-min-offset 70)
+    :custom-face
+    (blamer-face ((t :foreground "#7a88cf"
+                     :background nil
+                     :height 140
+                     :italic t)))
+    :config
+    (setq blamer-show-avatar-p t)
+    (global-blamer-mode 1))
+#+end_src
+
 ** Language Server Protocol (LSP)
 https://emacs-lsp.github.io/lsp-mode/page/performance/
 #+BEGIN_SRC emacs-lisp
@@ -1385,7 +1412,6 @@ https://github.com/galaunay/poetry.el
   ;;(load "coverage-mode.el")
   ;;(require 'coverage-mode)
 #+END_SRC
-
 ** flycheck
 *** Main
 #+BEGIN_SRC emacs-lisp
@@ -1626,11 +1652,23 @@ Activate babel languages
                 (push '("|>" . ?\u25B7) prettify-symbols-alist))))
 #+end_src
 
-** Copilot
+** COMMENT Copilot
 #+begin_src emacs-lisp
   (use-package copilot
     :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :ensure t)
+#+end_src
+** COMMENT openai Code-GPT
+#+begin_src emacs-lisp
+  ;; (use-package codegpt
+  ;;   :straight (codegpt :type git :host github :repo "emacs-openai/codegpt"))
+
+  (setq openai-key "---")
+  (straight-use-package '(openai :type git :host github
+                                  :repo "emacs-openai/openai"))
+
+  (straight-use-package '(codegpt :type git :host github
+                                  :repo "emacs-openai/codegpt"))
 #+end_src
 
 * Notes
@@ -1682,60 +1720,24 @@ section and any custom config here.
     )
 #+END_SRC
 
-**** COMMENT Eisenhower matrix
-This wasn't working. Only taking tags mentioned at the top of org doc in tags section.
-#+BEGIN_SRC emacs-lisp
-  (setq org-tag-alist '(("important" . ?i)
-                        ("urgent"    . ?u)))
+*** org-modern
+https://github.com/minad/org-modern
 
-  (setq org-agenda-custom-commands
-        '(("1" "Q1" tags-todo "+important+urgent")
-          ("2" "Q2" tags-todo "+important-urgent")
-          ("3" "Q3" tags-todo "-important+urgent")
-          ("4" "Q4" tags-todo "-important-urgent")))
-#+END_SRC
+#+begin_src emacs-lisp
+  (use-package org-modern
+    :custom
+    ;; (add-hook 'org-mode-hook #'org-modern-mode)
+    ;; (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+    ;; :
+    config
+    (global-org-modern-mode)
+    )
+#+end_src
 
 *** org-contrib
 #+begin_src emacs-lisp
   (straight-use-package 'org-contrib)
 #+end_src
-
-*** org-superstar
-https://github.com/integral-dw/org-superstar-mode
-Prettify headings and plain lists in Org mode.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-superstar
-    :defer t
-    :hook (org-mode . org-superstar-mode)
-    )
-#+END_SRC
-
-*** org-super-agenda
-#+BEGIN_SRC emacs-lisp
-  (use-package org-super-agenda
-    :defer t
-    :config
-    (org-super-agenda-mode))
-#+END_SRC
-
-*** org-pretty-tags
-Add emojis to org tags.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-pretty-tags
-    :defer t
-    :config
-    (setq org-pretty-tags-surrogate-strings
-          (quote
-           (
-            ("idea" . "💡")
-            ("learn" . "📖")
-            ("blog" . "✍")
-            ("music" . "🎵")
-            )))
-    (org-pretty-tags-globals-mode))
-#+END_SRC
 
 *** DOCT: Declarative Org Capture Templates
 #+BEGIN_SRC emacs-lisp
@@ -1753,101 +1755,7 @@ Add emojis to org tags.
    '((python . t)))
 #+end_src
 
-*** org-noter
-https://github.com/weirdNox/org-noter
-Org-noter’s purpose is to let you create notes that are kept in sync when you scroll through the document, but that are external to it - the notes themselves live in an Org-mode file. As such, this leverages the power of Org-mode (the notes may have outlines, latex fragments, babel, etc…) while acting like notes that are made inside the document. Also, taking notes is very simple: just press i and annotate away!
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-noter
-    :config
-    ;; Your org-noter config ........
-    ;; (require 'org-noter-pdftools)
-    )
-#+END_SRC
-
-**** org-pdftools
-https://github.com/fuxialexander/org-pdftools
-
-Run M-x pdf-tools-install after installing pdftools. See pdftools section below.
-
-#+begin_src emacs-lisp
-  (use-package org-pdftools
-    :hook (org-mode . org-pdftools-setup-link))
-
-  (use-package org-noter-pdftools
-    :after org-noter
-    :config
-    ;; Add a function to ensure precise note is inserted
-    (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
-      (interactive "P")
-      (org-noter--with-valid-session
-       (let ((org-noter-insert-note-no-questions (if toggle-no-questions
-                                                     (not org-noter-insert-note-no-questions)
-                                                   org-noter-insert-note-no-questions))
-             (org-pdftools-use-isearch-link t)
-             (org-pdftools-use-freestyle-annot t))
-         (org-noter-insert-note (org-noter--get-precise-info)))))
-
-    ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
-    (defun org-noter-set-start-location (&optional arg)
-      "When opening a session with this document, go to the current location.
-  With a prefix ARG, remove start location."
-      (interactive "P")
-      (org-noter--with-valid-session
-       (let ((inhibit-read-only t)
-             (ast (org-noter--parse-root))
-             (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
-         (with-current-buffer (org-noter--session-notes-buffer session)
-           (org-with-wide-buffer
-            (goto-char (org-element-property :begin ast))
-            (if arg
-                (org-entry-delete nil org-noter-property-note-location)
-              (org-entry-put nil org-noter-property-note-location
-                             (org-noter--pretty-print-location location))))))))
-    (with-eval-after-load 'pdf-annot
-      (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
-
-#+end_src
-
-** deft
-Searching/Filtering notes
-#+BEGIN_SRC emacs-lisp
-  (use-package deft
-    :custom
-    (deft-extensions '("org" "txt" "md"))
-    (deft-directory "~/Projects/Notes/")
-    (deft-recursive t)
-    (deft-use-filename-as-title t)
-    :config
-    (global-set-key [f9] 'deft)
-    )
-#+END_SRC
-
-** zetteldeft
-[[https://www.eliasstorms.net/zetteldeft/#org02cc025][Tutorial]]
-
-#+BEGIN_SRC emacs-lisp
-  (use-package zetteldeft
-    :after deft
-    :config (zetteldeft-set-classic-keybindings))
-#+END_SRC
-
-** COMMENT org-roam
-#+BEGIN_SRC emacs-lisp
-  (use-package org-roam
-    :hook
-    (after-init . org-roam-mode)
-    :bind (:map org-roam-mode-map
-                (("C-c n l" . org-roam)
-                 ("C-c n f" . org-roam-find-file)
-                 ("C-c n g" . org-roam-show-graph))
-                :map org-mode-map
-                (("C-c n i" . org-roam-insert))))
-
-  ;; (use-package org-roam-protocol)
-#+END_SRC
-
-** org-journal
+*** org-journal
 https://github.com/bastibe/org-journal
 #+BEGIN_SRC emacs-lisp
   (use-package org-journal
@@ -1894,13 +1802,97 @@ https://github.com/bastibe/org-journal
                       path (or desc "video"))))))
 #+END_SRC
 
-*** COMMENT boxy
+*** COMMENT org-noter
+https://github.com/weirdNox/org-noter
+Org-noter’s purpose is to let you create notes that are kept in sync when you scroll through the document, but that are external to it - the notes themselves live in an Org-mode file. As such, this leverages the power of Org-mode (the notes may have outlines, latex fragments, babel, etc…) while acting like notes that are made inside the document. Also, taking notes is very simple: just press i and annotate away!
+
 #+BEGIN_SRC emacs-lisp
-  (use-package boxy)
-  (use-package boxy-headings
+  (use-package org-noter
     :config
-    (define-key org-mode-map (kbd "C-c r o") 'boxy-headings)
+    ;; Your org-noter config ........
+    ;; (require 'org-noter-pdftools)
     )
+#+END_SRC
+
+**** COMMENT org-pdftools
+https://github.com/fuxialexander/org-pdftools
+
+Run M-x pdf-tools-install after installing pdftools. See pdftools section below.
+
+#+begin_src emacs-lisp
+  (use-package org-pdftools
+    :hook (org-mode . org-pdftools-setup-link))
+
+  (use-package org-noter-pdftools
+    :after org-noter
+    :config
+    ;; Add a function to ensure precise note is inserted
+    (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
+      (interactive "P")
+      (org-noter--with-valid-session
+       (let ((org-noter-insert-note-no-questions (if toggle-no-questions
+                                                     (not org-noter-insert-note-no-questions)
+                                                   org-noter-insert-note-no-questions))
+             (org-pdftools-use-isearch-link t)
+             (org-pdftools-use-freestyle-annot t))
+         (org-noter-insert-note (org-noter--get-precise-info)))))
+
+    ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
+    (defun org-noter-set-start-location (&optional arg)
+      "When opening a session with this document, go to the current location.
+  With a prefix ARG, remove start location."
+      (interactive "P")
+      (org-noter--with-valid-session
+       (let ((inhibit-read-only t)
+             (ast (org-noter--parse-root))
+             (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
+         (with-current-buffer (org-noter--session-notes-buffer session)
+           (org-with-wide-buffer
+            (goto-char (org-element-property :begin ast))
+            (if arg
+                (org-entry-delete nil org-noter-property-note-location)
+              (org-entry-put nil org-noter-property-note-location
+                             (org-noter--pretty-print-location location))))))))
+    (with-eval-after-load 'pdf-annot
+      (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+
+#+end_src
+
+*** COMMENT Eisenhower matrix
+This wasn't working. Only taking tags mentioned at the top of org doc in tags section.
+#+BEGIN_SRC emacs-lisp
+  (setq org-tag-alist '(("important" . ?i)
+                        ("urgent"    . ?u)))
+
+  (setq org-agenda-custom-commands
+        '(("1" "Q1" tags-todo "+important+urgent")
+          ("2" "Q2" tags-todo "+important-urgent")
+          ("3" "Q3" tags-todo "-important+urgent")
+          ("4" "Q4" tags-todo "-important-urgent")))
+#+END_SRC
+
+
+** deft
+Searching/Filtering notes
+#+BEGIN_SRC emacs-lisp
+  (use-package deft
+    :custom
+    (deft-extensions '("org" "txt" "md"))
+    (deft-directory "~/Projects/Notes/")
+    (deft-recursive t)
+    (deft-use-filename-as-title t)
+    :config
+    (global-set-key [f9] 'deft)
+    )
+#+END_SRC
+
+** zetteldeft
+[[https://www.eliasstorms.net/zetteldeft/#org02cc025][Tutorial]]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package zetteldeft
+    :after deft
+    :config (zetteldeft-set-classic-keybindings))
 #+END_SRC
 
 ** mermaid
