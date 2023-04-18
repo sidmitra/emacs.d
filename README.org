@@ -224,6 +224,12 @@ https://old.reddit.com/r/emacs/comments/mvlid5/native_emojis_in_emacs_just_some_
   (scroll-bar-mode -1)
 #+END_SRC
 
+** COMMENT Make title bar transparent
+#+begin_src emacs-lisp
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . dark))
+#+end_src
+
 ** Switch window to fullscreen
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -334,17 +340,7 @@ https://elpa.gnu.org/packages/rainbow-mode.html
     :hook (css-mode sass-mode scss-mode web-mode html-mode))
 #+END_SRC
 
-** COMMENT Pulse modified region
-#+BEGIN_SRC elisp
-  (use-package goggles
-    :demand t
-    :config
-    (goggles-mode)
-    (setq-default goggles-pulse t)) ;; set to nil to disable pulsing
-#+END_SRC
-
 ** Manage layout
-
 Save window layout history.
 #+BEGIN_SRC emacs-lisp
   (winner-mode 1)
@@ -376,11 +372,15 @@ Load this after nlinum
   (setq-default column-number-mode t)
 #+END_SRC
 ** Style the modeline
-*** COMMENT Doom Modeline
-#+BEGIN_SRC emacs-lisp
-  (use-package doom-modeline
-    :hook (after-init . doom-modeline-mode))
-#+END_SRC
+*** COMMENT Moody
+#+begin_src emacs-lisp
+  (use-package moody
+    :config
+    (setq x-underline-at-descent-line t)
+    (moody-replace-mode-line-buffer-identification)
+    (moody-replace-vc-mode)
+    (moody-replace-eldoc-minibuffer-message-function))
+#+end_src
 
 *** Minion
 #+BEGIN_SRC emacs-lisp
@@ -2170,7 +2170,16 @@ Ebook manager
 #+BEGIN_SRC emacs-lisp
   (defun relevize-enable () (interactive)
          ;; Python
-         (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/relevize-KceeEHPb-py3.9")
+         ;; (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/relevize-KceeEHPb-py3.9")
+         (defun eslint-fix-file ()
+           (interactive)
+           (message "eslint --fixing the file" (buffer-file-name))
+           (shell-command (concat "~/Projects/relevize/relevize/vue-app/node_modules/eslint/bin/eslint.js --fix " (buffer-file-name))))
+
+         (defun eslint-fix-file-and-revert ()
+           (interactive)
+           (eslint-fix-file)
+           (revert-buffer t t))
          )
 
   (defun eventbus-enable () (interactive)
@@ -2197,86 +2206,12 @@ Ebook manager
          (setq flycheck-python-mypy-config "~/Projects/Airbase/airbase-backend/ci_scripts/mypy.ini")
          ;; (lsp-deferred)
 
-         ;; (add-hook 'before-save-hook 'py-isort-before-save)
-         ;; (add-hook 'python-mode-hook 'blacken-mode)
-         ;; (add-hook 'python-mode-hook 'lsp-deferred)
-         ;; (setq lsp-enable-file-watchers nil)
-
-         ;; (defun custom-python-flycheck-setup ()
-         ;;   (setq-default flycheck-disabled-checkers
-         ;;                 (append flycheck-disabled-checkers
-         ;;                         '(python-pylint)))
-
-         ;;   (setq-default flycheck-disabled-checkers
-         ;;                 (append flycheck-disabled-checkers
-         ;;                         '(python-flake8)))
-         ;;   (flycheck-select-checker 'python-prospector))
-
-         ;; (add-hook 'python-mode-hook #'custom-python-flycheck-setup)
-
-         ;; (setq python-shell-completion-native-enable nil
-         ;;       python-shell-interpreter "~/Projects/Airbase/airbase-backend/venv/bin/python"
-         ;;       python-shell-interpreter-args "-i /home/sid/Projects/Airbase/airbase-backend/manage.py shell_plus")
-
-         ;; (dap-register-debug-template "Airbase"
-         ;;                    (list :type "python"
-         ;;                          :args "-i"
-         ;;                          :cwd nil
-         ;;                          :env '(("DEBUG" . "1"))
-         ;;                          :target-module (expand-file-name "~/src/myapp/.env/bin/myapp")
-         ;;                          :request "launch"
-         ;;                          :name "Airbase"))
-
          ;; unset run-python shortcut, interferes with helm-projectile open file
          (global-unset-key (kbd "C-c C-p"))
          )
 
   (defun airbase-disable () (interactive)
          )
-
-  ;; (defun airbase-djangoserver () (interactive)
-  ;;        "Start django runserver on a terminal"
-  ;;        (setq buffer-name "airbase-djangoserver")
-  ;;        (sane-term-create)
-  ;;        (rename-buffer buffer-name t)
-  ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
-  ;;        (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
-  ;;        (comint-send-string buffer-name "python manage.py runserver\n")
-  ;;        )
-  ;; (defun airbase-celery () (interactive)
-  ;;        "Start celery worker on a terminal"
-  ;;        (setq buffer-name "airbase-celery")
-  ;;        (sane-term-create)
-  ;;        (rename-buffer buffer-name t)
-  ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
-  ;;        (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
-  ;;        (comint-send-string buffer-name "celery --app=airbase_backend worker --loglevel=info -Ofair --queues=celery,fast\n")
-  ;;        )
-  ;; (defun airbase-reactserver () (interactive)
-  ;;        "Start react frontend on a terminal"
-  ;;        (setq buffer-name "airbase-reactserver")
-  ;;        (sane-term-create)
-  ;;        (rename-buffer buffer-name t)
-  ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-frontend\n")
-  ;;        (comint-send-string buffer-name "BROWSER=none yarn start\n")
-  ;;        )
-  ;; (defun airbase-djangoshell () (interactive)
-  ;;        "Start django shell on a terminal"
-  ;;        (setq buffer-name "airbase-djangoshell")
-  ;;        (sane-term-create)
-  ;;        (rename-buffer buffer-name t)
-  ;;        (comint-send-string buffer-name "cd ~/Projects/Airbase/airbase-backend\n")
-  ;;        (comint-send-string buffer-name "source $(poetry env info -p)/bin/activate\n")
-  ;;        ;; (comint-send-string buffer-name "source ~/.profile\n")
-  ;;        ;;(comint-send-string buffer-name "python manage.py shell_plus\n")
-  ;;        )
-  ;; (defun airbase-daemons () (interactive)
-  ;;        "Start all daemons on a terminal"
-  ;;        (airbase-djangoserver)
-  ;;        (airbase-djangoshell)
-  ;;        (airbase-reactserver)
-  ;;        )
-
 
   (defun custom-ag-args () (interactive)
          (setq-default ag-arguments '(
