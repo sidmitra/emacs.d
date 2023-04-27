@@ -125,7 +125,7 @@ This is a problem on Macbook where option and command is weirdly placed.
     (doom-themes-visual-bell-config)
 
     ;; Enable custom neotree theme (all-the-icons must be installed!)
-    (doom-themes-neotree-config)
+    ;; (doom-themes-neotree-config)
 
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config)
@@ -153,7 +153,9 @@ https://github.com/rougier/nano-modeline
 
 ** Icons
 #+BEGIN_SRC emacs-lisp
-  (use-package all-the-icons)
+  ;; (use-package all-the-icons)
+  (use-package nerd-icons
+    )
 #+END_SRC
 
 *** COMMENT kind-icons
@@ -785,7 +787,7 @@ This package is a emacs-which-key extension, which use posframe to show which-ke
     (global-set-key [f8] 'neotree-toggle)
     (setq neo-smart-open t)
     (setq-default neo-show-hidden-files t)
-    (setq neo-theme 'icons)
+    ;; (setq neo-theme 'icons)
     ;; (setq projectile-switch-project-action 'neotree-projectile-action)
     )
 
@@ -1146,6 +1148,8 @@ candidates at the top of the list.
 
 ** undo-tree
 #+BEGIN_SRC emacs-lisp
+  ;; Prevent undo tree files from polluting your git repo
+  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
   (use-package undo-tree
     :config
     (global-undo-tree-mode 1))
@@ -1200,7 +1204,6 @@ https://github.com/killdash9/better-shell
     (keyfreq-mode 1)
     (keyfreq-autosave-mode 1))
 #+END_SRC
-
 
 * Programming
 ** Snippets
@@ -1663,7 +1666,6 @@ Activate babel languages
   ;; (use-package codegpt
   ;;   :straight (codegpt :type git :host github :repo "emacs-openai/codegpt"))
 
-  (setq openai-key "---")
   (straight-use-package '(openai :type git :host github
                                   :repo "emacs-openai/openai"))
 
@@ -2029,6 +2031,31 @@ Ebook manager
     ;; From https://github.com/politza/pdf-tools/issues/51
     (setq pdf-view-use-scaling t)
     )
+#+end_src
+
+** AI
+#+begin_src emacs-lisp
+  (setq chatgpt-shell-openai-key
+      (auth-source-pick-first-password :host "api.openai.com"))
+
+  (setq dall-e-shell-openai-key
+      (auth-source-pick-first-password :host "api.openai.com"))
+  ;; (setq chatgpt-shell-openai-key
+  ;;       (lambda ()
+  ;;         (auth-source-pick-first-password :host "api.openai.com")))
+
+  ;; (setq dall-e-shell-openai-key
+  ;;       (lambda ()
+  ;;         (auth-source-pick-first-password :host "api.openai.com")))
+
+  ;; (setq chat gpt-shell-chatgpt-streaming t)
+  (straight-use-package '(shell-maker :type git :host github
+                                      :repo "xenodium/chatgpt-shell"))
+  (straight-use-package '(chatgpt-shell :type git :host github
+                                        :repo "xenodium/chatgpt-shell"))
+
+  (straight-use-package '(dall-e-shell :type git :host github
+                                       :repo "xenodium/chatgpt-shell"))
 #+end_src
 
 * My Helpers
