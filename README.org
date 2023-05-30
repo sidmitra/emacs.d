@@ -1585,25 +1585,6 @@ Activate babel languages
                 (push '("|>" . ?\u25B7) prettify-symbols-alist))))
 #+end_src
 
-** COMMENT Copilot
-#+begin_src emacs-lisp
-  (use-package copilot
-    :elpaca (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :ensure t)
-#+end_src
-
-** COMMENT openai Code-GPT
-#+begin_src emacs-lisp
-  ;; (use-package codegpt
-  ;;   :straight (codegpt :type git :host github :repo "emacs-openai/codegpt"))
-
-  (straight-use-package '(openai :type git :host github
-                                  :repo "emacs-openai/openai"))
-
-  (straight-use-package '(codegpt :type git :host github
-                                  :repo "emacs-openai/codegpt"))
-#+end_src
-
 * Notes
 ** org
 *** Main config
@@ -1869,10 +1850,7 @@ https://github.com/olav35/eradio
 ** COMMENT pinboard
 
 #+BEGIN_SRC emacs-lisp
-  (use-package pinboard
-    :config
-    ;; (add-to-list 'auth-sources "~/.authinfo" t)
-    )
+  (use-package pinboard)
 #+END_SRC
 
 https://gist.github.com/khinsen/7ed357eed9b27f142e4fa6f5c4ad45dd
@@ -1941,13 +1919,18 @@ Ebook manager
     )
 #+end_src
 
-** COMMENT AI
+** AI
+*** COMMENT codegpt-shell
 #+begin_src emacs-lisp
+  (add-to-list 'auth-sources "~/.authinfo" t)
+  (require 'auth-source)
+
   (setq chatgpt-shell-openai-key
       (auth-source-pick-first-password :host "api.openai.com"))
 
-  (setq dall-e-shell-openai-key
-      (auth-source-pick-first-password :host "api.openai.com"))
+  ;; (setq dall-e-shell-openai-key
+  ;;     (auth-source-pick-first-password :host "api.openai.com"))
+
   ;; (setq chatgpt-shell-openai-key
   ;;       (lambda ()
   ;;         (auth-source-pick-first-password :host "api.openai.com")))
@@ -1956,14 +1939,32 @@ Ebook manager
   ;;       (lambda ()
   ;;         (auth-source-pick-first-password :host "api.openai.com")))
 
-  ;; (setq chat gpt-shell-chatgpt-streaming t)
-  (straight-use-package '(shell-maker :type git :host github
-                                      :repo "xenodium/chatgpt-shell"))
-  (straight-use-package '(chatgpt-shell :type git :host github
-                                        :repo "xenodium/chatgpt-shell"))
+   (use-package chatgpt-shell
+    :elpaca (:host github :repo "xenodium/chatgpt-shell")
+    )
 
-  (straight-use-package '(dall-e-shell :type git :host github
-                                       :repo "xenodium/chatgpt-shell"))
+  ;; (setq chat gpt-shell-chatgpt-streaming t)
+  ;; (straight-use-package '(shell-maker :type git :host github
+  ;;                                     :repo "xenodium/chatgpt-shell"))
+  ;; (straight-use-package '(chatgpt-shell :type git :host github
+  ;;                                       :repo "xenodium/chatgpt-shell"))
+
+  ;; (straight-use-package '(dall-e-shell :type git :host github
+  ;;                                      :repo "xenodium/chatgpt-shell"))
+#+end_src
+
+*** COMMENT openai Code-GPT
+#+begin_src emacs-lisp
+ (use-package codegpt
+    :elpaca (codegpt :type git :host github :repo "emacs-openai/codegpt")
+    )
+#+end_src
+
+*** COMMENT Copilot
+#+begin_src emacs-lisp
+  (use-package copilot
+    :elpaca (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t)
 #+end_src
 
 * My Helpers
