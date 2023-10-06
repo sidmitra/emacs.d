@@ -159,7 +159,8 @@ https://old.reddit.com/r/emacs/comments/mvlid5/native_emojis_in_emacs_just_some_
 ** Set font, size
 *** Set font and size
 #+BEGIN_SRC emacs-lisp
-  (set-frame-font "Hack 14")
+  ;;(set-frame-font "Hack 14")
+  (set-frame-font "CommitMono 14")
 #+END_SRC
 
 *** Change font-size with ctrl + mouse wheel
@@ -347,63 +348,6 @@ Load this after nlinum
     (mode-icons-mode))
 #+END_SRC
 * Editing
-** Structured Editing
-*** emacs-tree-sitter
-https://emacs-tree-sitter.github.io/
-
-TODO: Use after + hook to prog/mode?
-#+begin_src emacs-lisp
-  (use-package tree-sitter
-    :config (global-tree-sitter-mode)
-    :hook (tree-sitter-after-on . tree-sitter-hl-mode)
-    )
-  (use-package tree-sitter-langs)
-#+end_src
-
-*** COMMENT tree-sitter-fold
-#+begin_src emacs-lisp
-  (straight-use-package '(tree-sitter-fold :type git
-                                           :host github
-                                           :repo "junyi-hou/tree-sitter-fold"))
-#+end_src
-
-*** COMMENT tree-sit
-#+begin_src emacs-lisp
-(use-package treesit
-  :custom (treesit-font-lock-level 4)
-  :straight (:type  built-in))
-
-(use-package treesit-auto
-  :straight (:host github :repo "renzmann/treesit-auto")
-  :config (setq treesit-auto-install 'prompt)
-  (global-treesit-auto-mode))
-#+end_src
-
-*** COMMENT combubulate
-https://github.com/mickeynp/combobulate
-
-Combobulate is an Emacs package that provides a standardized framework for manipulating and navigating your source code using tree sitter's concrete syntax tree. Combobulate is language agnostic and should work with little modification almost all languages supported by tree sitter itself.
-
-#+begin_src emacs-lisp
-  (use-package combobulate
-    ;; Ensure `combobulate-mode` is activated when you launch a mode it supports
-    :hook ((python-mode . combobulate-mode)
-           (js-mode . combobulate-mode)
-           (typescript-mode . combobulate-mode))
-    )
-#+end_src
-
-*** COMMENT paredit-everywhere
-https://github.com/purcell/paredit-everywhere
-It turns out that a lot of the paredit key bindings work as expected in non-lisp buffers, since many major modes provide reasonable sexp-oriented navigation.
-
-This library, then, provides a minor mode which enables a subset of the paredit library's editing commands in non-lisp buffers.
-#+begin_src emacs-lisp
-  (use-package paredit-everywhere
-    :hook (prog-mode . paredit-everywhere-mode)
-    )
-#+end_src
-
 ** Set default tab char's display width to 4 spaces
 #+BEGIN_SRC emacs-lisp
   (setq-default tab-width 4)
@@ -465,8 +409,7 @@ https://github.com/browse-kill-ring/browse-kill-ring
     (yank)
     )
 
-  ;; Why is this not working here? Moving to the bottom
-  ;; (global-set-key (kbd "C-c d") 'duplicate-line)
+  (global-set-key (kbd "C-c d") 'duplicate-line)
 #+END_SRC
 
 ** Insert pair of chars
@@ -521,6 +464,63 @@ comment-dwim-2 is a replacement for the Emacs' built-in command comment-dwim
     :config
     (global-set-key (kbd "M-;") 'comment-dwim-2))
 #+END_SRC
+
+** Structured Editing
+*** emacs-tree-sitter
+https://emacs-tree-sitter.github.io/
+
+TODO: Use after + hook to prog/mode?
+#+begin_src emacs-lisp
+  (use-package tree-sitter
+    :config (global-tree-sitter-mode)
+    :hook (tree-sitter-after-on . tree-sitter-hl-mode)
+    )
+  (use-package tree-sitter-langs)
+#+end_src
+
+*** COMMENT tree-sitter-fold
+#+begin_src emacs-lisp
+  (straight-use-package '(tree-sitter-fold :type git
+                                           :host github
+                                           :repo "junyi-hou/tree-sitter-fold"))
+#+end_src
+
+*** COMMENT tree-sit
+#+begin_src emacs-lisp
+(use-package treesit
+  :custom (treesit-font-lock-level 4)
+  :straight (:type  built-in))
+
+(use-package treesit-auto
+  :straight (:host github :repo "renzmann/treesit-auto")
+  :config (setq treesit-auto-install 'prompt)
+  (global-treesit-auto-mode))
+#+end_src
+
+*** COMMENT combubulate
+https://github.com/mickeynp/combobulate
+
+Combobulate is an Emacs package that provides a standardized framework for manipulating and navigating your source code using tree sitter's concrete syntax tree. Combobulate is language agnostic and should work with little modification almost all languages supported by tree sitter itself.
+
+#+begin_src emacs-lisp
+  (use-package combobulate
+    ;; Ensure `combobulate-mode` is activated when you launch a mode it supports
+    :hook ((python-mode . combobulate-mode)
+           (js-mode . combobulate-mode)
+           (typescript-mode . combobulate-mode))
+    )
+#+end_src
+
+*** COMMENT paredit-everywhere
+https://github.com/purcell/paredit-everywhere
+It turns out that a lot of the paredit key bindings work as expected in non-lisp buffers, since many major modes provide reasonable sexp-oriented navigation.
+
+This library, then, provides a minor mode which enables a subset of the paredit library's editing commands in non-lisp buffers.
+#+begin_src emacs-lisp
+  (use-package paredit-everywhere
+    :hook (prog-mode . paredit-everywhere-mode)
+    )
+#+end_src
 
 ** Key Bindings
 Utilities/helpers for key-bindings.
@@ -612,6 +612,7 @@ This package is a emacs-which-key extension, which use posframe to show which-ke
 * Tools
 ** Project Navigation
 *** Bookmarks
+https://github.com/joodland/bm
 #+BEGIN_SRC emacs-lisp
   (use-package bm
     :demand t
@@ -681,7 +682,32 @@ This package is a emacs-which-key extension, which use posframe to show which-ke
 
   ;; HACK: To make bm work in emacs-29
   ;; https://github.com/joodland/bm/issues/45
-  (defun bm-lists (&optional direction predicate)
+  ;; (defun bm-lists (&optional direction predicate)
+  ;;   "Return a pair of lists giving all the bookmarks of the current buffer.
+  ;; The car has all the bookmarks before the overlay center;
+  ;; the cdr has all the bookmarks after the overlay center.
+  ;; A bookmark implementation of `overlay-lists'.
+
+  ;; If optional argument DIRECTION is provided, only return bookmarks
+  ;; in the specified direction.
+
+  ;; If optional argument PREDICATE is provided, it is used as a
+  ;; selection criteria for filtering the lists."
+  ;;   (if (null predicate)
+  ;;       (setq predicate 'bm-bookmarkp))
+
+  ;;   (overlay-recenter (point))
+  ;;   (cond ((equal 'forward direction)
+  ;;          (cons nil (remq nil (mapcar predicate (overlays-in (point) (point-max))))))
+  ;;         ((equal 'backward direction)
+  ;;          (cons (remq nil (mapcar predicate (overlays-in (point-min) (point)))) nil))
+  ;;         (t
+  ;;          (cons
+  ;;           (remq nil (mapcar predicate (overlays-in (point-min) (point))))
+  ;;           (remq nil (mapcar predicate (overlays-in (point) (point-max))))))))
+
+  ;; https://github.com/elbeno/dotemacs/blob/94208542da779372fd44fd693204089601dcf824/.emacs.d/hacks.el#L114
+  (defun sm/bm-lists (&optional direction predicate)
     "Return a pair of lists giving all the bookmarks of the current buffer.
   The car has all the bookmarks before the overlay center;
   the cdr has all the bookmarks after the overlay center.
@@ -705,6 +731,8 @@ This package is a emacs-which-key extension, which use posframe to show which-ke
             (remq nil (mapcar predicate (overlays-in (point-min) (point))))
             (remq nil (mapcar predicate (overlays-in (point) (point-max))))))))
 
+  (advice-add #'bm-lists
+              :override #'sm/bm-lists)
 #+END_SRC
 *** projectile
 #+BEGIN_SRC emacs-lisp
@@ -724,7 +752,11 @@ This package is a emacs-which-key extension, which use posframe to show which-ke
 #+BEGIN_SRC emacs-lisp
   (use-package dumb-jump
     :config
-    (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+    ;; enable the xref backend, evaluate
+    (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+    ;; Use completing-read to select a target. That way a completion framework of your choice (Icomplete, Helm, Ivy, ...) will be used instead of the default pop-up buffer. To do this, evaluate
+    (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
+    )
 #+END_SRC
 *** neotree
 #+BEGIN_SRC emacs-lisp
@@ -1251,8 +1283,33 @@ A git blame plugin for emacs inspired by VS Code’s GitLens plugin and Vim plug
     (global-blamer-mode 1))
 #+end_src
 
+** dap-mode
+https://github.com/emacs-lsp/dap-mode/
+#+begin_src emacs-lisp
+  (use-package dap-mode
+    :config
+    (setq dap-auto-configure-features '(sessions locals controls tooltip)))
+#+end_src
+
 ** Language Server Protocol (LSP)
+*** eglot
+#+begin_src emacs-lisp
+  (use-package eglot
+    :ensure
+    :after (:any prog-mode)
+    :config
+
+    ;; (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+    (add-hook 'python-mode-hook 'eglot-ensure)
+   )
+#+end_src
+https://notes.alexkehayias.com/using-a-language-server-in-a-docker-container/
+
+
+*** COMMENT https://github.com/manateelazycat/lsp-bridge
+*** COMMENT https://github.com/mtshiba/pylyzer
 https://emacs-lsp.github.io/lsp-mode/page/performance/
+*** COMMENT lsp-mode
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
     :hook (python-mode lsp-enable-which-key-integration)
@@ -1289,13 +1346,6 @@ https://emacs-lsp.github.io/lsp-mode/page/performance/
                     lsp-ui-doc-use-childframe t)
       :commands lsp-ui-mode
       )
-
-    ;; optionally if you want to use debugger
-    ;; https://emacs-lsp.github.io/dap-mode/
-    (use-package dap-mode
-      :config
-      (setq dap-auto-configure-features '(sessions locals controls tooltip)))
-
     ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
     ;; (setq lsp-keymap-prefix "s-l")
     )
@@ -1583,6 +1633,11 @@ Activate babel languages
                 (push '("->" . ?\u2192) prettify-symbols-alist)
                 (push '("<-" . ?\u2190) prettify-symbols-alist)
                 (push '("|>" . ?\u25B7) prettify-symbols-alist))))
+#+end_src
+** Justfile
+https://github.com/leon-barrett/just-mode.el
+#+begin_src emacs-lisp
+(use-package just-mode)
 #+end_src
 
 * Notes
@@ -1920,6 +1975,73 @@ Ebook manager
 #+end_src
 
 ** AI
+*** COMMENT codeium
+https://github.com/Exafunction/codeium.el#-getting-started
+
+TODO: Try this from scratch on a python file. Do we need a completion thing. Is it company/corfu? Does consult work?
+#+begin_src emacs-lisp
+  (use-package codeium
+    :elpaca (:type git :host github :repo "Exafunction/codeium.el")
+
+    :init
+    ;; use globally
+    (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
+    ;; or on a hook
+    ;; (add-hook 'python-mode-hook
+    ;;     (lambda ()
+    ;;         (setq-local completion-at-point-functions '(codeium-completion-at-point))))
+
+    ;; if you want multiple completion backends, use cape (https://github.com/minad/cape):
+    ;; (add-hook 'python-mode-hook
+    ;;     (lambda ()
+    ;;         (setq-local completion-at-point-functions
+    ;;             (list (cape-super-capf #'codeium-completion-at-point #'lsp-completion-at-point)))))
+    ;; an async company-backend is coming soon!
+
+    ;; codeium-completion-at-point is autoloaded, but you can
+    ;; optionally set a timer, which might speed up things as the
+    ;; codeium local language server takes ~0.2s to start up
+    ;; (add-hook 'emacs-startup-hook
+    ;;  (lambda () (run-with-timer 0.1 nil #'codeium-init)))
+
+    ;; :defer t ;; lazy loading, if you want
+    :config
+    (setq use-dialog-box nil) ;; do not use popup boxes
+
+    ;; if you don't want to use customize to save the api-key
+    ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
+
+    ;; get codeium status in the modeline
+    (setq codeium-mode-line-enable
+        (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
+    (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
+    ;; alternatively for a more extensive mode-line
+    ;; (add-to-list 'mode-line-format '(-50 "" codeium-mode-line) t)
+
+    ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
+    (setq codeium-api-enabled
+        (lambda (api)
+            (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
+    ;; you can also set a config for a single buffer like this:
+    ;; (add-hook 'python-mode-hook
+    ;;     (lambda ()
+    ;;         (setq-local codeium/editor_options/tab_size 4)))
+
+    ;; You can overwrite all the codeium configs!
+    ;; for example, we recommend limiting the string sent to codeium for better performance
+    (defun my-codeium/document/text ()
+        (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
+    ;; if you change the text, you should also change the cursor_offset
+    ;; warning: this is measured by UTF-8 encoded bytes
+    (defun my-codeium/document/cursor_offset ()
+        (codeium-utf8-byte-length
+            (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
+    (setq codeium/document/text 'my-codeium/document/text)
+    (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset)
+
+    )
+#+end_src
+
 *** COMMENT codegpt-shell
 #+begin_src emacs-lisp
   (add-to-list 'auth-sources "~/.authinfo" t)
@@ -2099,7 +2221,6 @@ Ebook manager
 
 ** Shortcuts
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c d") 'duplicate-line)
 #+END_SRC
 
 ** Airbase
@@ -2136,7 +2257,7 @@ Ebook manager
          (setq prettier-args '())
 
          ;; Python
-         (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.9")
+         (pyvenv-activate "/Users/sidmitra/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.11")
          (setq flycheck-pylintrc "~/Projects/Airbase/airbase-backend/pyproject.toml")
          (setq flycheck-flake8rc "~/Projects/Airbase/airbase-backend/ci_scripts/.flake8")
          (setq flycheck-python-mypy-config "~/Projects/Airbase/airbase-backend/ci_scripts/mypy.ini")
