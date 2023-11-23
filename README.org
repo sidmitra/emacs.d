@@ -1291,6 +1291,16 @@ https://github.com/emacs-lsp/dap-mode/
     (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 #+end_src
 
+** EditorConfig
+https://editorconfig.org/
+https://github.com/editorconfig/editorconfig-emacs
+#+begin_src emacs-lisp
+  (use-package editorconfig
+    :ensure t
+    :config
+    (editorconfig-mode 1))
+#+end_src
+
 ** Language Server Protocol (LSP)
 *** eglot
 #+begin_src emacs-lisp
@@ -1975,6 +1985,26 @@ Ebook manager
 #+end_src
 
 ** AI
+*** Copilot
+#+begin_src emacs-lisp
+    (use-package copilot
+      :elpaca (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+      :ensure t
+      :config
+      (add-hook 'prog-mode-hook 'copilot-mode)
+      (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion)
+      ;; (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+    )
+#+end_src
+
+*** org-ai
+#+begin_src emacs-lisp
+  (straight-use-package
+ '(org-ai :type git :host github :repo "rksm/org-ai"
+          :local-repo "org-ai"
+          :files ("*.el" "README.md" "snippets")))
+#+end_src
+
 *** COMMENT codeium
 https://github.com/Exafunction/codeium.el#-getting-started
 
@@ -2080,13 +2110,6 @@ TODO: Try this from scratch on a python file. Do we need a completion thing. Is 
  (use-package codegpt
     :elpaca (codegpt :type git :host github :repo "emacs-openai/codegpt")
     )
-#+end_src
-
-*** COMMENT Copilot
-#+begin_src emacs-lisp
-  (use-package copilot
-    :elpaca (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :ensure t)
 #+end_src
 
 * My Helpers
