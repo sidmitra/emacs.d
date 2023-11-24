@@ -1997,14 +1997,6 @@ Ebook manager
     )
 #+end_src
 
-*** org-ai
-#+begin_src emacs-lisp
-  (straight-use-package
- '(org-ai :type git :host github :repo "rksm/org-ai"
-          :local-repo "org-ai"
-          :files ("*.el" "README.md" "snippets")))
-#+end_src
-
 *** COMMENT codeium
 https://github.com/Exafunction/codeium.el#-getting-started
 
