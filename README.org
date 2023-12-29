@@ -4,12 +4,26 @@
 This is my emacs config written as a literate program via org-babel.
 
 * Initialize
-** Package managers
+** COMMENT Package managers
 Use paradox as the default package interface
 #+BEGIN_SRC emacs-lisp
   (use-package paradox
     :config
     (paradox-enable))
+#+END_SRC
+
+** Enable built-in package upgrades
+Magit requires ‘transient’ >= 0.5.0,
+but due to bad defaults, Emacs’ package manager, refuses to
+upgrade this and other built-in packages to higher releases
+from GNU Elpa.
+#+BEGIN_SRC emacs-lisp
+  (setq package-install-upgrade-built-in t)
+  ;; (progn
+  ;;   (unload-feature ’transient t)
+  ;;   ;; (require ’transient)
+  ;;   )
+  (use-package transient)
 #+END_SRC
 
 ** Perf config
@@ -119,7 +133,10 @@ This is a problem on Macbook where option and command is weirdly placed.
     ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
     ;; may have their own settings.
     ;; (load-theme 'doom-flatwhite t)
-    (load-theme 'doom-dracula t)
+    ;(load-theme 'doom-dracula t)
+    ;; (load-theme 'doom-ayu-mirage t)
+    (load-theme 'doom-oksolar-light t)
+
 
     ;; Enable flashing mode-line on errors
     (doom-themes-visual-bell-config)
@@ -610,6 +627,12 @@ This package is a emacs-which-key extension, which use posframe to show which-ke
 #+END_SRC
 
 * Tools
+** Auth
+#+begin_src emacs-lisp
+  (add-to-list 'auth-sources "~/.authinfo" t)
+  (require 'auth-source)
+#+end_src
+
 ** Project Navigation
 *** Bookmarks
 https://github.com/joodland/bm
@@ -1200,6 +1223,9 @@ https://github.com/lassik/emacs-format-all-the-code
 #+BEGIN_SRC emacs-lisp
   (use-package format-all)
 #+END_SRC
+*** COMMENT aphelia
+Try out
+https://github.com/radian-software/apheleia
 
 ** Version Control (git)
 *** magit
@@ -1283,6 +1309,28 @@ A git blame plugin for emacs inspired by VS Code’s GitLens plugin and Vim plug
     (global-blamer-mode 1))
 #+end_src
 
+** Enviroment
+*** dot-env
+#+BEGIN_SRC emacs-lisp
+  (use-package dotenv-mode
+    :mode (("\\.env$" . dotenv-mode)))
+#+END_SRC
+
+*** direnv
+https://github.com/wbolster/emacs-direnv
+
+brew install direnv
+
+#+begin_src emacs-lisp
+  (use-package direnv
+    :config
+    (setq-default direnv-always-show-summary t)
+    (setq-default direnv-show-paths-in-summary t)
+    (setq-default direnv-use-faces-in-summary t)
+    (direnv-mode)
+    )
+#+end_src
+
 ** dap-mode
 https://github.com/emacs-lsp/dap-mode/
 #+begin_src emacs-lisp
@@ -1302,7 +1350,6 @@ https://github.com/editorconfig/editorconfig-emacs
 #+end_src
 
 ** flycheck
-*** Main
 #+BEGIN_SRC emacs-lisp
   (use-package let-alist)
   (use-package flycheck
@@ -1327,7 +1374,6 @@ https://github.com/editorconfig/editorconfig-emacs
    )
 #+end_src
 https://notes.alexkehayias.com/using-a-language-server-in-a-docker-container/
-
 
 *** COMMENT https://github.com/manateelazycat/lsp-bridge
 *** COMMENT https://github.com/mtshiba/pylyzer
@@ -1375,6 +1421,7 @@ https://emacs-lsp.github.io/lsp-mode/page/performance/
 #+END_SRC
 *** TODO consult-lsp
 ** Python
+
 *** LSP
 pip install python-language-server[all]
 
@@ -1400,13 +1447,6 @@ pip install python-language-server[all]
               (setq python-indent-offset 4)))
 #+END_SRC
 
-*** pyvenv
-#+BEGIN_SRC emacs-lisp
-  (use-package pyvenv
-    :config
-    (pyvenv-mode 1))
-#+END_SRC
-
 *** poetry
 https://github.com/galaunay/poetry.el
 
@@ -1417,16 +1457,43 @@ https://github.com/galaunay/poetry.el
     )
 #+end_src
 
+**** poetry + direnv
+Need to do some extra steps to config direnv with poetry
+https://github.com/lassik/emacs-format-all-the-code/issues/29#issuecomment-490519205
+
 *** pytest
 #+begin_src python
   (use-package python-pytest)
 #+end_src
 
-*** emacs-ipython-notebook - Jupyter
+*** COMMENT pyvenv
+#+BEGIN_SRC emacs-lisp
+  (use-package pyvenv
+    :config
+    (pyvenv-mode 1))
+#+END_SRC
+
+*** COMMENT emacs-ipython-notebook - Jupyter
 https://github.com/dickmao/emacs-ipython-notebook
 
 #+begin_src emacs-lisp
 (use-package ein)
+#+end_src
+
+*** COMMENT emacs-pet
+https://github.com/wyuenho/emacs-pet
+Tracks down the correct Python tooling executables from your virtualenvs so you can glue the binaries to Emacs and delete code in init.el
+
+The followig is a pre-requisite
+`brew install dasel`
+
+#+begin_src emacs-lisp
+  (use-package pet
+  :config
+  (add-hook 'python-base-mode-hook 'pet-mode -10)
+
+  (add-hook 'python-mode-hook 'pet-flycheck-setup)
+  )
 #+end_src
 
 *** COMMENT flycheck-ruff
@@ -1472,30 +1539,8 @@ https://gist.github.com/dsedivec/65eff752ec3aa3b652977c6e681bd609
                   (flycheck-mode))))))
 #+end_src
 
-*** emacs-pet
-https://github.com/wyuenho/emacs-pet
-Tracks down the correct Python tooling executables from your virtualenvs so you can glue the binaries to Emacs and delete code in init.el
 
-The followig is a pre-requisite
-`brew install dasel`
-
-#+begin_src emacs-lisp
-  (use-package pet
-  :config
-  (add-hook 'python-base-mode-hook 'pet-mode -10)
-
-  (add-hook 'python-mode-hook 'pet-flycheck-setup)
-  )
-#+end_src
-
-** Coverage
-#+BEGIN_SRC emacs-lisp
-  ;;(add-to-list 'load-path "~/.emacs.d/coverage-mode/")
-  ;;(load "coverage-mode.el")
-  ;;(require 'coverage-mode)
-#+END_SRC
-
-** JSON
+** COMMENT JSON
 #+BEGIN_SRC emacs-lisp
   ;;(use-package json-navigator)
   ;;(use-package tree-mode)  ;; Does this work in the json-navigator hierarcy window??
@@ -1510,12 +1555,6 @@ The followig is a pre-requisite
 ** TOML
 #+BEGIN_SRC emacs-lisp
   (use-package toml-mode)
-#+END_SRC
-
-** Env
-#+BEGIN_SRC emacs-lisp
-  (use-package dotenv-mode
-    :mode (("\\.env$" . dotenv-mode)))
 #+END_SRC
 
 ** HTML/Javascript
@@ -1713,6 +1752,7 @@ Activate babel languages
 #+end_src
 ** Justfile
 https://github.com/leon-barrett/just-mode.el
+
 #+begin_src emacs-lisp
 (use-package just-mode)
 #+end_src
@@ -2001,29 +2041,6 @@ https://gist.github.com/khinsen/7ed357eed9b27f142e4fa6f5c4ad45dd
                            :store #'org-pinboard-store-link)
 #+END_SRC
 
-** RSS Feeds
-*** COMMENT elfeed
-Moved back to newsblur, not currently using it.
-#+begin_src emacs-lisp
-  (setq elfeed-feeds
-        '("https://sobolevn.me/feed.xml"
-          "https://www.mattduck.com/feed.xml"
-          "https://jvns.ca/atom.xml"
-          "http://antirez.com/rss"
-          "https://increment.com/feed.xml"
-          "https://feeds.feedburner.com/martinkl?format=xml"
-          "https://www.allthingsdistributed.com/index.xml"
-          "https://blog.acolyer.org/feed/"
-          "https://arpitbhayani.me/feed.xml"
-          "https://www.blog.pythonlibrary.org/feed/"
-          "https://pythonspeed.com/atom.xml"
-          "https://rachelbythebay.com/w/atom.xml"
-          "https://hynek.me/index.xml"
-          "https://rednafi.github.io/digressions/feed.xml"
-          "https://cprss.s3.amazonaws.com/postgresweekly.com.xml"
-          ))
-  (use-package elfeed)
-#+end_src
 
 ** calibre
 Ebook manager
@@ -2052,6 +2069,30 @@ Ebook manager
 #+end_src
 
 ** AI
+*** Starcoder
+https://huggingface.co/bigcode/starcoder
+https://gitlab.com/daanturo/starhugger.el
+
+#+begin_src emacs-lisp
+  (setq starhugger-api-token
+        (auth-source-pick-first-password :host "starhugger"))
+
+  ;; Use https://huggingface.co/codellama/CodeLlama-13b-hf, best to be set before loading this package
+  (setq starhugger-model-id "codellama/CodeLlama-13b-hf")
+
+  (global-set-key (kbd "M-\\") #'starhugger-trigger-suggestion)
+
+  (elpaca (starhugger :repo "https://gitlab.com/daanturo/starhugger.el" :files (:defaults "*.py")))
+  ;; (straight-use-package '(starhugger :repo "https://gitlab.com/daanturo/starhugger.el" :files (:defaults "*.py")))
+
+  (with-eval-after-load 'starhugger
+    ;; `starhugger-inline-menu-item' makes a conditional binding that is only active at the inline suggestion start
+    (define-key starhugger-inlining-mode-map (kbd "TAB") (starhugger-inline-menu-item #'starhugger-accept-suggestion))
+    (define-key starhugger-inlining-mode-map (kbd "M-[") (starhugger-inline-menu-item #'starhugger-show-prev-suggestion))
+    (define-key starhugger-inlining-mode-map (kbd "M-]") (starhugger-inline-menu-item #'starhugger-show-next-suggestion))
+    (define-key starhugger-inlining-mode-map (kbd "M-f") (starhugger-inline-menu-item #'starhugger-accept-suggestion-by-word)))
+#+end_src
+
 *** Copilot
 #+begin_src emacs-lisp
     (use-package copilot
@@ -2063,7 +2104,8 @@ Ebook manager
       ;; (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
     )
 #+end_src
-
+*** TODO gptel
+https://github.com/karthink/gptel
 *** COMMENT codeium
 https://github.com/Exafunction/codeium.el#-getting-started
 
@@ -2133,9 +2175,6 @@ TODO: Try this from scratch on a python file. Do we need a completion thing. Is 
 
 *** COMMENT codegpt-shell
 #+begin_src emacs-lisp
-  (add-to-list 'auth-sources "~/.authinfo" t)
-  (require 'auth-source)
-
   (setq chatgpt-shell-openai-key
       (auth-source-pick-first-password :host "api.openai.com"))
 
