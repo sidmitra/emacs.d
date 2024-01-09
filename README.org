@@ -149,7 +149,6 @@ This is a problem on Macbook where option and command is weirdly placed.
     )
 #+END_SRC
 
-
 ** Icons
 #+BEGIN_SRC emacs-lisp
   (use-package nerd-icons
@@ -364,6 +363,17 @@ Load this after nlinum
     :config
     (mode-icons-mode))
 #+END_SRC
+** Dim other buffers
+https://github.com/mina86/auto-dim-other-buffers.el
+The auto-dim-other-buffers-mode is a global minor mode which makes windows without focus less prominent. With many windows in a frame, the idea is that this mode helps recognise which is the selected window by providing a non-intrusive but still noticeable visual indicator.
+
+#+begin_src emacs-lisp
+  (use-package auto-dim-other-buffers
+    :config
+    (auto-dim-other-buffers-mode t)
+    )
+#+end_src
+
 * Editing
 ** Set default tab char's display width to 4 spaces
 #+BEGIN_SRC emacs-lisp
@@ -1423,7 +1433,10 @@ https://emacs-lsp.github.io/lsp-mode/page/performance/
 ** Python
 
 *** LSP
-pip install python-language-server[all]
+
+pip install "python-lsp-server[all]"
+TODO: Figure out 3rd party plugins
+https://github.com/python-lsp/python-lsp-server#3rd-party-plugins
 
 #+BEGIN_SRC emacs-lisp
   ;; (use-package python-mode
