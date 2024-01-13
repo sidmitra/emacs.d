@@ -1,5 +1,7 @@
 ;; disable package.el in favour of elpaca
 (setq package-enable-at-startup nil)
+(if (featurep 'package)
+	(unload-feature 'package))
 
 ;; elpaca.el package manager
 ;; https://github.com/progfolio/elpaca
@@ -50,16 +52,6 @@
 ;; Block until current queue processed.
 (elpaca-wait)
 
-;;When installing a package which modifies a form used at the top-level
-;;(e.g. a package which adds a use-package key word),
-;;use `elpaca-wait' to block until that package has been installed/configured.
-;;For example:
-;;(use-package general :demand t)
-;;(elpaca-wait)
-
-;; Expands to: (elpaca evil (use-package evil :demand t))
-;; (use-package evil :demand t)
-
 ;;Turns off elpaca-use-package-mode current declaration
 ;;Note this will cause the declaration to be interpreted immediately (not deferred).
 ;;Useful for configuring built-in emacs features.
@@ -67,6 +59,24 @@
 
 ;; Don't install anything. Defer execution of BODY
 (elpaca nil (message "deferred"))
+
+;; https://github.com/progfolio/elpaca/issues/216
+(defun +elpaca-unload-seq (e)
+  (and (featurep 'seq) (unload-feature 'seq t))
+  (elpaca--continue-build e))
+
+;; You could embed this code directly in the reicpe, I just abstracted it into a function.
+(defun +elpaca-seq-build-steps ()
+  (append (butlast (if (file-exists-p (expand-file-name "seq" elpaca-builds-directory))
+                       elpaca--pre-built-steps elpaca-build-steps))
+          (list '+elpaca-unload-seq 'elpaca--activate-package)))
+
+(elpaca `(seq :build ,(+elpaca-seq-build-steps)))
+
+;; jsonrpc
+(use-package jsonrpc
+  :ensure t)
+(elpaca-wait)
 
 ;; Load org before we run rest of the config through org-babel
 (use-package org
@@ -80,4 +90,6 @@
 
 ;; Load my custom configuration
 (org-babel-load-file "~/.emacs.d/README.org")
+
+
 (put 'narrow-to-region 'disabled nil)

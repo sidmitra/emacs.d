@@ -4,14 +4,6 @@
 This is my emacs config written as a literate program via org-babel.
 
 * Initialize
-** COMMENT Package managers
-Use paradox as the default package interface
-#+BEGIN_SRC emacs-lisp
-  (use-package paradox
-    :config
-    (paradox-enable))
-#+END_SRC
-
 ** Enable built-in package upgrades
 Magit requires ‘transient’ >= 0.5.0,
 but due to bad defaults, Emacs’ package manager, refuses to
@@ -25,6 +17,13 @@ from GNU Elpa.
   ;;   )
   (use-package transient)
 #+END_SRC
+
+#+begin_src emacs-lisp
+;;  (use-package jsonrpc
+;;    :ensure t
+;;    :defer t)
+#+end_src
+
 
 ** Perf config
 Adjust gc-cons-threshold. The default setting is too low for lsp-mode's needs due to the fact that client/server communication generates a lot of memory/garbage.
@@ -1374,12 +1373,12 @@ https://github.com/editorconfig/editorconfig-emacs
 ** Language Server Protocol (LSP)
 *** eglot
 #+begin_src emacs-lisp
+  (use-package eldoc
+    :ensure t)
   (use-package eglot
     :ensure
     :after (:any prog-mode)
     :config
-
-    ;; (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
     (add-hook 'python-mode-hook 'eglot-ensure)
    )
 #+end_src
