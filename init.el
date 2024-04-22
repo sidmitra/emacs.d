@@ -5,7 +5,7 @@
 
 ;; elpaca.el package manager
 ;; https://github.com/progfolio/elpaca
-(defvar elpaca-installer-version 0.6)
+(defvar elpaca-installer-version 0.7)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
@@ -55,7 +55,7 @@
 ;;Turns off elpaca-use-package-mode current declaration
 ;;Note this will cause the declaration to be interpreted immediately (not deferred).
 ;;Useful for configuring built-in emacs features.
-(use-package emacs :elpaca nil :config (setq ring-bell-function #'ignore))
+(use-package emacs :ensure nil :config (setq ring-bell-function #'ignore))
 
 ;; Don't install anything. Defer execution of BODY
 (elpaca nil (message "deferred"))
@@ -81,7 +81,7 @@
 ;; Load org before we run rest of the config through org-babel
 (use-package org
   :demand t
-  :elpaca t
+  :ensure t
   :bind (
          ("C-c a" . org-agenda)
          ("C-c k" . org-capture)

@@ -11,24 +11,28 @@ upgrade this and other built-in packages to higher releases
 from GNU Elpa.
 #+BEGIN_SRC emacs-lisp
   (setq package-install-upgrade-built-in t)
-  ;; (progn
-  ;;   (unload-feature ’transient t)
-  ;;   ;; (require ’transient)
-  ;;   )
   (use-package transient)
 #+END_SRC
-
-#+begin_src emacs-lisp
-;;  (use-package jsonrpc
-;;    :ensure t
-;;    :defer t)
-#+end_src
-
 
 ** Perf config
 Adjust gc-cons-threshold. The default setting is too low for lsp-mode's needs due to the fact that client/server communication generates a lot of memory/garbage.
 #+BEGIN_SRC emacs-lisp
-  (setq gc-cons-threshold 100000000)
+    ;; Set garbage collection threshold to 1GB
+  (setq gc-cons-threshold #x40000000)
+
+  ;;  See when GC is running
+  (setq garbage-collection-messages t)
+
+  ;; https://news.ycombinator.com/item?id=39190110
+  (add-function :after
+                  after-focus-change-function
+                  (lambda () (unless (frame-focus-state) (garbage-collect))))
+#+END_SRC
+
+https://github.com/hlissner/doom-emacs/wiki/FAQ#how-is-dooms-startup-so-fast
+#+BEGIN_SRC emacs-lisp
+  (setq-default lexical-binding t
+              load-prefer-newer t)
 #+END_SRC
 
 Increase the amount of data which Emacs reads from the process. Again the emacs default is too low 4k considering that the some of the language server responses are in 800k - 3M range.
@@ -83,9 +87,9 @@ This is a problem on Macbook where option and command is weirdly placed.
 #+END_SRC
 
 ** Change "yes or no" to "y or n"
-
+Not working anymore???
 #+BEGIN_SRC emacs-lisp
-  (defalias 'yes-or-no-p 'y-or-n-p)
+  (setopt use-short-answers t)
 #+END_SRC
 
 ** Shell/exec-path-from-shell
@@ -99,14 +103,14 @@ This is a problem on Macbook where option and command is weirdly placed.
 ** Character Encodings
 #+BEGIN_SRC emacs-lisp
   (set-default-coding-systems 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
-  (set-language-environment 'utf-8)
-  (setq locale-coding-system 'utf-8)
-  (set-selection-coding-system 'utf-8)
-  (set-terminal-coding-system 'utf-8)
-  (prefer-coding-system 'utf-8)
-  (when (display-graphic-p)
-    (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+  ;; (set-keyboard-coding-system 'utf-8)
+  ;; (set-language-environment 'utf-8)
+  ;; (setq locale-coding-system 'utf-8)
+  ;; (set-selection-coding-system 'utf-8)
+  ;; (set-terminal-coding-system 'utf-8)
+  ;; (prefer-coding-system 'utf-8)
+  ;; (when (display-graphic-p)
+  ;;   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 #+END_SRC
 
 * Config Helpers
@@ -348,6 +352,7 @@ Load this after nlinum
   ;; show column number
   (setq-default column-number-mode t)
 #+END_SRC
+
 ** Style the modeline
 *** Minion
 #+BEGIN_SRC emacs-lisp
@@ -362,16 +367,17 @@ Load this after nlinum
     :config
     (mode-icons-mode))
 #+END_SRC
+
 ** Dim other buffers
 https://github.com/mina86/auto-dim-other-buffers.el
 The auto-dim-other-buffers-mode is a global minor mode which makes windows without focus less prominent. With many windows in a frame, the idea is that this mode helps recognise which is the selected window by providing a non-intrusive but still noticeable visual indicator.
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package auto-dim-other-buffers
     :config
     (auto-dim-other-buffers-mode t)
     )
-#+end_src
+#+END_SRC
 
 * Editing
 ** Set default tab char's display width to 4 spaces
@@ -496,23 +502,23 @@ comment-dwim-2 is a replacement for the Emacs' built-in command comment-dwim
 https://emacs-tree-sitter.github.io/
 
 TODO: Use after + hook to prog/mode?
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package tree-sitter
     :config (global-tree-sitter-mode)
     :hook (tree-sitter-after-on . tree-sitter-hl-mode)
     )
   (use-package tree-sitter-langs)
-#+end_src
+#+END_SRC
 
 *** COMMENT tree-sitter-fold
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (straight-use-package '(tree-sitter-fold :type git
                                            :host github
                                            :repo "junyi-hou/tree-sitter-fold"))
-#+end_src
+#+END_SRC
 
 *** COMMENT tree-sit
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package treesit
   :custom (treesit-font-lock-level 4)
   :straight (:type  built-in))
@@ -521,32 +527,32 @@ TODO: Use after + hook to prog/mode?
   :straight (:host github :repo "renzmann/treesit-auto")
   :config (setq treesit-auto-install 'prompt)
   (global-treesit-auto-mode))
-#+end_src
+#+END_SRC
 
 *** COMMENT combubulate
 https://github.com/mickeynp/combobulate
 
 Combobulate is an Emacs package that provides a standardized framework for manipulating and navigating your source code using tree sitter's concrete syntax tree. Combobulate is language agnostic and should work with little modification almost all languages supported by tree sitter itself.
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package combobulate
     ;; Ensure `combobulate-mode` is activated when you launch a mode it supports
     :hook ((python-mode . combobulate-mode)
            (js-mode . combobulate-mode)
            (typescript-mode . combobulate-mode))
     )
-#+end_src
+#+END_SRC
 
 *** COMMENT paredit-everywhere
 https://github.com/purcell/paredit-everywhere
 It turns out that a lot of the paredit key bindings work as expected in non-lisp buffers, since many major modes provide reasonable sexp-oriented navigation.
 
 This library, then, provides a minor mode which enables a subset of the paredit library's editing commands in non-lisp buffers.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package paredit-everywhere
     :hook (prog-mode . paredit-everywhere-mode)
     )
-#+end_src
+#+END_SRC
 
 ** Key Bindings
 Utilities/helpers for key-bindings.
@@ -637,10 +643,10 @@ This package is a emacs-which-key extension, which use posframe to show which-ke
 
 * Tools
 ** Auth
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (add-to-list 'auth-sources "~/.authinfo" t)
   (require 'auth-source)
-#+end_src
+#+END_SRC
 
 ** Project Navigation
 *** Bookmarks
@@ -811,12 +817,12 @@ Recentf is a minor mode that builds a list of recently opened files. This list i
 automatically saved across sessions on exiting Emacs - you can then access this list
 through a command or the menu.
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (recentf-mode 1)
   (setq recentf-max-menu-items 25)
   (setq recentf-max-saved-items 25)
   ;;(global-set-key "\C-x\ \C-r" 'recentf-open-files)
-#+end_src
+#+END_SRC
 
 ** Incremental narrowing, completion
 *** orderless
@@ -841,7 +847,7 @@ default, regexp and literal matches are enabled.
 #+END_SRC
 
 *** vertico
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package vertico
     :init
     (vertico-mode)
@@ -857,7 +863,7 @@ default, regexp and literal matches are enabled.
     ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
     (setq vertico-cycle t)
     )
-#+end_src
+#+END_SRC
 
 *** prescient
 Simple but effective sorting and filtering for Emacs.
@@ -938,7 +944,7 @@ https://github.com/oantolin/embark/
 #+END_SRC
 
 **** embark-consult
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package embark-consult
     :after (embark consult)
     :demand t ; only necessary if you have the hook below
@@ -946,7 +952,7 @@ https://github.com/oantolin/embark/
     ;; auto-updating embark collect buffer
     :hook
     (embark-collect-mode . consult-preview-at-point-mode))
-#+end_src
+#+END_SRC
 
 *** consult
 Consult provides practical commands based on the Emacs completion function
@@ -1032,15 +1038,15 @@ consult-buffer to switch between buffers and recently opened files.
 https://github.com/Wilfred/helpful
 Helpful is an alternative to the built-in Emacs help that provides much more contextual information.
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package helpful
     )
-#+end_src
+#+END_SRC
 
 *** misc
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq completion-cycle-threshold 3)
-#+end_src
+#+END_SRC
 
 ** Search
 *** ctrlf
@@ -1098,7 +1104,7 @@ https://github.com/Wilfred/deadgrep
     (global-set-key (kbd "<f5>") #'deadgrep))
 #+END_SRC
 *** fzf
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package fzf
     :bind
     ;; Don't forget to set keybinds!
@@ -1113,7 +1119,7 @@ https://github.com/Wilfred/deadgrep
           ;; If nil, the fzf buffer will appear at the top of the window
           fzf/position-bottom t
           fzf/window-height 15))
-#+end_src
+#+END_SRC
 
 ** Completion
 #+BEGIN_SRC emacs-lisp
@@ -1285,7 +1291,7 @@ Forge allows you to work with Git forges, such as Github and Gitlab
 *** git-timemachine
 #+BEGIN_SRC emacs-lisp
     (use-package git-timemachine
-    :elpaca (git-timemachine :type git :host codeberg :repo "pidu/git-timemachine")
+    :ensure (git-timemachine :type git :host codeberg :repo "pidu/git-timemachine")
     )
 #+END_SRC
 
@@ -1301,9 +1307,9 @@ Highlights uncommitted changes on the left side of the window, allows you to jum
 https://github.com/Artawower/blamer.el
 A git blame plugin for emacs inspired by VS Code’s GitLens plugin and Vim plugin
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package blamer
-    :elpaca (:host github :repo "artawower/blamer.el")
+    :ensure (:host github :repo "artawower/blamer.el")
     :bind (("s-i" . blamer-show-posframe-commit-info))
     :custom
     (blamer-idle-time 0.3)
@@ -1316,7 +1322,7 @@ A git blame plugin for emacs inspired by VS Code’s GitLens plugin and Vim plug
     :config
     (setq blamer-show-avatar-p t)
     (global-blamer-mode 1))
-#+end_src
+#+END_SRC
 
 ** Enviroment
 *** dot-env
@@ -1330,7 +1336,7 @@ https://github.com/wbolster/emacs-direnv
 
 brew install direnv
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package direnv
     :config
     (setq-default direnv-always-show-summary t)
@@ -1338,25 +1344,25 @@ brew install direnv
     (setq-default direnv-use-faces-in-summary t)
     (direnv-mode)
     )
-#+end_src
+#+END_SRC
 
 ** dap-mode
 https://github.com/emacs-lsp/dap-mode/
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package dap-mode
     :config
     (setq dap-auto-configure-features '(sessions locals controls tooltip)))
-#+end_src
+#+END_SRC
 
 ** EditorConfig
 https://editorconfig.org/
 https://github.com/editorconfig/editorconfig-emacs
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package editorconfig
     :ensure t
     :config
     (editorconfig-mode 1))
-#+end_src
+#+END_SRC
 
 ** flycheck
 #+BEGIN_SRC emacs-lisp
@@ -1372,16 +1378,18 @@ https://github.com/editorconfig/editorconfig-emacs
 
 ** Language Server Protocol (LSP)
 *** eglot
-#+begin_src emacs-lisp
-  (use-package eldoc
-    :ensure t)
+#+BEGIN_SRC emacs-lisp
   (use-package eglot
-    :ensure
     :after (:any prog-mode)
     :config
     (add-hook 'python-mode-hook 'eglot-ensure)
-   )
-#+end_src
+    )
+  (use-package eldoc
+    :after (:any prog-mode)
+    :ensure nil
+    )
+#+END_SRC
+
 https://notes.alexkehayias.com/using-a-language-server-in-a-docker-container/
 
 *** COMMENT https://github.com/manateelazycat/lsp-bridge
@@ -1430,8 +1438,18 @@ https://emacs-lsp.github.io/lsp-mode/page/performance/
 #+END_SRC
 *** TODO consult-lsp
 ** Python
+*** Default indentation
+#+BEGIN_SRC emacs-lisp
+    ;; TODO: Move to use-package block
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (setq indent-tabs-mode nil)
+              (setq tab-width 4)
+              (setq-default python-indent-guess-indent-offset nil)
+              (setq python-indent-offset 4)))
+#+END_SRC
 
-*** LSP
+*** COMMENT LSP
 
 pip install "python-lsp-server[all]"
 TODO: Figure out 3rd party plugins
@@ -1449,34 +1467,25 @@ https://github.com/python-lsp/python-lsp-server#3rd-party-plugins
   ;;   :config
   ;;   (require 'dap-python)
   ;;   )
-
-  ;; TODO: Move to use-package block
-  (add-hook 'python-mode-hook
-            (lambda ()
-              (setq indent-tabs-mode nil)
-              (setq tab-width 4)
-              (setq-default python-indent-guess-indent-offset nil)
-              (setq python-indent-offset 4)))
 #+END_SRC
-
 *** poetry
 https://github.com/galaunay/poetry.el
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package poetry
     ;; :hook
     ;; (python-mode . poetry-tracking-mode)
     )
-#+end_src
+#+END_SRC
 
 **** poetry + direnv
 Need to do some extra steps to config direnv with poetry
 https://github.com/lassik/emacs-format-all-the-code/issues/29#issuecomment-490519205
 
 *** pytest
-#+begin_src python
+#+BEGIN_SRC python
   (use-package python-pytest)
-#+end_src
+#+END_SRC
 
 *** COMMENT pyvenv
 #+BEGIN_SRC emacs-lisp
@@ -1488,9 +1497,9 @@ https://github.com/lassik/emacs-format-all-the-code/issues/29#issuecomment-49051
 *** COMMENT emacs-ipython-notebook - Jupyter
 https://github.com/dickmao/emacs-ipython-notebook
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package ein)
-#+end_src
+#+END_SRC
 
 *** COMMENT emacs-pet
 https://github.com/wyuenho/emacs-pet
@@ -1499,19 +1508,19 @@ Tracks down the correct Python tooling executables from your virtualenvs so you 
 The followig is a pre-requisite
 `brew install dasel`
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package pet
   :config
   (add-hook 'python-base-mode-hook 'pet-mode -10)
 
   (add-hook 'python-mode-hook 'pet-flycheck-setup)
   )
-#+end_src
+#+END_SRC
 
 *** COMMENT flycheck-ruff
 https://gist.github.com/dsedivec/65eff752ec3aa3b652977c6e681bd609
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (require 'flycheck)
 
   ;; From https://github.com/flycheck/flycheck/issues/1974#issuecomment-1343495202
@@ -1537,9 +1546,9 @@ https://gist.github.com/dsedivec/65eff752ec3aa3b652977c6e681bd609
               (message (one-or-more not-newline))
               line-end))
     :modes (python-mode python-ts-mode))
-#+end_src
+#+END_SRC
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   ;; Use something adapted to your config to add `python-ruff' to `flycheck-checkers'
   ;; This is an MVP example:
   ;; This over-rides existing flycheck-checkers
@@ -1549,7 +1558,7 @@ https://gist.github.com/dsedivec/65eff752ec3aa3b652977c6e681bd609
                 (when (buffer-file-name)
                   (setq-local flycheck-checkers '(python-ruff))
                   (flycheck-mode))))))
-#+end_src
+#+END_SRC
 
 
 ** COMMENT JSON
@@ -1662,7 +1671,7 @@ npm install -g typescript-language-server typescript vue-language-server
 #+END_SRC
 
 ** Go
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package go-mode
     :bind (
            ;; If you want to switch existing go-mode bindings to use lsp-mode/gopls instead
@@ -1674,7 +1683,7 @@ npm install -g typescript-language-server typescript vue-language-server
     ;;        (before-save . lsp-format-buffer)
     ;;        (before-save . lsp-organize-imports))
     )
-#+end_src
+#+END_SRC
 
 ** Markdown
 Install CLI markdown first
@@ -1708,7 +1717,7 @@ Install CLI markdown first
 
 ** sql
 Activate babel languages
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
@@ -1725,10 +1734,10 @@ Activate babel languages
      (org . t)
      (sql . t)
      ))
-#+end_src
+#+END_SRC
 
 ** solidity
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package solidity-mode
     :config
     ;; (setq solidity-comment-style 'slash)
@@ -1744,10 +1753,10 @@ Activate babel languages
     ;; or
     ;; (setq solidity-flycheck-solium-checker-active t)
     )
-#+end_src
+#+END_SRC
 
 ** Elixir
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package elixir-mode
     :init
     (add-hook 'elixir-mode-hook
@@ -1761,13 +1770,13 @@ Activate babel languages
                 (push '("->" . ?\u2192) prettify-symbols-alist)
                 (push '("<-" . ?\u2190) prettify-symbols-alist)
                 (push '("|>" . ?\u25B7) prettify-symbols-alist))))
-#+end_src
+#+END_SRC
 ** Justfile
 https://github.com/leon-barrett/just-mode.el
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package just-mode)
-#+end_src
+#+END_SRC
 
 * Notes
 ** org
@@ -1812,7 +1821,7 @@ section and any custom config here.
 *** org-modern
 https://github.com/minad/org-modern
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package org-modern
     :custom
     ;; (add-hook 'org-mode-hook #'org-modern-mode)
@@ -1821,12 +1830,12 @@ https://github.com/minad/org-modern
     config
     (global-org-modern-mode)
     )
-#+end_src
+#+END_SRC
 
 *** org-contrib
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package org-contrib)
-#+end_src
+#+END_SRC
 
 *** DOCT: Declarative Org Capture Templates
 #+BEGIN_SRC emacs-lisp
@@ -1837,12 +1846,12 @@ https://github.com/minad/org-modern
 #+END_SRC
 
 *** org-babel
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq org-babel-python-command "python3")
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)))
-#+end_src
+#+END_SRC
 
 *** org-journal
 https://github.com/bastibe/org-journal
@@ -1908,7 +1917,7 @@ https://github.com/fuxialexander/org-pdftools
 
 Run M-x pdf-tools-install after installing pdftools. See pdftools section below.
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package org-pdftools
     :hook (org-mode . org-pdftools-setup-link))
 
@@ -1945,7 +1954,7 @@ Run M-x pdf-tools-install after installing pdftools. See pdftools section below.
     (with-eval-after-load 'pdf-annot
       (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
-#+end_src
+#+END_SRC
 
 ** deft
 Searching/Filtering notes
@@ -1975,9 +1984,9 @@ Emacs major mode for working with mermaid graphs
 
 brew install mermaid-cli
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package mermaid-mode)
-#+end_src
+#+END_SRC
 ** d2lang
 
 What is D2?
@@ -1992,20 +2001,20 @@ brew install d2
 https://github.com/andorsk/d2-mode
 https://github.com/dmacvicar/ob-d2
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package d2-mode)
 
   (use-package ob-d2
-    :elpaca (:type git :host github :repo "dmacvicar/ob-d2")
+    :ensure (:type git :host github :repo "dmacvicar/ob-d2")
     :defer t)
-#+end_src
+#+END_SRC
 
 * External Services/Apps
 ** browser
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (defun eww-default () (interactive)
          (setq browse-url-browser-function 'eww-browse-url))
-#+end_src
+#+END_SRC
 
 ** eradio
 eradio is a simple internet radio player for Emacs.
@@ -2056,18 +2065,18 @@ https://gist.github.com/khinsen/7ed357eed9b27f142e4fa6f5c4ad45dd
 
 ** calibre
 Ebook manager
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package calibredb
     :config
     (setq calibredb-root-dir "~/Calibre Library/")
     (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
     )
-#+end_src
+#+END_SRC
 
 ** pdf
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package pdf-tools
-    :elpaca (pdf-tools :type git :host github
+    :ensure (pdf-tools :type git :host github
                          :repo "vedang/pdf-tools")
     :mode ("\\.pdf\\'" . pdf-view-mode)
     :config
@@ -2078,14 +2087,14 @@ Ebook manager
     ;; From https://github.com/politza/pdf-tools/issues/51
     (setq pdf-view-use-scaling t)
     )
-#+end_src
+#+END_SRC
 
 ** AI
 *** Starcoder
 https://huggingface.co/bigcode/starcoder
 https://gitlab.com/daanturo/starhugger.el
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq starhugger-api-token
         (auth-source-pick-first-password :host "starhugger"))
 
@@ -2103,28 +2112,43 @@ https://gitlab.com/daanturo/starhugger.el
     (define-key starhugger-inlining-mode-map (kbd "M-[") (starhugger-inline-menu-item #'starhugger-show-prev-suggestion))
     (define-key starhugger-inlining-mode-map (kbd "M-]") (starhugger-inline-menu-item #'starhugger-show-next-suggestion))
     (define-key starhugger-inlining-mode-map (kbd "M-f") (starhugger-inline-menu-item #'starhugger-accept-suggestion-by-word)))
-#+end_src
+#+END_SRC
 
 *** Copilot
 #+begin_src emacs-lisp
     (use-package copilot
-      :elpaca (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+    :ensure (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
+    :custom ((copilot-node-executable "~/.asdf/shims/node" "Set node executable.")
+           (copilot-indent-warning-suppress t))
+    :hook (prog-mode . copilot-mode)
+    :config
+    (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion)
+    )
+  ;; you can utilize :map :hook and :config to customize copilot
+#+end_src
+
+*** COMMENT Copilot-old
+#+BEGIN_SRC emacs-lisp
+    (use-package copilot
+      :ensure (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
       :ensure t
       :config
       (add-hook 'prog-mode-hook 'copilot-mode)
       (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion)
       ;; (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
     )
-#+end_src
+#+END_SRC
+
 *** TODO gptel
 https://github.com/karthink/gptel
+
 *** COMMENT codeium
 https://github.com/Exafunction/codeium.el#-getting-started
 
 TODO: Try this from scratch on a python file. Do we need a completion thing. Is it company/corfu? Does consult work?
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package codeium
-    :elpaca (:type git :host github :repo "Exafunction/codeium.el")
+    :ensure (:type git :host github :repo "Exafunction/codeium.el")
 
     :init
     ;; use globally
@@ -2183,10 +2207,10 @@ TODO: Try this from scratch on a python file. Do we need a completion thing. Is 
     (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset)
 
     )
-#+end_src
+#+END_SRC
 
 *** COMMENT codegpt-shell
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq chatgpt-shell-openai-key
       (auth-source-pick-first-password :host "api.openai.com"))
 
@@ -2202,7 +2226,7 @@ TODO: Try this from scratch on a python file. Do we need a completion thing. Is 
   ;;         (auth-source-pick-first-password :host "api.openai.com")))
 
    (use-package chatgpt-shell
-    :elpaca (:host github :repo "xenodium/chatgpt-shell")
+    :ensure (:host github :repo "xenodium/chatgpt-shell")
     )
 
   ;; (setq chat gpt-shell-chatgpt-streaming t)
@@ -2213,14 +2237,14 @@ TODO: Try this from scratch on a python file. Do we need a completion thing. Is 
 
   ;; (straight-use-package '(dall-e-shell :type git :host github
   ;;                                      :repo "xenodium/chatgpt-shell"))
-#+end_src
+#+END_SRC
 
 *** COMMENT openai Code-GPT
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
  (use-package codegpt
-    :elpaca (codegpt :type git :host github :repo "emacs-openai/codegpt")
+    :ensure (codegpt :type git :host github :repo "emacs-openai/codegpt")
     )
-#+end_src
+#+END_SRC
 
 * My Helpers
 ** Revert all buffers and ignore errors
@@ -2349,7 +2373,7 @@ TODO: Try this from scratch on a python file. Do we need a completion thing. Is 
   (setq-default org-roam-directory "~/Projects/Notes/")
   (setq-default org-roam-index-file "index.org")
   (setq-default org-agenda-files '("~/Projects/Notes/todo.org"))
-  (setq-default rmh-elfeed-org-files '("~/Projects/Notes/elfeed.org"))
+  ;; (setq-default rmh-elfeed-org-files '("~/Projects/Notes/elfeed.org"))
 #+END_SRC
 
 ** Shortcuts
