@@ -495,63 +495,6 @@ comment-dwim-2 is a replacement for the Emacs' built-in command comment-dwim
     (global-set-key (kbd "M-;") 'comment-dwim-2))
 #+END_SRC
 
-** Structured Editing
-*** emacs-tree-sitter
-https://emacs-tree-sitter.github.io/
-
-TODO: Use after + hook to prog/mode?
-#+BEGIN_SRC emacs-lisp
-  (use-package tree-sitter
-    :config (global-tree-sitter-mode)
-    :hook (tree-sitter-after-on . tree-sitter-hl-mode)
-    )
-  (use-package tree-sitter-langs)
-#+END_SRC
-
-*** COMMENT tree-sitter-fold
-#+BEGIN_SRC emacs-lisp
-  (straight-use-package '(tree-sitter-fold :type git
-                                           :host github
-                                           :repo "junyi-hou/tree-sitter-fold"))
-#+END_SRC
-
-*** COMMENT tree-sit
-#+BEGIN_SRC emacs-lisp
-(use-package treesit
-  :custom (treesit-font-lock-level 4)
-  :straight (:type  built-in))
-
-(use-package treesit-auto
-  :straight (:host github :repo "renzmann/treesit-auto")
-  :config (setq treesit-auto-install 'prompt)
-  (global-treesit-auto-mode))
-#+END_SRC
-
-*** COMMENT combubulate
-https://github.com/mickeynp/combobulate
-
-Combobulate is an Emacs package that provides a standardized framework for manipulating and navigating your source code using tree sitter's concrete syntax tree. Combobulate is language agnostic and should work with little modification almost all languages supported by tree sitter itself.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package combobulate
-    ;; Ensure `combobulate-mode` is activated when you launch a mode it supports
-    :hook ((python-mode . combobulate-mode)
-           (js-mode . combobulate-mode)
-           (typescript-mode . combobulate-mode))
-    )
-#+END_SRC
-
-*** COMMENT paredit-everywhere
-https://github.com/purcell/paredit-everywhere
-It turns out that a lot of the paredit key bindings work as expected in non-lisp buffers, since many major modes provide reasonable sexp-oriented navigation.
-
-This library, then, provides a minor mode which enables a subset of the paredit library's editing commands in non-lisp buffers.
-#+BEGIN_SRC emacs-lisp
-  (use-package paredit-everywhere
-    :hook (prog-mode . paredit-everywhere-mode)
-    )
-#+END_SRC
-
 ** Key Bindings
 Utilities/helpers for key-bindings.
 
