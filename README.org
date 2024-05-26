@@ -135,8 +135,8 @@ Not working anymore???
 
     ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
     ;; may have their own settings.
-    (load-theme 'doom-dracula t)
-    ;; (load-theme 'doom-peacock t)
+    ;; (load-theme 'doom-dracula t)
+    (load-theme 'doom-one-light t)
 
     ;; Enable flashing mode-line on errors
     (doom-themes-visual-bell-config)
@@ -1186,10 +1186,11 @@ https://github.com/radian-software/apheleia
 ** Version Control (git)
 *** magit
 #+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :config
-    (setq magit-auto-revert-mode nil)
-    (setq magit-last-seen-setup-instructions "1.4.0"))
+    (use-package magit
+      :config
+      (setq magit-auto-revert-mode nil)
+      ;; (setq magit-last-seen-setup-instructions "1.4.0")
+      )
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -1318,7 +1319,7 @@ https://github.com/editorconfig/editorconfig-emacs
 #+END_SRC
 
 ** Language Server Protocol (LSP)
-*** COMMENT eglot
+*** eglot
 #+BEGIN_SRC emacs-lisp
   (use-package eglot
     :after (:any prog-mode)
@@ -1390,6 +1391,26 @@ https://emacs-lsp.github.io/lsp-mode/page/performance/
               (setq python-indent-offset 4)))
 #+END_SRC
 
+*** poetry
+https://github.com/galaunay/poetry.el
+
+#+BEGIN_SRC emacs-lisp
+  (use-package poetry
+    :hook (python-mode . poetry-tracking-mode)
+    :config
+    (setq poetry-tracking-strategy 'switch-buffer)
+    )
+#+END_SRC
+
+**** poetry + direnv
+Need to do some extra steps to config direnv with poetry
+https://github.com/lassik/emacs-format-all-the-code/issues/29#issuecomment-490519205
+
+*** pytest
+#+BEGIN_SRC python
+  (use-package python-pytest)
+#+END_SRC
+
 *** COMMENT LSP
 
 pip install "python-lsp-server[all]"
@@ -1409,25 +1430,6 @@ https://github.com/python-lsp/python-lsp-server#3rd-party-plugins
   ;;   (require 'dap-python)
   ;;   )
 #+END_SRC
-*** poetry
-https://github.com/galaunay/poetry.el
-
-#+BEGIN_SRC emacs-lisp
-  (use-package poetry
-    ;; :hook
-    ;; (python-mode . poetry-tracking-mode)
-    )
-#+END_SRC
-
-**** poetry + direnv
-Need to do some extra steps to config direnv with poetry
-https://github.com/lassik/emacs-format-all-the-code/issues/29#issuecomment-490519205
-
-*** pytest
-#+BEGIN_SRC python
-  (use-package python-pytest)
-#+END_SRC
-
 *** COMMENT pyvenv
 #+BEGIN_SRC emacs-lisp
   (use-package pyvenv
@@ -1500,7 +1502,6 @@ https://gist.github.com/dsedivec/65eff752ec3aa3b652977c6e681bd609
                   (setq-local flycheck-checkers '(python-ruff))
                   (flycheck-mode))))))
 #+END_SRC
-
 
 ** COMMENT JSON
 #+BEGIN_SRC emacs-lisp
@@ -2003,7 +2004,6 @@ https://gist.github.com/khinsen/7ed357eed9b27f142e4fa6f5c4ad45dd
                            :store #'org-pinboard-store-link)
 #+END_SRC
 
-
 ** calibre
 Ebook manager
 #+BEGIN_SRC emacs-lisp
@@ -2031,7 +2031,20 @@ Ebook manager
 #+END_SRC
 
 ** AI
-*** Starcoder
+*** COMMENT Copilot
+#+begin_src emacs-lisp
+    (use-package copilot
+    :ensure (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
+    :custom ((copilot-node-executable "~/.asdf/shims/node" "Set node executable.")
+           (copilot-indent-warning-suppress t))
+    :hook (prog-mode . copilot-mode)
+    :config
+    (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion)
+    )
+  ;; you can utilize :map :hook and :config to customize copilot
+#+end_src
+
+*** COMMENT Starcoder
 https://huggingface.co/bigcode/starcoder
 https://gitlab.com/daanturo/starhugger.el
 
@@ -2054,19 +2067,6 @@ https://gitlab.com/daanturo/starhugger.el
     (define-key starhugger-inlining-mode-map (kbd "M-]") (starhugger-inline-menu-item #'starhugger-show-next-suggestion))
     (define-key starhugger-inlining-mode-map (kbd "M-f") (starhugger-inline-menu-item #'starhugger-accept-suggestion-by-word)))
 #+END_SRC
-
-*** Copilot
-#+begin_src emacs-lisp
-    (use-package copilot
-    :ensure (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
-    :custom ((copilot-node-executable "~/.asdf/shims/node" "Set node executable.")
-           (copilot-indent-warning-suppress t))
-    :hook (prog-mode . copilot-mode)
-    :config
-    (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion)
-    )
-  ;; you can utilize :map :hook and :config to customize copilot
-#+end_src
 
 *** COMMENT Copilot-old
 #+BEGIN_SRC emacs-lisp
@@ -2325,53 +2325,30 @@ TODO: Try this from scratch on a python file. Do we need a completion thing. Is 
 #+BEGIN_SRC emacs-lisp
   ;; Forcing django mode on all html
   ;; TODO: Better way to do this?
-  (setq-default web-mode-engines-alist
-                '(("django"    . "\\.html\\'")))
+  ;; (setq-default web-mode-engines-alist
+  ;;               '(("django"    . "\\.html\\'")))
 
-  (defun relevize-enable () (interactive)
+  (defun airbase-enable () (interactive)
+         ;; JS
+         ;; (setq web-mode-code-indent-offset 2)
+         ;; (setq web-mode-markup-indent-offset 2)
+         ;; (setq web-mode-css-indent-offset 2)
+         ;; (setq web-mode-js-indent-offset 2)
+         ;; ;;(prettier-js-mode 1)
+         ;; (setq prettier-args '())
+
          ;; Python
-         ;; (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/relevize-KceeEHPb-py3.9")
-         (defun eslint-fix-file ()
-           (interactive)
-           (message "eslint --fixing the file" (buffer-file-name))
-           (shell-command (concat "~/Projects/relevize/relevize/vue-app/node_modules/eslint/bin/eslint.js --fix " (buffer-file-name))))
+         (pyvenv-activate "/Users/sidmitra/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.11")
+         (setq flycheck-pylintrc "~/Projects/Airbase/airbase-backend/pyproject.toml")
+         (setq flycheck-flake8rc "~/Projects/Airbase/airbase-backend/ci_scripts/.flake8")
+         (setq flycheck-python-mypy-config "~/Projects/Airbase/airbase-backend/pyproject.toml")
+         ;; (lsp-deferred)
 
-         (defun eslint-fix-file-and-revert ()
-           (interactive)
-           (eslint-fix-file)
-           (revert-buffer t t))
+         ;; unset run-python shortcut, interferes with helm-projectile open file
+         (global-unset-key (kbd "C-c C-p"))
          )
 
-  ;; (defun eventbus-enable () (interactive)
-  ;;        ;; Python
-  ;;        (pyvenv-activate "~/Library/Caches/pypoetry/virtualenvs/eventbusk-It3kPIr7-py3.9")
-  ;;        (setq flycheck-pylintrc "~/Projects/Airbase/eventbusk/pyproject.toml")
-  ;;        (setq flycheck-flake8rc "~/Projects/Airbase/eventbusk/.flake8")
-  ;;        (setq flycheck-python-mypy-config "~/Projects/Airbase/eventbusk/.mypy.ini")
-  ;;        )
-
-  ;; (defun airbase-enable () (interactive)
-  ;;        ;; JS
-  ;;        (setq web-mode-code-indent-offset 2)
-  ;;        (setq web-mode-markup-indent-offset 2)
-  ;;        (setq web-mode-css-indent-offset 2)
-  ;;        (setq web-mode-js-indent-offset 2)
-  ;;        ;;(prettier-js-mode 1)
-  ;;        (setq prettier-args '())
-
-  ;;        ;; Python
-  ;;        (pyvenv-activate "/Users/sidmitra/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.11")
-  ;;        (setq flycheck-pylintrc "~/Projects/Airbase/airbase-backend/pyproject.toml")
-  ;;        (setq flycheck-flake8rc "~/Projects/Airbase/airbase-backend/ci_scripts/.flake8")
-  ;;        (setq flycheck-python-mypy-config "~/Projects/Airbase/airbase-backend/ci_scripts/mypy.ini")
-  ;;        ;; (lsp-deferred)
-
-  ;;        ;; unset run-python shortcut, interferes with helm-projectile open file
-  ;;        (global-unset-key (kbd "C-c C-p"))
-  ;;        )
-
-  ;; (defun airbase-disable () (interactive)
-  ;;        )
+  (defun airbase-disable () (interactive))
 
   (defun custom-ag-args () (interactive)
          (set
