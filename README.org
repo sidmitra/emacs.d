@@ -1320,6 +1320,13 @@ https://github.com/editorconfig/editorconfig-emacs
 
 ** Language Server Protocol (LSP)
 *** eglot
+
+Currently trying this out. Install the following inside poetry venv
+
+#+begin_src bash
+  pip install python-lsp-server[rope,pylint,flake8]
+#+end_src
+
 #+BEGIN_SRC emacs-lisp
   (use-package eglot
     :after (:any prog-mode)
@@ -1332,53 +1339,9 @@ https://github.com/editorconfig/editorconfig-emacs
     )
 #+END_SRC
 
+**** TODO Try later
 https://notes.alexkehayias.com/using-a-language-server-in-a-docker-container/
 
-*** COMMENT https://github.com/manateelazycat/lsp-bridge
-*** COMMENT https://github.com/mtshiba/pylyzer
-https://emacs-lsp.github.io/lsp-mode/page/performance/
-*** COMMENT lsp-mode
-#+BEGIN_SRC emacs-lisp
-  (use-package lsp-mode
-    :hook (python-mode lsp-enable-which-key-integration)
-    :commands lsp lsp-deferred
-    :config
-    (setq lsp-use-plists t
-          lsp-idle-delay 0.5
-          lsp-enable-symbol-highlighting t
-          lsp-enable-snippet nil  ;; Not supported by company capf, which is the recommended company backend
-          ;; lsp-completion-provider :capf
-          )
-
-    ;; TODO: Move to python block
-    (lsp-register-custom-settings
-     '(("pyls.plugins.pyls_mypy.enabled" t t)
-       ("pyls.plugins.pyls_mypy.live_mode" nil t)
-       ("pyls.plugins.pyls_black.enabled" t t)
-       ("pyls.plugins.pyls_isort.enabled" t t)
-
-       ;; Disable these as they're duplicated by flake8
-       ("pyls.plugins.pycodestyle.enabled" nil t)
-       ("pyls.plugins.mccabe.enabled" nil t)
-       ("pyls.plugins.pyflakes.enabled" nil t)))
-
-    (use-package lsp-ui
-      :config (setq lsp-ui-sideline-show-hover t
-                    lsp-ui-sideline-delay 0.5
-                    lsp-ui-doc-delay 5
-                    lsp-ui-sideline-ignore-duplicates t
-                    lsp-ui-doc-position 'bottom
-                    lsp-ui-doc-alignment 'frame
-                    lsp-ui-doc-header nil
-                    lsp-ui-doc-include-signature t
-                    lsp-ui-doc-use-childframe t)
-      :commands lsp-ui-mode
-      )
-    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-    ;; (setq lsp-keymap-prefix "s-l")
-    )
-#+END_SRC
-*** TODO consult-lsp
 ** Python
 *** Default indentation
 #+BEGIN_SRC emacs-lisp
@@ -1396,9 +1359,9 @@ https://github.com/galaunay/poetry.el
 
 #+BEGIN_SRC emacs-lisp
   (use-package poetry
-    :hook (python-mode . poetry-tracking-mode)
-    :config
-    (setq poetry-tracking-strategy 'switch-buffer)
+    ;; :hook (python-mode . poetry-tracking-mode)
+    ;; :config
+    ;; (setq poetry-tracking-strategy 'switch-buffer)
     )
 #+END_SRC
 
