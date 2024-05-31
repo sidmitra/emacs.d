@@ -583,6 +583,21 @@ This package is a emacs-which-key extension, which use posframe to show which-ke
 #+END_SRC
 
 * Tools
+** Spell check
+https://github.com/minad/jinx
+
+#+begin_src bash
+  brew install enchant pkgconf
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package jinx
+    ;; :hook (emacs-startup . global-jinx-mode)
+    ;; :bind (("M-$" . jinx-correct)
+    ;;        ("C-M-$" . jinx-languages))
+    )
+#+end_src
+
 ** Auth
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auth-sources "~/.authinfo" t)
