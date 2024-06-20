@@ -792,7 +792,7 @@ default, regexp and literal matches are enabled.
 
 #+BEGIN_SRC elisp
   (use-package orderless
-    :init
+    :config
     ;; :init (icomplete-mode) ; optional but recommended!
 
     ;; Configure a custom style dispatcher (see the Consult wiki)
@@ -806,7 +806,7 @@ default, regexp and literal matches are enabled.
 *** vertico
 #+BEGIN_SRC emacs-lisp
   (use-package vertico
-    :init
+    :config
     (vertico-mode)
     ;; Different scroll margin
     (setq vertico-scroll-margin 0)
@@ -862,7 +862,7 @@ https://github.com/minad/marginalia
                 )
 
     ;; The :init configuration is always executed (Not lazy!)
-    :init
+    :config
 
     ;; Must be in the :init section of use-package such that the mode gets
     ;; enabled right away. Note that this forces loading the package.
@@ -912,6 +912,7 @@ https://github.com/oantolin/embark/
 #+END_SRC
 
 *** consult
+https://github.com/minad/consult
 Consult provides practical commands based on the Emacs completion function
 completing-read. Completion allows you to quickly select an item from a list of
 candidates. Consult offers in particular an advanced buffer switching command
@@ -942,48 +943,68 @@ consult-buffer to switch between buffers and recently opened files.
            ("M-y" . consult-yank-pop)
            ("<help> a" . consult-apropos))
 
+    ;; Enable automatic preview at point in the *Completions* buffer. This is
+    ;; relevant when you use the default completion UI.
+    :hook (completion-list-mode . consult-preview-at-point-mode)
+
     ;; The :init configuration is always executed (Not lazy!)
     :init
 
-    ;; Custom command wrappers. It is generally encouraged to write your own
-    ;; commands based on the Consult commands. Some commands have arguments which
-    ;; allow tweaking. Furthermore global configuration variables can be set
-    ;; locally in a let-binding.
-    (defun my-fdfind (&optional dir)
-      (interactive "P")
-      (let ((consult-find-command '("fdfind" "--color=never" "--full-path")))
-        (consult-find dir)))
+    ;; Optionally configure the register formatting. This improves the register
+    ;; preview for `consult-register', `consult-register-load',
+    ;; `consult-register-store' and the Emacs built-ins.
+    (setq register-preview-delay 0.5
+          register-preview-function #'consult-register-format)
 
-    ;; Replace `multi-occur' with `consult-multi-occur', which is a drop-in replacement.
+    ;; Optionally tweak the register preview window.
+    ;; This adds thin lines, sorting and hides the mode line of the window.
+    (advice-add #'register-preview :override #'consult-register-window)
+
+    ;; Use Consult to select xref locations with preview
+    (setq xref-show-xrefs-function #'consult-xref
+          xref-show-definitions-function #'consult-xref)
+
+    ;; Not sure where this was used? Maybe an old experiment?
+    ;; ;; Custom command wrappers. It is generally encouraged to write your own
+    ;; ;; commands based on the Consult commands. Some commands have arguments which
+    ;; ;; allow tweaking. Furthermore global configuration variables can be set
+    ;; ;; locally in a let-binding.
+    ;; (defun my-fdfind (&optional dir)
+    ;;   (interactive "P")
+    ;;   (let ((consult-find-command '("fdfind" "--color=never" "--full-path")))
+    ;;     (consult-find dir)))
+
+    ;; ;; Replace `multi-occur' with `consult-multi-occur', which is a drop-in replacement.
     (fset 'multi-occur #'consult-multi-occur)
 
     ;; Configure other variables and modes in the :config section, after lazily loading the package
     :config
-
-    ;; Optionally configure a function which returns the project root directory
-    (autoload 'projectile-project-root "projectile")
-    (setq consult-project-root-function #'projectile-project-root)
+    ;; Optionally configure preview. The default value
+    ;; is 'any, such that any key triggers the preview.
+    ;; (setq consult-preview-key 'any)
+    ;; (setq consult-preview-key "M-.")
+    ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
+    ;; For some commands and buffer sources it is useful to configure the
+    ;; :preview-key on a per-command basis using the `consult-customize' macro.
+    (consult-customize
+     consult-theme :preview-key '(:debounce 0.2 any)
+     consult-ripgrep consult-git-grep consult-grep
+     consult-bookmark consult-recent-file consult-xref
+     consult--source-bookmark consult--source-file-register
+     consult--source-recent-file consult--source-project-recent-file
+     ;; :preview-key "M-."
+     :preview-key '(:debounce 0.4 any))
 
     ;; Optionally configure narrowing key.
     ;; Both < and C-+ work reasonably well.
     (setq consult-narrow-key "<") ;; (kbd "C-+")
-    ;; Optionally make narrowing help available in the minibuffer.
-    ;; Probably not needed if you are using which-key.
-    ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
 
-    ;; Optional configure a view library to be used by `consult-buffer'.
-    ;; The view library must provide two functions, one to open the view by name,
-    ;; and one function which must return a list of views as strings.
-    ;; Example: https://github.com/minad/bookmark-view/
-    ;; (setq consult-view-open-function #'bookmark-jump
-    ;;       consult-view-list-function #'bookmark-view-names)
-
-    ;; Optionally enable previews. Note that individual previews can be disabled
-    ;; via customization variables.
-    ;; (consult-preview-mode)
+    ;; Optionally configure a function which returns the project root directory
+    (autoload 'projectile-project-root "projectile")
+    (setq consult-project-root-function #'projectile-project-root)
     )
 
-    ;; TODO Instal and figure out consult-vertico
+  ;; TODO Install and figure out consult-vertico
 
   ;; Optionally add the `consult-flycheck' command.
   (use-package consult-flycheck
