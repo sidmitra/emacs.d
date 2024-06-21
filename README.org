@@ -1310,7 +1310,7 @@ A git blame plugin for emacs inspired by VS Code’s GitLens plugin and Vim plug
     :mode (("\\.env$" . dotenv-mode)))
 #+END_SRC
 
-*** direnv
+*** COMMENT direnv
 https://github.com/wbolster/emacs-direnv
 
 brew install direnv
@@ -1325,7 +1325,7 @@ brew install direnv
     )
 #+END_SRC
 
-** dap-mode
+** COMMENT dap-mode
 https://github.com/emacs-lsp/dap-mode/
 #+BEGIN_SRC emacs-lisp
   (use-package dap-mode
@@ -1333,7 +1333,7 @@ https://github.com/emacs-lsp/dap-mode/
     (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 #+END_SRC
 
-** EditorConfig
+** COMMENT EditorConfig
 https://editorconfig.org/
 https://github.com/editorconfig/editorconfig-emacs
 #+BEGIN_SRC emacs-lisp
@@ -1356,7 +1356,34 @@ https://github.com/editorconfig/editorconfig-emacs
 #+END_SRC
 
 ** Language Server Protocol (LSP)
-*** eglot
+*** lsp-bridge
+
+https://github.com/manateelazycat/lsp-bridge
+
+~pip install epc orjson sexpdata six setuptools paramiko rapidfuzz~
+pip install python-lsp-server[all]
+
+#+begin_src emacs-lisp
+  (use-package lsp-bridge
+    :ensure (
+             :type git
+             :host github
+             :repo "manateelazycat/lsp-bridge"
+             :files (:defaults "*.el" "*.py" "acm/*" "core/*" "langserver/*" "multiserver" "resources")
+             :build (:not compile)
+             )
+    :defer t
+    :init
+    (setq lsp-bridge-python-lsp-server "pylsp")
+    (setq lsp-bridge-enable-hover-diagnostic t)
+    (setq lsp-bridge-enable-log t)
+    (setq acm-backend-lsp-show-progress t)
+    (global-lsp-bridge-mode)
+
+    )
+#+end_src
+
+*** COMMENT eglot
 
 Currently trying this out. Install the following inside poetry venv
 
@@ -1380,7 +1407,7 @@ Currently trying this out. Install the following inside poetry venv
 https://notes.alexkehayias.com/using-a-language-server-in-a-docker-container/
 
 ** Python
-*** Default indentation
+*** COMMENT Default indentation
 #+BEGIN_SRC emacs-lisp
     ;; TODO: Move to use-package block
   (add-hook 'python-mode-hook
@@ -1391,7 +1418,7 @@ https://notes.alexkehayias.com/using-a-language-server-in-a-docker-container/
               (setq python-indent-offset 4)))
 #+END_SRC
 
-*** poetry
+*** COMMENT poetry
 https://github.com/galaunay/poetry.el
 
 #+BEGIN_SRC emacs-lisp
@@ -1402,11 +1429,11 @@ https://github.com/galaunay/poetry.el
     )
 #+END_SRC
 
-**** poetry + direnv
+**** COMMENT poetry + direnv
 Need to do some extra steps to config direnv with poetry
 https://github.com/lassik/emacs-format-all-the-code/issues/29#issuecomment-490519205
 
-*** pytest
+*** COMMENT pytest
 #+BEGIN_SRC python
   (use-package python-pytest)
 #+END_SRC
@@ -1430,7 +1457,7 @@ https://github.com/python-lsp/python-lsp-server#3rd-party-plugins
   ;;   (require 'dap-python)
   ;;   )
 #+END_SRC
-*** COMMENT pyvenv
+*** pyvenv
 #+BEGIN_SRC emacs-lisp
   (use-package pyvenv
     :config
