@@ -126,21 +126,29 @@ Not working anymore???
 * Appearance/Visual
 ** Load colour theme
 *** doom-themes
+https://github.com/doomemacs/themes
+
 #+BEGIN_SRC emacs-lisp
   (use-package doom-themes
     :config
     ;; Global settings (defaults)
     (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+         doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
     ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
     ;; may have their own settings.
-    (load-theme 'doom-dracula t)
+    (load-theme 'leuven t)
+    ;; (load-theme 'leuven-dark t)
+    ;; (load-theme 'doom-dracula t)
     ;; (load-theme 'doom-one-light t)
     ;; (load-theme 'doom-one t)
 
     ;; Enable flashing mode-line on errors
-    (doom-themes-visual-bell-config)
+    ;; TODO: why did this stop working?
+    ;; (doom-themes-visual-bell-config)
+
+    ;; Enable custom neotree theme (all-the-icons must be installed!)
+    (doom-themes-neotree-config)
 
     ;; Enable custom neotree theme (all-the-icons must be installed!)
     ;; (doom-themes-neotree-config)
@@ -286,7 +294,11 @@ https://github.com/ankurdave/color-identifiers-mode
 #+BEGIN_SRC emacs-lisp
   (use-package highlight-indent-guides
     :config
-    (setq highlight-indent-guides-method 'bitmap)
+    ;; values are fill, column, character, and bitmap
+    (setq highlight-indent-guides-method 'column)
+    (set-face-background 'highlight-indent-guides-odd-face "darkgray")
+    (set-face-background 'highlight-indent-guides-even-face "dimgray")
+    (set-face-foreground 'highlight-indent-guides-character-face "dimgray")
     (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
 #+END_SRC
 
@@ -1304,6 +1316,19 @@ A git blame plugin for emacs inspired by VS Code’s GitLens plugin and Vim plug
 #+END_SRC
 
 ** Enviroment
+*** mise
+#+begin_src emacs-lisp
+  (use-package mise
+    ;; enable globally
+    ;; (add-hook 'after-init-hook #'global-mise-mode)
+
+    ;; or turn on in some buffer
+    ;; (add-hook 'emacs-lisp-mode-hook #'mise-mode)
+
+    ;(global-mise-mode)
+    )
+#+end_src
+
 *** dot-env
 #+BEGIN_SRC emacs-lisp
   (use-package dotenv-mode
@@ -1360,7 +1385,7 @@ https://github.com/editorconfig/editorconfig-emacs
 
 https://github.com/manateelazycat/lsp-bridge
 
-~pip install epc orjson sexpdata six setuptools paramiko rapidfuzz~
+pip install epc orjson sexpdata six setuptools paramiko rapidfuzz
 pip install python-lsp-server[all]
 
 #+begin_src emacs-lisp
@@ -1378,8 +1403,7 @@ pip install python-lsp-server[all]
     (setq lsp-bridge-enable-hover-diagnostic t)
     (setq lsp-bridge-enable-log t)
     (setq acm-backend-lsp-show-progress t)
-    (global-lsp-bridge-mode)
-
+    ; (global-lsp-bridge-mode)
     )
 #+end_src
 
@@ -1418,7 +1442,7 @@ https://notes.alexkehayias.com/using-a-language-server-in-a-docker-container/
               (setq python-indent-offset 4)))
 #+END_SRC
 
-*** COMMENT poetry
+*** poetry
 https://github.com/galaunay/poetry.el
 
 #+BEGIN_SRC emacs-lisp
@@ -1845,30 +1869,6 @@ https://github.com/bastibe/org-journal
     )
 #+END_SRC
 
-*** Links
-#+BEGIN_SRC emacs-lisp
-  (defvar yt-iframe-format
-    ;; You may want to change your width and height.
-    (concat "<iframe width=\"440\""
-            " height=\"335\""
-            " src=\"https://www.youtube.com/embed/%s\""
-            " frameborder=\"0\""
-            " allowfullscreen>%s</iframe>"))
-
-  (org-add-link-type
-   "yt"
-   (lambda (handle)
-     (browse-url
-      (concat "https://www.youtube.com/embed/"
-              handle)))
-   (lambda (path desc backend)
-     (cl-case backend
-       (html (format yt-iframe-format
-                     path (or desc "")))
-       (latex (format "\href{%s}{%s}"
-                      path (or desc "video"))))))
-#+END_SRC
-
 *** COMMENT org-noter
 https://github.com/weirdNox/org-noter
 Org-noter’s purpose is to let you create notes that are kept in sync when you scroll through the document, but that are external to it - the notes themselves live in an Org-mode file. As such, this leverages the power of Org-mode (the notes may have outlines, latex fragments, babel, etc…) while acting like notes that are made inside the document. Also, taking notes is very simple: just press i and annotate away!
@@ -1923,6 +1923,32 @@ Run M-x pdf-tools-install after installing pdftools. See pdftools section below.
     (with-eval-after-load 'pdf-annot
       (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
+#+END_SRC
+
+*** Links
+**** COMMENT Youtube
+Not sure this is working still?
+#+BEGIN_SRC emacs-lisp
+  (defvar yt-iframe-format
+    ;; You may want to change your width and height.
+    (concat "<iframe width=\"440\""
+            " height=\"335\""
+            " src=\"https://www.youtube.com/embed/%s\""
+            " frameborder=\"0\""
+            " allowfullscreen>%s</iframe>"))
+
+  (org-add-link-type
+   "yt"
+   (lambda (handle)
+     (browse-url
+      (concat "https://www.youtube.com/embed/"
+              handle)))
+   (lambda (path desc backend)
+     (cl-case backend
+       (html (format yt-iframe-format
+                     path (or desc "")))
+       (latex (format "\href{%s}{%s}"
+                      path (or desc "video"))))))
 #+END_SRC
 
 ** deft
