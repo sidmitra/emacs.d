@@ -1,5 +1,5 @@
 #+TITLE: Emacs Configuration
-#+STARTUP: overview
+#+STARTUP: show2levels
 
 This is my emacs config written as a literate program via org-babel.
 
@@ -124,6 +124,22 @@ Not working anymore???
 #+END_SRC
 
 * Appearance/Visual
+** Icons
+*** all-the-icons
+https://github.com/domtronn/all-the-icons.el
+
+Run ~M-x all-the-icons-install-fonts~
+
+#+begin_src emacs-lisp
+  (use-package all-the-icons
+    :if (display-graphic-p))
+#+end_src
+
+*** nerd-icons
+#+BEGIN_SRC emacs-lisp
+  (use-package nerd-icons)
+#+END_SRC
+
 ** Load colour theme
 *** doom-themes
 https://github.com/doomemacs/themes
@@ -133,7 +149,7 @@ https://github.com/doomemacs/themes
     :config
     ;; Global settings (defaults)
     (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-         doom-themes-enable-italic t) ; if nil, italics is universally disabled
+         doom-themes-enable-italic t)  ; if nil, italics is universally disabled
 
     ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
     ;; may have their own settings.
@@ -145,22 +161,14 @@ https://github.com/doomemacs/themes
 
     ;; Enable flashing mode-line on errors
     ;; TODO: why did this stop working?
-    ;; (doom-themes-visual-bell-config)
+    (doom-themes-visual-bell-config)
 
     ;; Enable custom neotree theme (all-the-icons must be installed!)
     (doom-themes-neotree-config)
 
-    ;; Enable custom neotree theme (all-the-icons must be installed!)
-    ;; (doom-themes-neotree-config)
-
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config)
     )
-#+END_SRC
-
-** Icons
-#+BEGIN_SRC emacs-lisp
-  (use-package nerd-icons)
 #+END_SRC
 
 ** Fonts
@@ -1431,18 +1439,18 @@ Currently trying this out. Install the following inside poetry venv
 https://notes.alexkehayias.com/using-a-language-server-in-a-docker-container/
 
 ** Python
-*** COMMENT Default indentation
+*** pyvenv
 #+BEGIN_SRC emacs-lisp
-    ;; TODO: Move to use-package block
-  (add-hook 'python-mode-hook
-            (lambda ()
-              (setq indent-tabs-mode nil)
-              (setq tab-width 4)
-              (setq-default python-indent-guess-indent-offset nil)
-              (setq python-indent-offset 4)))
+  (use-package pyvenv
+    :config
+    (pyvenv-mode 1))
+
+  ;; (if (getenv "WORKON_HOME")
+  ;;   (setq virtualenv-workon-home (getenv "WORKON_HOME"))
+  ;; (setq virtualenv-workon-home "~/Library/Caches/pypoetry/virtualenvs/"))
 #+END_SRC
 
-*** poetry
+*** COMMENT poetry
 https://github.com/galaunay/poetry.el
 
 #+BEGIN_SRC emacs-lisp
@@ -1481,13 +1489,6 @@ https://github.com/python-lsp/python-lsp-server#3rd-party-plugins
   ;;   (require 'dap-python)
   ;;   )
 #+END_SRC
-*** pyvenv
-#+BEGIN_SRC emacs-lisp
-  (use-package pyvenv
-    :config
-    (pyvenv-mode 1))
-#+END_SRC
-
 *** COMMENT emacs-ipython-notebook - Jupyter
 https://github.com/dickmao/emacs-ipython-notebook
 
@@ -1509,6 +1510,17 @@ The followig is a pre-requisite
 
   (add-hook 'python-mode-hook 'pet-flycheck-setup)
   )
+#+END_SRC
+
+*** COMMENT Default indentation
+#+BEGIN_SRC emacs-lisp
+    ;; TODO: Move to use-package block
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (setq indent-tabs-mode nil)
+              (setq tab-width 4)
+              (setq-default python-indent-guess-indent-offset nil)
+              (setq python-indent-offset 4)))
 #+END_SRC
 
 *** COMMENT flycheck-ruff
