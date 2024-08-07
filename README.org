@@ -93,11 +93,12 @@ Not working anymore???
 #+END_SRC
 
 ** Shell/exec-path-from-shell
+
+https://github.com/wyuenho/emacs-pet
 #+BEGIN_SRC emacs-lisp
-  ;; exec-path-from-shell
   (use-package exec-path-from-shell
-    :config
-    (exec-path-from-shell-initialize))
+    :if (memq (window-system) '(mac ns))
+    :config (exec-path-from-shell-initialize))
 #+END_SRC
 
 ** Character Encodings
@@ -153,7 +154,10 @@ https://github.com/doomemacs/themes
 
     ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
     ;; may have their own settings.
-    (load-theme 'leuven t)
+    ;; Some of my favourites
+    ;; (load-theme 'doom-solarized-light t)
+    ;; (load-theme 'doom-solarized-dark t)
+    ;; (load-theme 'leuven t)
     ;; (load-theme 'leuven-dark t)
     ;; (load-theme 'doom-dracula t)
     ;; (load-theme 'doom-one-light t)
@@ -170,6 +174,19 @@ https://github.com/doomemacs/themes
     (doom-themes-org-config)
     )
 #+END_SRC
+
+*** autodark
+https://github.com/LionyxML/auto-dark-emacs
+This package, auto-dark-mode, introduces a minor mode in Emacs that enables automatic switching between two user-defined (customizable) themes. This transition occurs seamlessly in response to Dark Mode being enabled or disabled across MacOS, Linux, Windows, and Android platforms.
+
+#+begin_src emacs-lisp
+  (use-package auto-dark
+    :config
+    (auto-dark-mode t)
+    (setq-default auto-dark-dark-theme 'doom-solarized-dark
+                  auto-dark-light-theme 'doom-solarized-light)
+    )
+#+end_src
 
 ** Fonts
 #+BEGIN_SRC emacs-lisp
@@ -193,6 +210,11 @@ https://old.reddit.com/r/emacs/comments/mvlid5/native_emojis_in_emacs_just_some_
 #+BEGIN_SRC emacs-lisp
   ;;(set-frame-font "Hack 14")
   (set-frame-font "CommitMono 14")
+
+  ;; (set-frame-font "JetBrains Mono 16")
+  ;; (add-to-list 'default-frame-alist '(font . "JetBrains Mono-14"))
+  ;; (add-to-list 'default-frame-alist '(line-spacing . 0.2))
+
 #+END_SRC
 
 *** Change font-size with ctrl + mouse wheel
@@ -222,6 +244,13 @@ https://old.reddit.com/r/emacs/comments/mvlid5/native_emojis_in_emacs_just_some_
 #+BEGIN_SRC emacs-lisp
   (scroll-bar-mode -1)
 #+END_SRC
+
+** Update Titlebar appearance
+ Is this working? Worked once, but not now.
+#+begin_src emacs-lisp
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . dark))
+#+end_src
 
 ** Switch window to fullscreen
 #+BEGIN_SRC emacs-lisp
@@ -397,6 +426,49 @@ The auto-dim-other-buffers-mode is a global minor mode which makes windows witho
     (auto-dim-other-buffers-mode t)
     )
 #+END_SRC
+
+** Screensaver
+*** Zone mode
+https://www.emacswiki.org/emacs/ZoneMode
+#+begin_src emacs-lisp
+   (defun zone-choose (pgm)
+    "Choose a PGM to run for `zone'."
+    (interactive
+     (list
+      (completing-read
+       "Program: "
+       (mapcar 'symbol-name zone-programs))))
+    (let ((zone-programs (list (intern pgm))))
+      (zone)))
+#+end_src
+**** zone-words
+https://xenodium.com/emacs-zones-to-lift-you-up/
+
+~brew install wordnet~
+
+#+begin_src emacs-lisp
+  (use-package zone-words
+    :ensure (zone-words :type git :host github :repo "xenodium/dotsies" :files ("emacs/ar/zone-words*"))
+    )
+#+end_src
+
+**** zone-nyan
+#+begin_src emacs-lisp
+  (use-package zone-nyan
+    :after zone
+    :ensure t
+    :commands zone-mode)
+#+end_src
+
+**** zone-rainbow
+#+begin_src emacs-lisp
+  (use-package zone-rainbow :ensure t
+  :after zone
+  :config
+  (setq zone-programs (vconcat [zone-rainbow] zone-programs)))
+#+end_src
+
+
 
 * Editing
 ** Set default tab char's display width to 4 spaces
@@ -604,6 +676,37 @@ This package is a emacs-which-key extension, which use posframe to show which-ke
 #+END_SRC
 
 * Tools
+** Offline docs
+https://github.com/astoff/devdocs.el
+devdocs.el is a documentation viewer for Emacs similar to the built-in Info browser, but geared towards documentation distributed by the https://devdocs.io/ website. Currently, this covers over 500 versions of 188 different software components.
+
+~M-x devdocs-install~
+#+begin_src emacs-lisp
+  ;; Define the installation function outside of the use-package block
+  (defun my-devdocs-install ()
+    "Install documentation sets defined in `my-devdocs-docs-list` if not already installed."
+    (interactive)
+    (require 'devdocs) ;; Ensure devdocs is loaded
+    (dolist (doc my-devdocs-docs-list)
+      (unless (member doc (devdocs--installed-docs))
+        (devdocs-install doc))))
+
+  ;; Ensure my-devdocs-docs-list is defined before use
+  (defvar my-devdocs-docs-list
+    '("django~5.0" "rust" "django_rest_framework")
+    "List of documentation sets to install in devdocs.")
+
+  (use-package devdocs
+    :ensure t
+    :commands (devdocs-install devdocs-peruse devdocs-lookup)
+    :config
+    ;; Automatically call the installation function on startup
+    (my-devdocs-install)
+
+    (global-set-key (kbd "C-h D") 'devdocs-lookup)
+    )
+#+end_src
+
 ** Spell check
 https://github.com/minad/jinx
 
@@ -1184,6 +1287,12 @@ candidates at the top of the list.
               (lambda ()
                 (set (make-local-variable 'buffer-face-mode-face) 'fixed-pitch)
                 (buffer-face-mode t)))
+
+    ;; You can use another font for vterm buffer
+    ;; (add-hook 'vterm-mode-hook
+    ;;       (lambda ()
+    ;;            (set (make-local-variable 'buffer-face-mode-face) '(:family "IosevkaTerm Nerd Font"))
+    ;;            (buffer-face-mode t))
     )
 #+END_SRC
 *** vterm-eshell
@@ -1415,6 +1524,9 @@ pip install python-lsp-server[all]
     )
 #+end_src
 
+*** TODO lsp-booster
+https://github.com/blahgeek/emacs-lsp-booster
+
 *** COMMENT eglot
 
 Currently trying this out. Install the following inside poetry venv
@@ -1449,6 +1561,15 @@ https://notes.alexkehayias.com/using-a-language-server-in-a-docker-container/
   ;;   (setq virtualenv-workon-home (getenv "WORKON_HOME"))
   ;; (setq virtualenv-workon-home "~/Library/Caches/pypoetry/virtualenvs/"))
 #+END_SRC
+*** emacs-pet
+https://github.com/wyuenho/emacs-pet
+
+#+begin_src emacs-lisp
+  (use-package pet
+    :config
+    (add-hook 'python-base-mode-hook 'pet-mode -10)
+    )
+#+end_src
 
 *** COMMENT poetry
 https://github.com/galaunay/poetry.el
@@ -1741,7 +1862,7 @@ Activate babel languages
      ))
 #+END_SRC
 
-** solidity
+** COMMENT solidity
 #+BEGIN_SRC emacs-lisp
   (use-package solidity-mode
     :config
@@ -1977,7 +2098,7 @@ Searching/Filtering notes
     )
 #+END_SRC
 
-** zetteldeft
+** COMMENT zetteldeft
 [[https://www.eliasstorms.net/zetteldeft/#org02cc025][Tutorial]]
 
 #+BEGIN_SRC emacs-lisp
@@ -2096,17 +2217,47 @@ Ebook manager
 #+END_SRC
 
 ** AI
-*** COMMENT Copilot
+*** Copilot
+https://github.com/copilot-emacs/copilot.el
+Copilot.el is an Emacs plugin for GitHub Copilot.
+Note: You need access to GitHub Copilot to use this plugin.
+
+Run M-x copilot-install-server
+and then M-x copilot-login
+
+TODO: Note the hardcoded path.Anyway to make that configurable? Using ~which node~
 #+begin_src emacs-lisp
-    (use-package copilot
+  (use-package copilot
     :ensure (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
-    :custom ((copilot-node-executable "~/.asdf/shims/node" "Set node executable.")
-           (copilot-indent-warning-suppress t))
-    :hook (prog-mode . copilot-mode)
+    :custom (
+             (copilot-node-executable "~/.local/share/mise/installs/node/22/bin/node" "Set node executable.")
+             (copilot-indent-warning-suppress t))
+    ;; :hook (prog-mode . copilot-mode)
     :config
     (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion)
     )
   ;; you can utilize :map :hook and :config to customize copilot
+#+end_src
+
+*** gptel
+https://github.com/karthink/gptel
+
+
+The key currently is stored in ~~/.authinfo~ as shown below. By default, ~api.openai.com~ is used as HOST and “apikey” as USER.
+
+#+begin_quote
+machine api.openai.com login apikey password TOKEN
+#+end_quote
+
+
+#+begin_src emacs-lisp
+  (use-package gptel
+    :config
+    (gptel-make-ollama "Ollama"             ; Any name of your choosing
+      :host "localhost:11434"               ; Where it's running
+      :stream t                             ; Stream responses
+      :models '("codestral:latest"))        ; List of models
+    )
 #+end_src
 
 *** COMMENT Starcoder
@@ -2144,9 +2295,6 @@ https://gitlab.com/daanturo/starhugger.el
       ;; (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
     )
 #+END_SRC
-
-*** TODO gptel
-https://github.com/karthink/gptel
 
 *** COMMENT codeium
 https://github.com/Exafunction/codeium.el#-getting-started
