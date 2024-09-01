@@ -476,9 +476,9 @@ https://xenodium.com/emacs-zones-to-lift-you-up/
   (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil)
   ;; make tab key always call a indent command.
-  (setq-default tab-always-indent t)
+  ;; (setq-default tab-always-indent t)
   ;; make tab key call indent command or insert tab character, depending on cursor position
-  (setq-default tab-always-indent nil)
+  ;; (setq-default tab-always-indent nil)
   ;; make tab key do indent first then completion.
   (setq-default tab-always-indent 'complete)
 #+END_SRC
@@ -905,6 +905,61 @@ through a command or the menu.
 #+END_SRC
 
 ** Incremental narrowing, completion
+Some of the packages are confusing. This thread helps
+https://www.reddit.com/r/emacs/comments/1bz0ekn/company_vertico_corfu_corfusion/
+
+*** corfu
+https://github.com/minad/corfu
+
+#+begin_src emacs-lisp
+  (use-package corfu
+    ;; Optional customizations
+    ;; :custom
+    ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+    ;; (corfu-auto t)                 ;; Enable auto completion
+    ;; (corfu-separator ?\s)          ;; Orderless field separator
+    ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+    ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+    ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+    ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+    ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+    ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+
+    ;; Enable Corfu only for certain modes. See also `global-corfu-modes'.
+    ;; :hook ((prog-mode . corfu-mode)
+    ;;        (shell-mode . corfu-mode)
+    ;;        (eshell-mode . corfu-mode))
+
+    ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
+    ;; be used globally (M-/).  See also the customization variable
+    ;; `global-corfu-modes' to exclude certain modes.
+    :init
+    (global-corfu-mode)
+    :config
+    (setq-default corfu-auto t
+                  corfu-quit-no-match 'separator) ;; or t
+    )
+#+end_src
+
+*** vertico
+#+BEGIN_SRC emacs-lisp
+  (use-package vertico
+    :config
+    (vertico-mode)
+    ;; Different scroll margin
+    (setq vertico-scroll-margin 0)
+
+    ;; Show more candidates
+    (setq vertico-count 20)
+
+    ;; Grow and shrink the Vertico minibuffer
+    (setq vertico-resize t)
+
+    ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+    (setq vertico-cycle t)
+    )
+#+END_SRC
+
 *** orderless
 https://github.com/oantolin/orderless
 This package provides an orderless completion style that divides the pattern into
@@ -924,25 +979,6 @@ default, regexp and literal matches are enabled.
     (setq completion-styles '(orderless)
           completion-category-defaults nil
           completion-category-overrides '((file (styles . (partial-completion))))))
-#+END_SRC
-
-*** vertico
-#+BEGIN_SRC emacs-lisp
-  (use-package vertico
-    :config
-    (vertico-mode)
-    ;; Different scroll margin
-    (setq vertico-scroll-margin 0)
-
-    ;; Show more candidates
-    (setq vertico-count 20)
-
-    ;; Grow and shrink the Vertico minibuffer
-    (setq vertico-resize t)
-
-    ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
-    (setq vertico-cycle t)
-    )
 #+END_SRC
 
 *** prescient
@@ -1551,16 +1587,6 @@ Currently trying this out. Install the following inside poetry venv
 https://notes.alexkehayias.com/using-a-language-server-in-a-docker-container/
 
 ** Python
-*** pyvenv
-#+BEGIN_SRC emacs-lisp
-  (use-package pyvenv
-    :config
-    (pyvenv-mode 1))
-
-  ;; (if (getenv "WORKON_HOME")
-  ;;   (setq virtualenv-workon-home (getenv "WORKON_HOME"))
-  ;; (setq virtualenv-workon-home "~/Library/Caches/pypoetry/virtualenvs/"))
-#+END_SRC
 *** emacs-pet
 https://github.com/wyuenho/emacs-pet
 
@@ -1571,7 +1597,17 @@ https://github.com/wyuenho/emacs-pet
     )
 #+end_src
 
-*** COMMENT poetry
+*** pyvenv
+#+BEGIN_SRC emacs-lisp
+  (use-package pyvenv
+    :config
+    (pyvenv-mode 1))
+
+  ;; (if (getenv "WORKON_HOME")
+  ;;   (setq virtualenv-workon-home (getenv "WORKON_HOME"))
+  ;; (setq virtualenv-workon-home "~/Library/Caches/pypoetry/virtualenvs/"))
+#+END_SRC
+*** poetry
 https://github.com/galaunay/poetry.el
 
 #+BEGIN_SRC emacs-lisp
@@ -2160,9 +2196,8 @@ https://github.com/olav35/eradio
 
   (setq eradio-channels
         '(
-          ("secretagent - somafm" . "http://somafm.com/secretagent130.pls")
-          ("groovesalad - somafm"   . "http://somafm.com/groovesalad130.pls")
-          ("groovesalad - somafm"   . "http://somafm.com/groovesalad130.pls")
+          ("secretagent - somafm" . "https://somafm.com/secretagent130.pls")
+          ("groovesalad - somafm"   . "https://somafm.com/groovesalad130.pls")
           ("defcon - somafm"   . "https://somafm.com/defcon130.pls")
           ("cafe - lainon"     . "https://lainon.life/radio/cafe.ogg.m3u")
           ))
@@ -2428,8 +2463,10 @@ TODO: Try this from scratch on a python file. Do we need a completion thing. Is 
 #+END_SRC
 
 ** Quote lines
+[[http://xahlee.info/emacs/emacs/emacs_quote_lines.html][Source]]
+
 #+BEGIN_SRC emacs-lisp
-  (defun xah-quote-lines ()
+  (defun sm-quote-lines ()
     "Change current text block's lines to quoted lines with comma or other separator char.
   When there is a text selection, act on the selection, else, act on a text block separated by blank lines.
 
@@ -2511,6 +2548,25 @@ TODO: Try this from scratch on a python file. Do we need a completion thing. Is 
                 (forward-char 1))))))))
 
 #+END_SRC
+
+** Open file with line number
+
+Opens file with line number for eg. ~service/models/vendor.py:1481:25~
+
+[[https://stackoverflow.com/questions/3139970/open-a-file-at-line-with-filenameline-syntax][Source]]
+#+begin_src emacs-lisp
+  (defun sm-find-file-at-point-with-line()
+    "if file has an attached line num goto that line, ie boom.rb:12"
+    (interactive)
+    (setq line-num 0)
+    (save-excursion
+      (search-forward-regexp "[^ ]:" (point-max) t)
+      (if (looking-at "[0-9]+")
+          (setq line-num (string-to-number (buffer-substring (match-beginning 0) (match-end 0))))))
+    (find-file-at-point)
+    (if (not (equal line-num 0))
+        (goto-line line-num)))
+#+end_src
 
 * My Workflow
 ** Registers
