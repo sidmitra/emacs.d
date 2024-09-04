@@ -2588,6 +2588,10 @@ Opens file with line number for eg. ~service/models/vendor.py:1481:25~
 
 ** Shortcuts
 #+BEGIN_SRC emacs-lisp
+
+  ;; unset run-python shortcut, interferes with projectile open file and i never use this.
+  (global-unset-key (kbd "C-c C-p"))
+
 #+END_SRC
 
 ** Airbase
@@ -2612,9 +2616,6 @@ Opens file with line number for eg. ~service/models/vendor.py:1481:25~
          (setq flycheck-flake8rc "~/Projects/Airbase/airbase-backend/ci_scripts/.flake8")
          (setq flycheck-python-mypy-config "~/Projects/Airbase/airbase-backend/pyproject.toml")
          ;; (lsp-deferred)
-
-         ;; unset run-python shortcut, interferes with helm-projectile open file
-         (global-unset-key (kbd "C-c C-p"))
          )
 
   (defun airbase-disable () (interactive))
