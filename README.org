@@ -1315,7 +1315,8 @@ candidates at the top of the list.
     :config
     (setq vterm-buffer-name-string "%s"
           vterm-max-scrollback 100000
-          vterm-kill-buffer-on-exit t)
+          vterm-kill-buffer-on-exit t
+  	vterm-always-compile-module t)
 
     ;; Change the font in vterm buffers to a mono-spaced font (the fixed-pitch face)
     ;; if the default font in Emacs is a proportional font.
