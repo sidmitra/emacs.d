@@ -206,15 +206,17 @@ https://old.reddit.com/r/emacs/comments/mvlid5/native_emojis_in_emacs_just_some_
 #+END_SRC
 
 ** Set font, size
+*** COMMENT List all fonts installed
+#+BEGIN_SRC emacs-lisp
+  (dolist (font (x-list-fonts "*"))
+  (insert (format "%s\n" font)))
+#+END_SRC
 *** Set font and size
 #+BEGIN_SRC emacs-lisp
-  ;;(set-frame-font "Hack 14")
-  (set-frame-font "CommitMono 14")
-
-  ;; (set-frame-font "JetBrains Mono 16")
-  ;; (add-to-list 'default-frame-alist '(font . "JetBrains Mono-14"))
+  ;; (set-frame-font "Hack 14")
+  ;; (set-frame-font "CommitMono 14")
+  (set-frame-font "JetBrains Mono 16")
   ;; (add-to-list 'default-frame-alist '(line-spacing . 0.2))
-
 #+END_SRC
 
 *** Change font-size with ctrl + mouse wheel
