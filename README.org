@@ -183,7 +183,7 @@ This package, auto-dark-mode, introduces a minor mode in Emacs that enables auto
   (use-package auto-dark
     :config
     (auto-dark-mode t)
-    (setq-default auto-dark-dark-theme 'doom-solarized-dark
+    (setq-default auto-dark-dark-theme 'doom-dracula
                   auto-dark-light-theme 'doom-solarized-light)
     )
 #+end_src
@@ -471,7 +471,6 @@ https://xenodium.com/emacs-zones-to-lift-you-up/
 #+end_src
 
 
-
 * Editing
 ** Set default tab char's display width to 4 spaces
 #+BEGIN_SRC emacs-lisp
@@ -609,6 +608,21 @@ This package is a emacs-which-key extension, which use posframe to show which-ke
     :config
     (which-key-posframe-mode))
 #+END_SRC
+
+** COMMENT Casual suite
+https://github.com/kickingvegas/casual-suite
+
+Upgrade to fix ~symbol-overlay installed version (4 1) lower than min required 4.2~
+#+begin_src emacs-lisp
+  (use-package symbol-overlay
+    :ensure t
+    ;; :pin melpa ; or gnu, depending on the repo you are using
+    )
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package casual-suite)
+#+end_src
 
 * Buffers
 ** Backup
