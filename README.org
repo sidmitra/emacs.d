@@ -1328,11 +1328,12 @@ candidates at the top of the list.
 *** vterm
 #+BEGIN_SRC emacs-lisp
   (use-package vterm
+    :init
+    (setq vterm-always-compile-module t)
     :config
     (setq vterm-buffer-name-string "%s"
           vterm-max-scrollback 100000
-          vterm-kill-buffer-on-exit t
-  	vterm-always-compile-module t)
+          vterm-kill-buffer-on-exit t)
 
     ;; Change the font in vterm buffers to a mono-spaced font (the fixed-pitch face)
     ;; if the default font in Emacs is a proportional font.
@@ -1549,6 +1550,12 @@ https://github.com/editorconfig/editorconfig-emacs
     (setq-default flycheck-idle-change-delay 3)
     (setq-default flycheck-display-errors-delay 0))
 #+END_SRC
+
+** SQL
+Trying to figure if i need this for calibredb
+#+begin_src emacs-lisp
+(use-package emacsql)
+#+end_src
 
 ** Language Server Protocol (LSP)
 *** lsp-bridge
@@ -2244,11 +2251,17 @@ https://gist.github.com/khinsen/7ed357eed9b27f142e4fa6f5c4ad45dd
 
 ** calibre
 Ebook manager
+https://github.com/chenyanming/calibredb.el
+
 #+BEGIN_SRC emacs-lisp
   (use-package calibredb
     :config
-    (setq calibredb-root-dir "~/Calibre Library/")
+    ;; TODO: Move to file-path section?
+    ;; TODO: Also make dependent on OS.
+    (setq calibredb-root-dir "~/Library/CloudStorage/GoogleDrive-sidmitra.del@gmail.com/My Drive/Media/Calibre")
     (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
+    (setq sql-sqlite-program "/usr/bin/sqlite3")
+    (setq calibredb-program "/Applications/calibre.app/Contents/MacOS/calibredb")
     )
 #+END_SRC
 
