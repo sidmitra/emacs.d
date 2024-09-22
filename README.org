@@ -155,13 +155,7 @@ https://github.com/doomemacs/themes
     ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
     ;; may have their own settings.
     ;; Some of my favourites
-    ;; (load-theme 'doom-solarized-light t)
-    ;; (load-theme 'doom-solarized-dark t)
-    ;; (load-theme 'leuven t)
-    ;; (load-theme 'leuven-dark t)
-    ;; (load-theme 'doom-dracula t)
-    ;; (load-theme 'doom-one-light t)
-    ;; (load-theme 'doom-one t)
+    (load-theme 'doom-dracula t)
 
     ;; Enable flashing mode-line on errors
     ;; TODO: why did this stop working?
