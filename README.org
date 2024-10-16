@@ -142,7 +142,19 @@ Run ~M-x all-the-icons-install-fonts~
 #+END_SRC
 
 ** Load colour theme
-*** doom-themes
+*** ef-themes
+#+begin_src emacs-lisp
+  (use-package ef-themes
+    :config
+    (setq ef-themes-to-toggle '(ef-day ef-night))
+    (setq ef-themes-mixed-fonts t
+      ef-themes-variable-pitch-ui t)
+    (mapc #'disable-theme custom-enabled-themes)
+    (load-theme 'ef-day :no-confirm)
+    )
+#+end_src
+
+*** COMMENT doom-themes
 https://github.com/doomemacs/themes
 
 #+BEGIN_SRC emacs-lisp
@@ -169,7 +181,7 @@ https://github.com/doomemacs/themes
     )
 #+END_SRC
 
-*** autodark
+*** COMMENT autodark
 https://github.com/LionyxML/auto-dark-emacs
 This package, auto-dark-mode, introduces a minor mode in Emacs that enables automatic switching between two user-defined (customizable) themes. This transition occurs seamlessly in response to Dark Mode being enabled or disabled across MacOS, Linux, Windows, and Android platforms.
 
@@ -178,7 +190,7 @@ This package, auto-dark-mode, introduces a minor mode in Emacs that enables auto
     :config
     (auto-dark-mode t)
     (setq-default auto-dark-dark-theme 'doom-dracula
-                  auto-dark-light-theme 'doom-solarized-light)
+                  auto-dark-light-theme 'doom-dracula)
     )
 #+end_src
 
@@ -210,7 +222,6 @@ https://old.reddit.com/r/emacs/comments/mvlid5/native_emojis_in_emacs_just_some_
   ;; (set-frame-font "Hack 14")
   ;; (set-frame-font "CommitMono 14")
   (set-frame-font "JetBrains Mono 16")
-  ;; (add-to-list 'default-frame-alist '(line-spacing . 0.2))
 #+END_SRC
 
 *** Change font-size with ctrl + mouse wheel
@@ -234,8 +245,9 @@ https://old.reddit.com/r/emacs/comments/mvlid5/native_emojis_in_emacs_just_some_
       (tool-bar-mode -1))
   (if window-system
       (menu-bar-mode -1))
+  ;; Remove the GNOME title bars
+  ;; (add-to-list 'default-frame-alist '(undecorated . t))
 #+END_SRC
-
 ** Hide scrollbar
 #+BEGIN_SRC emacs-lisp
   (scroll-bar-mode -1)
@@ -1741,7 +1753,11 @@ https://gist.github.com/dsedivec/65eff752ec3aa3b652977c6e681bd609
                   (flycheck-mode))))))
 #+END_SRC
 
-** COMMENT JSON
+** JSON
+#+begin_src emacs-lisp
+  (use-package json-mode)
+#+end_src
+
 #+BEGIN_SRC emacs-lisp
   ;;(use-package json-navigator)
   ;;(use-package tree-mode)  ;; Does this work in the json-navigator hierarcy window??
@@ -2312,10 +2328,7 @@ machine api.openai.com login apikey password TOKEN
 #+begin_src emacs-lisp
   (use-package gptel
     :config
-    (gptel-make-ollama "Ollama"             ; Any name of your choosing
-      :host "localhost:11434"               ; Where it's running
-      :stream t                             ; Stream responses
-      :models '("codestral:latest"))        ; List of models
+    (setq gptel-model "gpt-4o")
     )
 #+end_src
 
@@ -2341,122 +2354,6 @@ https://gitlab.com/daanturo/starhugger.el
     (define-key starhugger-inlining-mode-map (kbd "M-[") (starhugger-inline-menu-item #'starhugger-show-prev-suggestion))
     (define-key starhugger-inlining-mode-map (kbd "M-]") (starhugger-inline-menu-item #'starhugger-show-next-suggestion))
     (define-key starhugger-inlining-mode-map (kbd "M-f") (starhugger-inline-menu-item #'starhugger-accept-suggestion-by-word)))
-#+END_SRC
-
-*** COMMENT Copilot-old
-#+BEGIN_SRC emacs-lisp
-    (use-package copilot
-      :ensure (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-      :ensure t
-      :config
-      (add-hook 'prog-mode-hook 'copilot-mode)
-      (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion)
-      ;; (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
-    )
-#+END_SRC
-
-*** COMMENT codeium
-https://github.com/Exafunction/codeium.el#-getting-started
-
-TODO: Try this from scratch on a python file. Do we need a completion thing. Is it company/corfu? Does consult work?
-#+BEGIN_SRC emacs-lisp
-  (use-package codeium
-    :ensure (:type git :host github :repo "Exafunction/codeium.el")
-
-    :init
-    ;; use globally
-    (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
-    ;; or on a hook
-    ;; (add-hook 'python-mode-hook
-    ;;     (lambda ()
-    ;;         (setq-local completion-at-point-functions '(codeium-completion-at-point))))
-
-    ;; if you want multiple completion backends, use cape (https://github.com/minad/cape):
-    ;; (add-hook 'python-mode-hook
-    ;;     (lambda ()
-    ;;         (setq-local completion-at-point-functions
-    ;;             (list (cape-super-capf #'codeium-completion-at-point #'lsp-completion-at-point)))))
-    ;; an async company-backend is coming soon!
-
-    ;; codeium-completion-at-point is autoloaded, but you can
-    ;; optionally set a timer, which might speed up things as the
-    ;; codeium local language server takes ~0.2s to start up
-    ;; (add-hook 'emacs-startup-hook
-    ;;  (lambda () (run-with-timer 0.1 nil #'codeium-init)))
-
-    ;; :defer t ;; lazy loading, if you want
-    :config
-    (setq use-dialog-box nil) ;; do not use popup boxes
-
-    ;; if you don't want to use customize to save the api-key
-    ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
-
-    ;; get codeium status in the modeline
-    (setq codeium-mode-line-enable
-        (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
-    (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
-    ;; alternatively for a more extensive mode-line
-    ;; (add-to-list 'mode-line-format '(-50 "" codeium-mode-line) t)
-
-    ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
-    (setq codeium-api-enabled
-        (lambda (api)
-            (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
-    ;; you can also set a config for a single buffer like this:
-    ;; (add-hook 'python-mode-hook
-    ;;     (lambda ()
-    ;;         (setq-local codeium/editor_options/tab_size 4)))
-
-    ;; You can overwrite all the codeium configs!
-    ;; for example, we recommend limiting the string sent to codeium for better performance
-    (defun my-codeium/document/text ()
-        (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
-    ;; if you change the text, you should also change the cursor_offset
-    ;; warning: this is measured by UTF-8 encoded bytes
-    (defun my-codeium/document/cursor_offset ()
-        (codeium-utf8-byte-length
-            (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
-    (setq codeium/document/text 'my-codeium/document/text)
-    (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset)
-
-    )
-#+END_SRC
-
-*** COMMENT codegpt-shell
-#+BEGIN_SRC emacs-lisp
-  (setq chatgpt-shell-openai-key
-      (auth-source-pick-first-password :host "api.openai.com"))
-
-  ;; (setq dall-e-shell-openai-key
-  ;;     (auth-source-pick-first-password :host "api.openai.com"))
-
-  ;; (setq chatgpt-shell-openai-key
-  ;;       (lambda ()
-  ;;         (auth-source-pick-first-password :host "api.openai.com")))
-
-  ;; (setq dall-e-shell-openai-key
-  ;;       (lambda ()
-  ;;         (auth-source-pick-first-password :host "api.openai.com")))
-
-   (use-package chatgpt-shell
-    :ensure (:host github :repo "xenodium/chatgpt-shell")
-    )
-
-  ;; (setq chat gpt-shell-chatgpt-streaming t)
-  ;; (straight-use-package '(shell-maker :type git :host github
-  ;;                                     :repo "xenodium/chatgpt-shell"))
-  ;; (straight-use-package '(chatgpt-shell :type git :host github
-  ;;                                       :repo "xenodium/chatgpt-shell"))
-
-  ;; (straight-use-package '(dall-e-shell :type git :host github
-  ;;                                      :repo "xenodium/chatgpt-shell"))
-#+END_SRC
-
-*** COMMENT openai Code-GPT
-#+BEGIN_SRC emacs-lisp
- (use-package codegpt
-    :ensure (codegpt :type git :host github :repo "emacs-openai/codegpt")
-    )
 #+END_SRC
 
 * My Helpers
