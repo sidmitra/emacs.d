@@ -23,10 +23,24 @@ Adjust gc-cons-threshold. The default setting is too low for lsp-mode's needs du
   ;;  See when GC is running
   (setq garbage-collection-messages t)
 
+  (run-with-idle-timer 300 t 'garbage-collect)
+
   ;; https://news.ycombinator.com/item?id=39190110
-  (add-function :after
-                  after-focus-change-function
-                  (lambda () (unless (frame-focus-state) (garbage-collect))))
+  ;; Following worked on MacOSx, but on archlinux+gnome it does gc on every
+  ;; click!
+  ;; (add-function :after
+  ;;             after-focus-change-function
+  ;;             (lambda ()
+  ;;               (unless (frame-focus-state)
+  ;;                 ;; Check if the frame state changed from focused to unfocused
+  ;;                 (if (not (frame-focus-state))
+  ;;                     (garbage-collect)))))
+
+  ;; (add-function :after after-focus-change-function
+  ;;             (lambda ()
+  ;;               (when (not (frame-focus-state))
+  ;;                 (garbage-collect))))
+
 #+END_SRC
 
 https://github.com/hlissner/doom-emacs/wiki/FAQ#how-is-dooms-startup-so-fast
@@ -76,7 +90,7 @@ This is a problem on Macbook where option and command is weirdly placed.
     (global-unset-all-super-key))
 #+END_SRC
 
-** Inhibit compacting font cache
+** Inhibit compacting font Cache
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-compacting-font-caches t)
 #+END_SRC
@@ -150,7 +164,7 @@ Run ~M-x all-the-icons-install-fonts~
     (setq ef-themes-mixed-fonts t
       ef-themes-variable-pitch-ui t)
     (mapc #'disable-theme custom-enabled-themes)
-    (load-theme 'ef-day :no-confirm)
+    (load-theme 'misterioso :no-confirm)
     )
 #+end_src
 
@@ -423,7 +437,6 @@ Load this after nlinum
     :config
     (mode-icons-mode))
 #+END_SRC
-
 ** Dim other buffers
 https://github.com/mina86/auto-dim-other-buffers.el
 The auto-dim-other-buffers-mode is a global minor mode which makes windows without focus less prominent. With many windows in a frame, the idea is that this mode helps recognise which is the selected window by providing a non-intrusive but still noticeable visual indicator.
@@ -1617,6 +1630,15 @@ Currently trying this out. Install the following inside poetry venv
 https://notes.alexkehayias.com/using-a-language-server-in-a-docker-container/
 
 ** Python
+*** Base
+#+begin_src emacs-lisp
+  (use-package python
+    :ensure nil ; because python is built-in, no need to install
+    :bind
+    (:map python-mode-map
+          ("C-c C-p" . nil))) ; Unset C-c C-p in python-mode-map
+#+end_src
+
 *** emacs-pet
 https://github.com/wyuenho/emacs-pet
 
@@ -2332,21 +2354,23 @@ machine api.openai.com login apikey password TOKEN
     )
 #+end_src
 
-*** COMMENT Starcoder
+*** Starcoder
 https://huggingface.co/bigcode/starcoder
 https://gitlab.com/daanturo/starhugger.el
 
 #+BEGIN_SRC emacs-lisp
-  (setq starhugger-api-token
-        (auth-source-pick-first-password :host "starhugger"))
+  ;; (setq starhugger-api-token
+  ;;       (auth-source-pick-first-password :host "huggingface"))
+  ;; For inference endpoints
+  (setq starhugger-hugging-face-api-token
+        (auth-source-pick-first-password :host "huggingface"))
 
   ;; Use https://huggingface.co/codellama/CodeLlama-13b-hf, best to be set before loading this package
-  (setq starhugger-model-id "codellama/CodeLlama-13b-hf")
+  (setq-default starhugger-model-id "bigcode/starcoder2-15b")
 
   (global-set-key (kbd "M-\\") #'starhugger-trigger-suggestion)
 
   (elpaca (starhugger :repo "https://gitlab.com/daanturo/starhugger.el" :files (:defaults "*.py")))
-  ;; (straight-use-package '(starhugger :repo "https://gitlab.com/daanturo/starhugger.el" :files (:defaults "*.py")))
 
   (with-eval-after-load 'starhugger
     ;; `starhugger-inline-menu-item' makes a conditional binding that is only active at the inline suggestion start
@@ -2511,7 +2535,7 @@ Opens file with line number for eg. ~service/models/vendor.py:1481:25~
 #+BEGIN_SRC emacs-lisp
 
   ;; unset run-python shortcut, interferes with projectile open file and i never use this.
-  (global-unset-key (kbd "C-c C-p"))
+  ;; (global-unset-key (kbd "C-c C-p"))
 
 #+END_SRC
 
