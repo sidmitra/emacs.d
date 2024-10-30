@@ -126,6 +126,17 @@ https://github.com/wyuenho/emacs-pet
   ;; (prefer-coding-system 'utf-8)
   ;; (when (display-graphic-p)
   ;;   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+
+  ;; Set default coding system for new files to UTF-8 with Unix EOL
+  (prefer-coding-system 'utf-8-unix)
+  (setq default-buffer-file-coding-system 'utf-8-unix)
+
+  ;; Automatically convert EOL style to Unix when opening existing files
+  (add-hook 'find-file-hook
+            (lambda ()
+              (when (eq buffer-file-coding-system 'undecided)
+                (set-buffer-file-coding-system 'utf-8-unix))))
+
 #+END_SRC
 
 * Config Helpers
@@ -146,8 +157,16 @@ https://github.com/domtronn/all-the-icons.el
 Run ~M-x all-the-icons-install-fonts~
 
 #+begin_src emacs-lisp
+  (defun install-all-the-icons-fonts-if-missing ()
+    "Install all-the-icons fonts if they are not already installed."
+    (unless (file-exists-p (expand-file-name "~/.local/share/fonts/all-the-icons.ttf"))
+      (all-the-icons-install-fonts t)))
+
   (use-package all-the-icons
-    :if (display-graphic-p))
+    :if (display-graphic-p)
+    :config
+    (install-all-the-icons-fonts-if-missing)
+    )
 #+end_src
 
 *** nerd-icons
@@ -437,6 +456,32 @@ Load this after nlinum
     :config
     (mode-icons-mode))
 #+END_SRC
+*** COMMENT Change modeline writeable/readonly to icons
+#+begin_src emacs-lisp
+   ;; Define the writable and readonly icons
+   (defvar my/mode-line-readonly-icon
+     (propertize (all-the-icons-faicon "lock")
+                 'face '(:family "FontAwesome")))
+   (defvar my/mode-line-writable-icon
+     (propertize (all-the-icons-faicon "unlock-alt")
+                 'face '(:family "FontAwesome")))
+
+   ;; Function to display the writable/readonly icon
+   (defun my/mode-line-readonly-or-writable-icon ()
+     (if buffer-read-only
+         my/mode-line-readonly-icon
+       my/mode-line-writable-icon))
+
+   ;; Update mode-line-format
+   (setq-default mode-line-format
+                 (list
+                  ;; Other mode line elements...
+                  '(:eval (my/mode-line-readonly-or-writable-icon))
+                  ;; Rest of the mode line...
+                  ))
+
+#+end_src
+
 ** Dim other buffers
 https://github.com/mina86/auto-dim-other-buffers.el
 The auto-dim-other-buffers-mode is a global minor mode which makes windows without focus less prominent. With many windows in a frame, the idea is that this mode helps recognise which is the selected window by providing a non-intrusive but still noticeable visual indicator.
