@@ -790,9 +790,16 @@ devdocs.el is a documentation viewer for Emacs similar to the built-in Info brow
 ** Spell check
 https://github.com/minad/jinx
 
+On Mac
 #+begin_src bash
   brew install enchant pkgconf
 #+end_src
+
+On Arch
+#+begin_src bash
+  sudo pacman -Sy enchant
+#+end_src
+
 
 #+begin_src emacs-lisp
   (use-package jinx
