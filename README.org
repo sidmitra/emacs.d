@@ -534,7 +534,6 @@ https://xenodium.com/emacs-zones-to-lift-you-up/
   (setq zone-programs (vconcat [zone-rainbow] zone-programs)))
 #+end_src
 
-
 * Editing
 ** Set default tab char's display width to 4 spaces
 #+BEGIN_SRC emacs-lisp
@@ -1523,9 +1522,13 @@ Forge allows you to work with Git forges, such as Github and Gitlab
 
 *** git-timemachine
 #+BEGIN_SRC emacs-lisp
-    (use-package git-timemachine
-    :ensure (git-timemachine :type git :host codeberg :repo "pidu/git-timemachine")
-    )
+  ;; (use-package git-timemachine
+  ;; :ensure (git-timemachine :type git :host codeberg :repo "pidu/git-timemachine")
+  ;; )
+
+  (use-package git-timemachine
+    :ensure (git-timemachine :type git :host codeberg :repo "pidu/git-timemachine"
+                             :url "https://codeberg.org/pidu/git-timemachine.git"))
 #+END_SRC
 
 *** diff-hl
@@ -2047,6 +2050,21 @@ https://github.com/leon-barrett/just-mode.el
 #+BEGIN_SRC emacs-lisp
 (use-package just-mode)
 #+END_SRC
+
+** Postgres
+#+begin_src emacs-lisp
+    (use-package pg
+      :ensure (pg :type git :host github :repo "emarsden/pg-el"))
+
+    (use-package pgmacs
+    :ensure (pgmacs :type git :host github :repo "emarsden/pgmacs")
+    :config
+    ;; Options: host, hostaddr, port, dbname, user, password
+    ;; (defun pgmacs-open-maindb () (interactive)
+    ;;  (pgmacs-open-string
+    ;;   "dbname=mydb user=pgmacs_readonly_user host=localhost password=change"))
+    )
+#+end_src
 
 * Notes
 ** org
