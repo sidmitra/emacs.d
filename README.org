@@ -996,29 +996,10 @@ https://www.reddit.com/r/emacs/comments/1bz0ekn/company_vertico_corfu_corfusion/
 
 *** corfu
 https://github.com/minad/corfu
+Corfu enhances in-buffer completion with a small completion popup. The current candidates are shown in a popup below or above the point, and can be selected by moving up and down. Corfu is the minimalistic in-buffer completion counterpart of the Vertico minibuffer UI.
 
 #+begin_src emacs-lisp
   (use-package corfu
-    ;; Optional customizations
-    ;; :custom
-    ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-    ;; (corfu-auto t)                 ;; Enable auto completion
-    ;; (corfu-separator ?\s)          ;; Orderless field separator
-    ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-    ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-    ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-    ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
-    ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
-    ;; (corfu-scroll-margin 5)        ;; Use scroll margin
-
-    ;; Enable Corfu only for certain modes. See also `global-corfu-modes'.
-    ;; :hook ((prog-mode . corfu-mode)
-    ;;        (shell-mode . corfu-mode)
-    ;;        (eshell-mode . corfu-mode))
-
-    ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
-    ;; be used globally (M-/).  See also the customization variable
-    ;; `global-corfu-modes' to exclude certain modes.
     :init
     (global-corfu-mode)
     :config
@@ -1026,8 +1007,35 @@ https://github.com/minad/corfu
                   corfu-quit-no-match 'separator) ;; or t
     )
 #+end_src
+*** cape
+#+begin_src emacs-lisp
+    ;; Add extensions
+  (use-package cape
+    ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
+    ;; Press C-c p ? to for help.
+    :bind ("C-c p" . cape-prefix-map) ;; Alternative key: M-TAB, M-p, M-+
+    ;; Alternatively bind Cape commands individually.
+    ;; :bind (("C-c p d" . cape-dabbrev)
+    ;;        ("C-c p h" . cape-history)
+    ;;        ("C-c p f" . cape-file)
+    ;;        ...)
+    :init
+    ;; Add to the global default value of `completion-at-point-functions' which is
+    ;; used by `completion-at-point'.  The order of the functions matters, the
+    ;; first function returning a result wins.  Note that the list of buffer-local
+    ;; completion functions takes precedence over the global list.
+    (add-hook 'completion-at-point-functions #'cape-dabbrev)
+    (add-hook 'completion-at-point-functions #'cape-file)
+    (add-hook 'completion-at-point-functions #'cape-elisp-block)
+    ;; (add-hook 'completion-at-point-functions #'cape-history)
+    ;; ...
+  )
+#+end_src
 
 *** vertico
+https://github.com/minad/vertico
+Vertico provides a performant and minimalistic vertical completion UI based on the default completion system. The focus of Vertico is to provide a UI which behaves correctly under all circumstances. By reusing the built-in facilities system, Vertico achieves full compatibility with built-in Emacs completion commands and completion tables. Vertico only provides the completion UI but aims to be highly flexible, extendable and modular.
+
 #+BEGIN_SRC emacs-lisp
   (use-package vertico
     :config
@@ -1124,6 +1132,7 @@ https://github.com/minad/marginalia
 
 *** embark
 https://github.com/oantolin/embark/
+Vertico provides a performant and minimalistic vertical completion UI based on the default completion system. The focus of Vertico is to provide a UI which behaves correctly under all circumstances. By reusing the built-in facilities system, Vertico achieves full compatibility with built-in Emacs completion commands and completion tables. Vertico only provides the completion UI but aims to be highly flexible, extendable and modular.
 
 #+BEGIN_SRC emacs-lisp
   (use-package embark
@@ -1271,6 +1280,47 @@ Helpful is an alternative to the built-in Emacs help that provides much more con
   (setq completion-cycle-threshold 3)
 #+END_SRC
 
+*** COMMENT Completion
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :config
+    (add-hook 'after-init-hook 'global-company-mode)
+    (setq company-idle-delay 0.2
+          company-minimum-prefix-length 1
+          company-selection-wrap-around t
+          company-tooltip-align-annotations t
+          company-tooltip-flip-when-above nil
+          company-tooltip-limit 10
+          company-tooltip-minimum 3
+          company-tooltip-margin 1
+          company-transformers '(company-sort-by-occurrence)
+          company-dabbrev-downcase nil)
+
+    ;; Add yasnippet support for all company backends
+    ;; https://github.com/syl20bnr/spacemacs/pull/179
+    (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+    (defun company-mode/backend-with-yas (backend)
+      (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+          backend
+        (append (if (consp backend) backend (list backend))
+                '(:with company-yasnippet))))
+    )
+#+END_SRC
+
+***** COMMENT company-statistics
+Company-statistics is a global minor mode built on top of the
+in-buffer completion system company-mode. The idea is to keep a
+log of a certain number of completions you choose, along with
+some context information, and use that to rank candidates the
+next time you have to choose — hopefully showing you likelier
+candidates at the top of the list.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company-statistics
+    :config
+    (company-statistics-mode))
+#+END_SRC
+
 ** Search
 *** ctrlf
 CTRLF (pronounced "control F") is an intuitive and efficient solution for single-buffer text search in Emacs.
@@ -1342,47 +1392,6 @@ https://github.com/Wilfred/deadgrep
           ;; If nil, the fzf buffer will appear at the top of the window
           fzf/position-bottom t
           fzf/window-height 15))
-#+END_SRC
-
-** Completion
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-    :config
-    (add-hook 'after-init-hook 'global-company-mode)
-    (setq company-idle-delay 0.2
-          company-minimum-prefix-length 1
-          company-selection-wrap-around t
-          company-tooltip-align-annotations t
-          company-tooltip-flip-when-above nil
-          company-tooltip-limit 10
-          company-tooltip-minimum 3
-          company-tooltip-margin 1
-          company-transformers '(company-sort-by-occurrence)
-          company-dabbrev-downcase nil)
-
-    ;; Add yasnippet support for all company backends
-    ;; https://github.com/syl20bnr/spacemacs/pull/179
-    (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
-    (defun company-mode/backend-with-yas (backend)
-      (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-          backend
-        (append (if (consp backend) backend (list backend))
-                '(:with company-yasnippet))))
-    )
-#+END_SRC
-
-***** company-statistics
-Company-statistics is a global minor mode built on top of the
-in-buffer completion system company-mode. The idea is to keep a
-log of a certain number of completions you choose, along with
-some context information, and use that to rank candidates the
-next time you have to choose — hopefully showing you likelier
-candidates at the top of the list.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package company-statistics
-    :config
-    (company-statistics-mode))
 #+END_SRC
 
 ** undo-tree
@@ -2258,15 +2267,6 @@ Searching/Filtering notes
     :config
     (global-set-key [f9] 'deft)
     )
-#+END_SRC
-
-** COMMENT zetteldeft
-[[https://www.eliasstorms.net/zetteldeft/#org02cc025][Tutorial]]
-
-#+BEGIN_SRC emacs-lisp
-  (use-package zetteldeft
-    :after deft
-    :config (zetteldeft-set-classic-keybindings))
 #+END_SRC
 
 ** mermaid
