@@ -1439,7 +1439,6 @@ https://github.com/iostapyshyn/eshell-vterm
     (eshell-vterm-mode))
 #+END_SRC
 
-
 *** better-shell
 This package simplifies shell management and sudo access by providing the following commands.
 better-shell-for-current-dir
@@ -1452,6 +1451,38 @@ https://github.com/killdash9/better-shell
            ;;("C-;" . better-shell-remote-open)
            ))
 #+END_SRC
+*** eat
+https://codeberg.org/akib/emacs-eat
+ Eat's name self-explanatory, it stands for "Emulate A Terminal". Eat is a terminal emulator. It can run most (if not all) full-screen terminal programs, including Emacs.
+
+It is pretty fast, more than three times faster than Term, despite being implemented entirely in Emacs Lisp. So fast that you can comfortably run Emacs inside Eat, or even use your Emacs as a terminal multiplexer.
+
+It has many features that other Emacs terminal emulator still don't have, for example Sixel support, complete mouse support, shell integration, etc.
+
+It flickers less than other Emacs terminal emulator, so you get more performance and a smoother experience.
+
+To get the most out of Eat, you should also setup shell integration.
+
+#+begin_src emacs-lisp
+  (use-package eat
+    :ensure t
+    :config
+
+    ;; TODO: Make it work!!
+    ;; disable global-hl-line-mode on eat
+    ;; (defun my-disable-hl-line-mode ()
+    ;;   "Disable hl-line-mode in eat-mode buffers."
+    ;;   (hl-line-mode 0))
+    ;; (add-hook 'eat-mode-hook #'my-disable-hl-line-mode)
+    )
+#+end_src
+
+To setup shell integration for GNU Bash, put the following at the end of your .bashrc:
+
+#+begin_example
+  [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+    source "$EAT_SHELL_INTEGRATION_DIR/bash"
+#+end_example
 
 ** keyfreq
 #+BEGIN_SRC emacs-lisp
