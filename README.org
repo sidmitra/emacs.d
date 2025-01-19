@@ -2451,7 +2451,7 @@ machine api.openai.com login apikey password TOKEN
 #+begin_src emacs-lisp
   (use-package gptel
     :config
-    (setq gptel-model "gpt-4o")
+    (setq gptel-model 'gpt-4o)
     )
 #+end_src
 
