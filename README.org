@@ -365,7 +365,14 @@ https://github.com/ankurdave/color-identifiers-mode
 
 *** Highlight current line
 #+BEGIN_SRC emacs-lisp
-  (global-hl-line-mode +1)
+  ;; (global-hl-line-mode +1)
+
+
+  (defun custom-highlight-current-line ()
+    (when (derived-mode-p 'prog-mode 'text-mode);
+      (hl-line-mode 1)))
+
+  (add-hook 'after-change-major-mode-hook 'custom-highlight-current-line)
 #+END_SRC
 
 *** Highlight indentation
