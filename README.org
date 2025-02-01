@@ -1451,7 +1451,7 @@ https://github.com/killdash9/better-shell
            ;;("C-;" . better-shell-remote-open)
            ))
 #+END_SRC
-*** eat
+*** COMMENT eat
 https://codeberg.org/akib/emacs-eat
  Eat's name self-explanatory, it stands for "Emulate A Terminal". Eat is a terminal emulator. It can run most (if not all) full-screen terminal programs, including Emacs.
 
