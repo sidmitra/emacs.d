@@ -2452,6 +2452,7 @@ machine api.openai.com login apikey password TOKEN
   (use-package gptel
     :config
     (setq gptel-model 'gpt-4o)
+    ;; (setq gptel-model 'gpt-o3-mini)
     )
 #+end_src
 
