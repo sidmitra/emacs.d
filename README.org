@@ -1402,6 +1402,14 @@ https://github.com/Wilfred/deadgrep
     :config
     (global-undo-tree-mode 1))
 #+END_SRC
+*** Clear undo tree
+https://stackoverflow.com/questions/12730158/emacs-cleaning-up-undo-tree
+
+#+begin_src emacs-lisp
+  (defun sm-clear-undo-tree ()
+    (interactive)
+    (setq buffer-undo-tree nil))
+#+end_src
 
 ** Terminal
 *** vterm
