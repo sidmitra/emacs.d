@@ -2423,28 +2423,6 @@ https://github.com/chenyanming/calibredb.el
 #+END_SRC
 
 ** AI
-*** Copilot
-https://github.com/copilot-emacs/copilot.el
-Copilot.el is an Emacs plugin for GitHub Copilot.
-Note: You need access to GitHub Copilot to use this plugin.
-
-Run M-x copilot-install-server
-and then M-x copilot-login
-
-TODO: Note the hardcoded path.Anyway to make that configurable? Using ~which node~
-#+begin_src emacs-lisp
-  (use-package copilot
-    :ensure (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
-    :custom (
-             (copilot-node-executable "~/.local/share/mise/installs/node/22/bin/node" "Set node executable.")
-             (copilot-indent-warning-suppress t))
-    ;; :hook (prog-mode . copilot-mode)
-    :config
-    (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion)
-    )
-  ;; you can utilize :map :hook and :config to customize copilot
-#+end_src
-
 *** gptel
 https://github.com/karthink/gptel
 
@@ -2470,7 +2448,22 @@ machine api.openai.com login apikey password TOKEN
     )
 #+end_src
 
-*** Starcoder
+*** aidermacs
+#+begin_src emacs-lisp
+  (use-package aidermacs
+    :ensure (:host github :repo "MatthewZMD/aidermacs" :files ("*.el"))
+    ;; :bind (("C-c a" . aidermacs-transient-menu))
+    :config
+                                          ; Enable minor mode for Aider files
+    (aidermacs-setup-minor-mode)
+    :custom
+                                          ; See the Configuration section below
+    (aidermacs-auto-commits t)
+    (aidermacs-use-architect-mode t)
+    (aidermacs-default-model "sonnet"))
+#+end_src
+
+*** COMMENT Starcoder
 https://huggingface.co/bigcode/starcoder
 https://gitlab.com/daanturo/starhugger.el
 
