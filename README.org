@@ -1568,7 +1568,7 @@ Forge allows you to work with Git forges, such as Github and Gitlab
     )
 #+END_SRC
 
-*** git-timemachine
+*** COMMENT git-timemachine
 #+BEGIN_SRC emacs-lisp
   ;; (use-package git-timemachine
   ;; :ensure (git-timemachine :type git :host codeberg :repo "pidu/git-timemachine")
@@ -1605,7 +1605,7 @@ A git blame plugin for emacs inspired by VS Code’s GitLens plugin and Vim plug
                      :italic t)))
     :config
     (setq blamer-show-avatar-p t)
-    (global-blamer-mode 1))
+    (global-blamer-mode 0))
 #+END_SRC
 
 ** Enviroment
@@ -2459,8 +2459,14 @@ machine api.openai.com login apikey password TOKEN
 #+begin_src emacs-lisp
   (use-package gptel
     :config
-    (setq gptel-model 'gpt-4o)
-    ;; (setq gptel-model 'gpt-o3-mini)
+    ;; (setq gptel-model 'gpt-4o)
+    ;; (gptel-make-anthropic "Claude"
+    ;;   :stream t
+    ;;   :key gptel-api-key)
+    (setq gptel-model 'claude-3-7-sonnet-20250219
+        gptel-backend (gptel-make-anthropic "Claude"
+                        :stream t
+                        :key gptel-api-key))
     )
 #+end_src
 
@@ -2633,7 +2639,6 @@ Opens file with line number for eg. ~service/models/vendor.py:1481:25~
 
 ** File Paths
 #+BEGIN_SRC emacs-lisp
-  ;; (add-to-list 'auth-sources "~/.authinfo" t) ;; pinboard, magit-forge
   (setq-default org-directory "~/Projects/Notes")
   (setq-default org-roam-directory "~/Projects/Notes/")
   (setq-default org-roam-index-file "index.org")
