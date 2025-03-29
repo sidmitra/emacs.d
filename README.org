@@ -2206,7 +2206,7 @@ https://github.com/bastibe/org-journal
 
     (setq org-journal-file-header 'org-journal-file-header-func)
 
-    (setq org-journal-dir "~/Projects/Notes/journal/")
+    (setq org-journal-dir "~/Notes/journal/")
     (setq org-journal-file-type 'daily)
     (setq org-journal-file-format "%Y%m%d.org")
     )
@@ -2300,7 +2300,7 @@ Searching/Filtering notes
   (use-package deft
     :custom
     (deft-extensions '("org" "txt" "md"))
-    (deft-directory "~/Projects/Notes/")
+    (deft-directory "~/Notes/")
     (deft-recursive t)
     (deft-use-filename-as-title t)
     :config
@@ -2625,18 +2625,18 @@ Opens file with line number for eg. ~service/models/vendor.py:1481:25~
 * My Workflow
 ** Registers
 #+BEGIN_SRC emacs-lisp
-  (set-register ?t (cons 'file "~/Projects/Notes/todo.org"))
+  (set-register ?t (cons 'file "~/Notes/todo.org"))
   (set-register ?i (cons 'file "~/.emacs.d/README.org"))
-  (set-register ?s (cons 'file "~/Projects/Notes/scratch.org"))
+  (set-register ?s (cons 'file "~/Notes/scratch.org"))
 #+END_SRC
 
 ** File Paths
 #+BEGIN_SRC emacs-lisp
-  (setq-default org-directory "~/Projects/Notes")
-  (setq-default org-roam-directory "~/Projects/Notes/")
+  (setq-default org-directory "~/Notes")
+  (setq-default org-roam-directory "~/Notes/")
   (setq-default org-roam-index-file "index.org")
-  (setq-default org-agenda-files '("~/Projects/Notes/todo.org"))
-  ;; (setq-default rmh-elfeed-org-files '("~/Projects/Notes/elfeed.org"))
+  (setq-default org-agenda-files '("~/Notes/todo.org"))
+  ;; (setq-default rmh-elfeed-org-files '("~/Notes/elfeed.org"))
 #+END_SRC
 
 ** Shortcuts
@@ -2665,9 +2665,9 @@ Opens file with line number for eg. ~service/models/vendor.py:1481:25~
 
          ;; Python
          (pyvenv-activate "/Users/sidmitra/Library/Caches/pypoetry/virtualenvs/airbase-backend-csyzUOJz-py3.11")
-         (setq flycheck-pylintrc "~/Projects/Airbase/airbase-backend/pyproject.toml")
-         (setq flycheck-flake8rc "~/Projects/Airbase/airbase-backend/ci_scripts/.flake8")
-         (setq flycheck-python-mypy-config "~/Projects/Airbase/airbase-backend/pyproject.toml")
+         (setq flycheck-pylintrc "~/Airbase/airbase-backend/pyproject.toml")
+         (setq flycheck-flake8rc "~/Airbase/airbase-backend/ci_scripts/.flake8")
+         (setq flycheck-python-mypy-config "~/Airbase/airbase-backend/pyproject.toml")
          ;; (lsp-deferred)
          )
 
