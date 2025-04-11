@@ -179,40 +179,13 @@ Run ~M-x all-the-icons-install-fonts~
 #+begin_src emacs-lisp
   (use-package ef-themes
     :config
-    (setq ef-themes-to-toggle '(ef-maris-light ef-maris-dark))
+    (setq ef-themes-to-toggle '(ef-maris-light ef-day))
     (setq ef-themes-mixed-fonts t
       ef-themes-variable-pitch-ui t)
     (mapc #'disable-theme custom-enabled-themes)
-    (load-theme 'ef-maris-dark :no-confirm)
+    (load-theme 'ef-day :no-confirm)
     )
 #+end_src
-
-*** COMMENT doom-themes
-https://github.com/doomemacs/themes
-
-#+BEGIN_SRC emacs-lisp
-  (use-package doom-themes
-    :config
-    ;; Global settings (defaults)
-    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-         doom-themes-enable-italic t)  ; if nil, italics is universally disabled
-
-    ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
-    ;; may have their own settings.
-    ;; Some of my favourites
-    (load-theme 'doom-dracula t)
-
-    ;; Enable flashing mode-line on errors
-    ;; TODO: why did this stop working?
-    (doom-themes-visual-bell-config)
-
-    ;; Enable custom neotree theme (all-the-icons must be installed!)
-    (doom-themes-neotree-config)
-
-    ;; Corrects (and improves) org-mode's native fontification.
-    (doom-themes-org-config)
-    )
-#+END_SRC
 
 *** COMMENT autodark
 https://github.com/LionyxML/auto-dark-emacs
@@ -1777,10 +1750,13 @@ https://github.com/galaunay/poetry.el
 Need to do some extra steps to config direnv with poetry
 https://github.com/lassik/emacs-format-all-the-code/issues/29#issuecomment-490519205
 
-*** COMMENT pytest
-#+BEGIN_SRC python
-  (use-package python-pytest)
-#+END_SRC
+** mojo
+#+begin_src emacs-lisp
+  (use-package mojo
+  :ensure (mojo :host github :repo "andcarnivorous/mojo-hl")
+  :commands (mojo-mode mojo-compile)
+  :mode ("\\.🔥\\'" . mojo-mode))
+#+end_src
 
 ** JSON
 #+begin_src emacs-lisp
