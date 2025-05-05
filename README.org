@@ -179,7 +179,7 @@ Run ~M-x all-the-icons-install-fonts~
 #+begin_src emacs-lisp
   (use-package ef-themes
     :config
-    (setq ef-themes-to-toggle '(ef-maris-light ef-day))
+    (setq ef-themes-to-toggle '(ef-maris-dark ef-day))
     (setq ef-themes-mixed-fonts t
       ef-themes-variable-pitch-ui t)
     (mapc #'disable-theme custom-enabled-themes)
