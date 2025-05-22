@@ -2395,6 +2395,13 @@ https://gitlab.com/daanturo/starhugger.el
               (message "Killed non-existing/unreadable file buffer: %s" filename))))))
     (message "Finished reverting buffers containing unmodified files."))
 #+END_SRC
+** kill all other buffers except current one
+#+begin_src emacs-lisp
+  (defun sm-kill-other-buffers ()
+      "Kill all other buffers."
+      (interactive)
+      (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+#+end_src
 
 ** Quote lines
 [[http://xahlee.info/emacs/emacs/emacs_quote_lines.html][Source]]
