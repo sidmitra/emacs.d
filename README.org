@@ -1367,7 +1367,15 @@ https://github.com/Wilfred/deadgrep
           fzf/window-height 15))
 #+END_SRC
 
-** undo-tree
+** vundo - visualize undo tree
+https://github.com/casouri/vundo
+#+begin_src emacs-lisp
+  (use-package vundo
+    :config
+    (setq vundo-glyph-alist vundo-unicode-symbols)
+    )
+#+end_src
+** COMMENT undo-tree
 #+BEGIN_SRC emacs-lisp
   ;; Prevent undo tree files from polluting your git repo
   (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
@@ -1735,21 +1743,6 @@ https://github.com/wyuenho/emacs-pet
   ;;   (setq virtualenv-workon-home (getenv "WORKON_HOME"))
   ;; (setq virtualenv-workon-home "~/Library/Caches/pypoetry/virtualenvs/"))
 #+END_SRC
-*** poetry
-https://github.com/galaunay/poetry.el
-
-#+BEGIN_SRC emacs-lisp
-  (use-package poetry
-    ;; :hook (python-mode . poetry-tracking-mode)
-    ;; :config
-    ;; (setq poetry-tracking-strategy 'switch-buffer)
-    )
-#+END_SRC
-
-**** COMMENT poetry + direnv
-Need to do some extra steps to config direnv with poetry
-https://github.com/lassik/emacs-format-all-the-code/issues/29#issuecomment-490519205
-
 ** mojo
 #+begin_src emacs-lisp
   (use-package mojo
