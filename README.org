@@ -1646,9 +1646,9 @@ https://github.com/editorconfig/editorconfig-emacs
 #+BEGIN_SRC emacs-lisp
   (use-package let-alist)
   (use-package flycheck
-    :init (global-flycheck-mode)
+    ;; :init (global-flycheck-mode)
     :config
-    (setq-default flycheck-checker-error-threshold 500)
+    (setq-default flycheck-checker-error-threshold 100)
     (setq-default flycheck-highlighting-mode 'lines)
     (setq-default flycheck-idle-change-delay 3)
     (setq-default flycheck-display-errors-delay 0))
