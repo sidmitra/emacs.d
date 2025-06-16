@@ -2140,6 +2140,12 @@ Run M-x pdf-tools-install after installing pdftools. See pdftools section below.
       (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
 #+END_SRC
+*** org-preview-html
+https://github.com/jakebox/org-preview-html
+
+#+begin_src emacs-lisp
+  (use-package org-preview-html)
+#+end_src
 
 *** Links
 **** COMMENT Youtube
