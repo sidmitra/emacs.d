@@ -2315,16 +2315,26 @@ machine api.openai.com login apikey password TOKEN
 
 #+begin_src emacs-lisp
   (use-package gptel
-    :config
-    ;; (setq gptel-model 'gpt-4o)
-    ;; (gptel-make-anthropic "Claude"
-    ;;   :stream t
-    ;;   :key gptel-api-key)
-    (setq gptel-model 'claude-3-7-sonnet-20250219
-        gptel-backend (gptel-make-anthropic "Claude"
-                        :stream t
-                        :key gptel-api-key))
-    )
+  :config
+  (setq-default
+   gptel-backend-anthropic (gptel-make-anthropic "Anthropic"
+                             :stream t
+                             :key gptel-api-key)
+
+   gptel-backend-google (gptel-make-gemini "Google"
+                          :stream t
+                          :key gptel-api-key)
+
+   gptel-backend-ollama (gptel-make-ollama "Ollama"
+                          :host "localhost:11434"
+                          :stream t
+                          :models '("qwen2:14b" "qwen2:32b")))
+
+  ;; Setup default backend and model
+  (setq
+   gptel-backend gptel-backend-anthropic
+   gptel-model 'claude-sonnet-4-20250514)
+  )
 #+end_src
 
 *** aidermacs
