@@ -1666,7 +1666,7 @@ Trying to figure if i need this for calibredb
 https://github.com/manateelazycat/lsp-bridge
 
 pip install epc orjson sexpdata six setuptools paramiko rapidfuzz
-pip install python-lsp-server[all]
+pip install python-lsp-server[all] watchdog
 
 #+begin_src emacs-lisp
   (use-package lsp-bridge
