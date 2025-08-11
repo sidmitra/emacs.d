@@ -2315,28 +2315,32 @@ machine api.openai.com login apikey password TOKEN
 
 #+begin_src emacs-lisp
   (use-package gptel
-  :config
-  (setq-default
-   gptel-backend-anthropic (gptel-make-anthropic "Anthropic"
-                             :stream t
-                             :key gptel-api-key)
+    :config
+    (setq-default
+     gptel-backend-anthropic (gptel-make-anthropic "Anthropic"
+                               :stream t
+                               :key gptel-api-key)
 
-   gptel-backend-google (gptel-make-gemini "Google"
-                          :stream t
-                          :key gptel-api-key)
+     gptel-backend-google (gptel-make-gemini "Google"
+                            :stream t
+                            :key gptel-api-key)
 
-   gptel-backend-ollama (gptel-make-ollama "Ollama"
-                          :host "localhost:11434"
-                          :stream t
-                          :models '("qwen2:14b" "qwen2:32b")))
+     gptel-backend-lmstudio  (gptel-make-openai "lm-studio"
+                               :stream t
+                               :protocol "http"
+                               :key "lm-studio" ; API key is ignored by LM Studio
+                               :host "localhost:1234"
+                               ;; The model is selected in the LM Studio UI.
+                               ;; This is just a placeholder name for gptel.
+                               :models '("lm-studio-model"))
+     )
 
-  ;; Setup default backend and model
-  (setq
-   gptel-backend gptel-backend-anthropic
-   gptel-model 'claude-sonnet-4-20250514)
-  )
+     ;; Setup default backend and model
+     (setq
+      gptel-backend gptel-backend-anthropic
+      gptel-model 'claude-sonnet-4-20250514)
+     )
 #+end_src
-
 *** aidermacs
 #+begin_src emacs-lisp
   (use-package aidermacs
