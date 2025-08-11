@@ -2352,31 +2352,6 @@ machine api.openai.com login apikey password TOKEN
     (aidermacs-default-model "sonnet"))
 #+end_src
 
-*** COMMENT Starcoder
-https://huggingface.co/bigcode/starcoder
-https://gitlab.com/daanturo/starhugger.el
-
-#+BEGIN_SRC emacs-lisp
-  ;; (setq starhugger-api-token
-  ;;       (auth-source-pick-first-password :host "huggingface"))
-  ;; For inference endpoints
-  (setq starhugger-hugging-face-api-token
-        (auth-source-pick-first-password :host "huggingface"))
-
-  ;; Use https://huggingface.co/codellama/CodeLlama-13b-hf, best to be set before loading this package
-  (setq-default starhugger-model-id "bigcode/starcoder2-15b")
-
-  (global-set-key (kbd "M-\\") #'starhugger-trigger-suggestion)
-
-  (elpaca (starhugger :repo "https://gitlab.com/daanturo/starhugger.el" :files (:defaults "*.py")))
-
-  (with-eval-after-load 'starhugger
-    ;; `starhugger-inline-menu-item' makes a conditional binding that is only active at the inline suggestion start
-    (define-key starhugger-inlining-mode-map (kbd "TAB") (starhugger-inline-menu-item #'starhugger-accept-suggestion))
-    (define-key starhugger-inlining-mode-map (kbd "M-[") (starhugger-inline-menu-item #'starhugger-show-prev-suggestion))
-    (define-key starhugger-inlining-mode-map (kbd "M-]") (starhugger-inline-menu-item #'starhugger-show-next-suggestion))
-    (define-key starhugger-inlining-mode-map (kbd "M-f") (starhugger-inline-menu-item #'starhugger-accept-suggestion-by-word)))
-#+END_SRC
 
 * My Helpers
 ** Revert all buffers and ignore errors
