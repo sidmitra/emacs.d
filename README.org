@@ -178,12 +178,17 @@ Run ~M-x all-the-icons-install-fonts~
 *** ef-themes
 #+begin_src emacs-lisp
   (use-package ef-themes
+    :init
+     (ef-themes-take-over-modus-themes-mode 1)
     :config
-    (setq ef-themes-to-toggle '(ef-maris-dark ef-arbutus))
-    (setq ef-themes-mixed-fonts t
-      ef-themes-variable-pitch-ui t)
-    (mapc #'disable-theme custom-enabled-themes)
-    (load-theme 'ef-maris-dark :no-confirm)
+     (setq ef-themes-mixed-fonts t)
+     (setq ef-themes-variable-pitch-ui t)
+     (setq modus-themes-mixed-fonts t)
+     (setq modus-themes-italic-constructs t)
+     (setq modus-themes-to-toggle '(ef-arbutus ef-maris-dark))
+     (modus-themes-load-theme 'ef-arbutus)
+     ;; (mapc #'disable-theme custom-enabled-themes)
+     ;; (load-theme 'ef-maris-dark :no-confirm)
     )
 #+end_src
 
@@ -2338,7 +2343,8 @@ machine api.openai.com login apikey password TOKEN
      ;; Setup default backend and model
      (setq
       gptel-backend gptel-backend-anthropic
-      gptel-model 'claude-sonnet-4-20250514)
+      gptel-model 'claude-sonnet-4-5-20250929
+      )
      )
 #+end_src
 *** aidermacs
