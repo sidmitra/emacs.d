@@ -2078,7 +2078,7 @@ https://github.com/bastibe/org-journal
       (concat
        (pcase org-journal-file-type
          (`daily "#+TITLE: Daily Journal\n#+STARTUP: showeverything")
-         (`weekly "#+TITLE: Weekly Journal\n#+STARTUP: folded")
+         (`weekly "#+TITLE: Weekly Journal\#+STARTUP: folded")
          (`monthly "#+TITLE: Monthly Journal\n#+STARTUP: folded")
          (`yearly "#+TITLE: Yearly Journal\n#+STARTUP: folded"))))
 
@@ -2583,4 +2583,18 @@ Opens file with line number for eg. ~service/models/vendor.py:1481:25~
     (let ((default-directory (projectile-project-root)))
       (compile "poetry run pytest tests/")))
 
+#+END_SRC
+
+** Work journal
+
+#+BEGIN_SRC emacs-lisp
+  (defun sm/airbase-work-log ()
+    "Create an entry in the Airbase Work Journal (Monthly)."
+    (interactive)
+    (let ((org-journal-dir "~/Notes/airbase/journal/")
+          (org-journal-file-type 'monthly)
+          (org-journal-file-format "%Y-%m.org") ;; Name files like 2025-05.org
+          (org-journal-file-header "#+TITLE: Airbase Work Log %Y-%m\n#+STARTUP: folded\n"))
+      ;; Call the standard new entry function with the variables above temporarily applied
+      (org-journal-new-entry nil)))
 #+END_SRC
