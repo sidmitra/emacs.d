@@ -2503,6 +2503,19 @@ Opens file with line number for eg. ~service/models/vendor.py:1481:25~
         (goto-line line-num)))
 #+end_src
 
+** Date and timestamps
+#+begin_src emacs-lisp
+  (defun sm-insert-inactive-datetime ()
+    "Insert the current date and time as an inactive Org timestamp."
+    (interactive)
+    (insert (concat "[" (format-time-string "%Y-%m-%d %H:%M") "]")))
+
+  (defun sm-insert-inactive-date ()
+  "Insert the current date and time as an inactive Org timestamp."
+  (interactive)
+  (insert (concat "[" (format-time-string "%Y-%m-%d") "]")))
+#+end_src
+
 * My Workflow
 ** Registers
 #+BEGIN_SRC emacs-lisp
