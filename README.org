@@ -347,6 +347,34 @@ https://github.com/ankurdave/color-identifiers-mode
 #+END_SRC
 
 *** Highlight indentation
+**** indent-bars
+https://github.com/jdtsmith/indent-bars
+
+#+begin_src emacs-lisp
+  ;; (use-package indent-bars
+  ;;   :hook ((python-mode yaml-mode) . indent-bars-mode)) ; or whichever modes you prefer
+#+end_src
+
+With tree-sitter
+#+begin_src emacs-lisp
+  (use-package indent-bars
+    :custom
+    (indent-bars-no-descend-lists 'skip) ; prevent extra bars in nested lists + skip intermediate bars
+    (indent-bars-treesit-support t)
+    (indent-bars-treesit-ignore-blank-lines-types '("module"))
+    ;; Add other languages as needed; check the wiki
+    (indent-bars-treesit-scope '((python function_definition class_definition for_statement
+                                         if_statement with_statement while_statement)))
+    ;; Note: wrap likely not be needed if no-descend-list is enough
+    ;;(indent-bars-treesit-wrap '((python argument_list parameters ; for python, as an example
+    ;;				      list list_comprehension
+    ;;				      dictionary dictionary_comprehension
+    ;;				      parenthesized_expression subscript)))
+    :hook ((python-base-mode yaml-mode) . indent-bars-mode))
+#+end_src
+
+
+**** COMMENT highlight-indent-guides
 #+BEGIN_SRC emacs-lisp
   (use-package highlight-indent-guides
     :config
