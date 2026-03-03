@@ -2371,7 +2371,8 @@ machine api.openai.com login apikey password TOKEN
      ;; Setup default backend and model
      (setq
       gptel-backend gptel-backend-anthropic
-      gptel-model 'claude-opus-4-5-20251101
+      ;; gptel-model 'claude-opus-4-5-20251101
+      gptel-model 'gemini-3.1-pro-preview
       )
      )
 #+end_src
@@ -2390,6 +2391,44 @@ machine api.openai.com login apikey password TOKEN
     (aidermacs-default-model "sonnet"))
 #+end_src
 
+
+*** COMMENT claude-code
+https://github.com/stevemolitor/monet
+https://github.com/manzaltu/claude-code-ide.el
+
+#+begin_src emacs-lisp
+  (use-package monet
+    :vc (:url "https://github.com/stevemolitor/monet" :rev :newest))
+
+  ;; NOTE: This will take a while due to massive GIFs in the repo!
+  (use-package claude-code
+    :ensure t
+    :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
+
+    :config
+    ;; optional IDE integration with Monet
+    (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
+    (monet-mode 1)
+
+    (claude-code-mode)
+    :bind-keymap ("C-c c" . claude-code-command-map)
+
+    ;; Optionally define a repeat map so that "M" will cycle thru Claude auto-accept/plan/confirm modes after invoking claude-code-cycle-mode / C-c M.
+    :bind
+    (:repeat-map my-claude-code-map ("M" . claude-code-cycle-mode)))
+#+end_src
+
+*** COMMENT agent-shell
+https://github.com/xenodium/agent-shell
+
+#+begin_src emacs-lisp
+  (use-package agent-shell
+    :ensure t
+    :ensure-system-package
+    ;; Add agent installation configs here
+    ((claude . "brew install claude-code")
+     (claude-agent-acp . "npm install -g @zed-industries/claude-agent-acp")))
+#+end_src
 
 * My Helpers
 ** Revert all buffers and ignore errors
