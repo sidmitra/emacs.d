@@ -49,10 +49,10 @@
   ;; Enable :elpaca use-package keyword.
   (elpaca-use-package-mode)
   ;; Assume :elpaca t unless otherwise specified.
-  (setq elpaca-use-package-by-default t))
+  (setq use-package-always-ensure t))
 
-;; TODO: remove Block until current queue processed.
-;; (elpaca-wait)
+;; Block until current queue processed.
+(elpaca-wait)
 
 ;;Turns off elpaca-use-package-mode current declaration
 ;;Note this will cause the declaration to be interpreted immediately (not deferred).
