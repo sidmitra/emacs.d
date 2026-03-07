@@ -2369,9 +2369,14 @@ machine api.openai.com login apikey password TOKEN
      )
 
      ;; Setup default backend and model
+    ;; (setq
+    ;;   gptel-backend gptel-backend-anthropic
+    ;;   gptel-model 'claude-opus-4-5-20251101
+    ;;   )
      (setq
-      gptel-backend gptel-backend-anthropic
+      ;; gptel-backend gptel-backend-anthropic
       ;; gptel-model 'claude-opus-4-5-20251101
+      gptel-backend gptel-backend-google
       gptel-model 'gemini-3.1-pro-preview
       )
      )
