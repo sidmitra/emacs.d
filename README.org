@@ -186,23 +186,21 @@ Run ~M-x all-the-icons-install-fonts~
      (setq modus-themes-mixed-fonts t)
      (setq modus-themes-italic-constructs t)
      (setq modus-themes-to-toggle '(ef-arbutus ef-maris-dark))
-     (modus-themes-load-theme 'ef-arbutus)
-     ;; (mapc #'disable-theme custom-enabled-themes)
-     ;; (load-theme 'ef-maris-dark :no-confirm)
+     ;; Theme is loaded automatically by auto-dark based on system appearance
+     ;; (modus-themes-load-theme 'ef-arbutus)
     )
 #+end_src
 
-*** COMMENT autodark
+*** autodark
 https://github.com/LionyxML/auto-dark-emacs
 This package, auto-dark-mode, introduces a minor mode in Emacs that enables automatic switching between two user-defined (customizable) themes. This transition occurs seamlessly in response to Dark Mode being enabled or disabled across MacOS, Linux, Windows, and Android platforms.
 
 #+begin_src emacs-lisp
   (use-package auto-dark
     :config
-    (auto-dark-mode t)
-    (setq-default auto-dark-dark-theme 'doom-dracula
-                  auto-dark-light-theme 'doom-dracula)
-    )
+    (setq auto-dark-dark-theme 'ef-maris-dark
+          auto-dark-light-theme 'ef-arbutus)
+    (auto-dark-mode t))
 #+end_src
 
 ** Fonts
