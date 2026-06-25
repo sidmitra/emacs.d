@@ -473,7 +473,7 @@ Load this after nlinum
 *** Update line numbers format to avoid graphics glitches in fringe
 
 #+BEGIN_SRC emacs-lisp
-  (setq-default linum-format " %4d ")
+  (setq-default nlinum-format " %4d ")
 #+END_SRC
 
 *** Show column numbers
