@@ -50,7 +50,10 @@
   (elpaca-use-package-mode)
   (setq use-package-always-ensure t))
 
-;; Block until elpaca-use-package is installed/activated.
+;; Activate compat early so it is available before any package needs it.
+(elpaca compat)
+
+;; Block until elpaca-use-package and compat are installed/activated.
 (elpaca-wait)
 
 ;;Turns off elpaca-use-package-mode current declaration
@@ -60,8 +63,6 @@
 
 ;; Don't install anything. Defer execution of BODY
 ;; (elpaca nil (message "deferred"))
-
-(elpaca seq)
 
 ;; jsonrpc
 (use-package jsonrpc
