@@ -89,7 +89,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("ea4dd126d72d30805c083421a50544e235176d9698c8c541b824b60912275ba1"
+   '("2b0531a540f4b51e524f551ed7374099f9d743b4de458ade0c52ba18ee6bfe46"
+     "ea4dd126d72d30805c083421a50544e235176d9698c8c541b824b60912275ba1"
      "48cfb7c9e5ad83901f9789790a7ae427ab4242005c2ee6d0b0f0b5ff5e3f724e"
      "88f7ee5594021c60a4a6a1c275614103de8c1435d6d08cc58882f920e0cec65e"
      "9f297216c88ca3f47e5f10f8bd884ab24ac5bc9d884f0f23589b0a46a608fe14" default))

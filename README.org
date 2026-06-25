@@ -187,7 +187,7 @@ Run ~M-x all-the-icons-install-fonts~
      (setq modus-themes-italic-constructs t)
      (setq modus-themes-to-toggle '(ef-arbutus ef-maris-dark))
      ;; Theme is loaded automatically by auto-dark based on system appearance
-     ;; (modus-themes-load-theme 'ef-arbutus)
+     (modus-themes-load-theme 'ef-arbutus)
     )
 #+end_src
 
@@ -196,12 +196,41 @@ https://github.com/LionyxML/auto-dark-emacs
 This package, auto-dark-mode, introduces a minor mode in Emacs that enables automatic switching between two user-defined (customizable) themes. This transition occurs seamlessly in response to Dark Mode being enabled or disabled across MacOS, Linux, Windows, and Android platforms.
 
 #+begin_src emacs-lisp
-  (use-package auto-dark
-    :config
-    (setq auto-dark-dark-theme 'ef-maris-dark
-          auto-dark-light-theme 'ef-arbutus)
-    (auto-dark-mode t))
+  ;; (use-package auto-dark
+  ;;   :demand t
+  ;;   :config
+  ;;   (setq auto-dark-dark-theme 'ef-maris-dark
+  ;;         auto-dark-light-theme 'ef-arbutus)
+  ;;   ;; Do not call (auto-dark-mode t) directly here: elpaca processes packages
+  ;;   ;; asynchronously during after-init-hook, so auto-dark-mode may fire before
+  ;;   ;; ef-themes is fully activated and before the macOS display is ready for
+  ;;   ;; ns-do-applescript. elpaca-after-init-hook runs only after all queues are
+  ;;   ;; fully drained, guaranteeing the theme and frame are both ready.
+  ;;   ;; (auto-dark-mode t)
+  ;;   (add-hook 'elpaca-after-init-hook #'auto-dark-mode))
 #+end_src
+
+#+begin_src emacs-lisp
+  (use-package auto-dark
+    :ensure t
+    :custom
+    (auto-dark-themes '((ef-maris-dark) (ef-arbutus)))
+    (auto-dark-polling-interval-seconds 5)
+    (auto-dark-allow-osascript nil)
+    (auto-dark-allow-powershell nil)
+    ;; (auto-dark-detection-method nil) ;; dangerous to be set manually
+    ;; :hook
+    ;; (auto-dark-dark-mode
+    ;;  . (lambda ()
+    ;;      ;; something to execute when dark mode is detected
+    ;;      ))
+    ;; (auto-dark-light-mode
+    ;;  . (lambda ()
+    ;;      ;; something to execute when light mode is detected
+    ;;      ))
+    :init (auto-dark-mode))
+#+end_src
+
 
 ** Fonts
 #+BEGIN_SRC emacs-lisp
