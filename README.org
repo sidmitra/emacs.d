@@ -158,9 +158,18 @@ Run ~M-x all-the-icons-install-fonts~
 
 #+begin_src emacs-lisp
   (defun install-all-the-icons-fonts-if-missing ()
-    "Install all-the-icons fonts if they are not already installed."
-    (unless (file-exists-p (expand-file-name "~/.local/share/fonts/all-the-icons.ttf"))
-      (all-the-icons-install-fonts t)))
+    "Install all-the-icons fonts if they are not already installed.
+  Works on both Linux and macOS by checking the OS-appropriate font directory."
+    (let ((font-dest (cond
+                      ((member system-type '(gnu gnu/linux gnu/kfreebsd))
+                       (concat (or (getenv "XDG_DATA_HOME")
+                                   (concat (getenv "HOME") "/.local/share"))
+                               "/fonts/"))
+                      ((eq system-type 'darwin)
+                       (concat (getenv "HOME") "/Library/Fonts/")))))
+      (when (and font-dest
+                 (not (file-exists-p (expand-file-name "all-the-icons.ttf" font-dest))))
+        (all-the-icons-install-fonts t))))
 
   (use-package all-the-icons
     :if (display-graphic-p)
@@ -230,7 +239,6 @@ This package, auto-dark-mode, introduces a minor mode in Emacs that enables auto
     ;;      ))
     :init (auto-dark-mode))
 #+end_src
-
 
 ** Fonts
 #+BEGIN_SRC emacs-lisp
