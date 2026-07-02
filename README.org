@@ -986,7 +986,7 @@ https://github.com/joodland/bm
     :init
     (setq projectile-keymap-prefix (kbd "C-c p"))
     :config
-    (projectile-global-mode)
+    (projectile-mode)
     (setq projectile-completion-system 'default)
     (setq projectile-enable-caching t)
     (setq projectile-indexing-method 'alien)
