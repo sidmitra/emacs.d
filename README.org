@@ -591,6 +591,10 @@ https://xenodium.com/emacs-zones-to-lift-you-up/
 #+BEGIN_SRC emacs-lisp
   (setq-default fill-column 88)
 #+END_SRC
+** Large file handlign
+#+begin_src emacs-lisp
+  (global-so-long-mode 1)
+#+end_src
 
 ** Delete trailing whitespace before saving
 #+BEGIN_SRC emacs-lisp
@@ -1404,8 +1408,8 @@ https://github.com/raxod502/ctrlf
                                  "--ignore" "*.csv"
                                  "--ignore" "*.svg"
                                  "--ignore" "*.json"
-                                 "--ignore" "*.yaml"
-                                 "--ignore" "*.yml"
+                                 ;; "--ignore" "*.yaml"
+                                 ;; "--ignore" "*.yml"
                                  ))
     (global-set-key "\C-c\C-g" 'ag-project))
 #+END_SRC
@@ -1823,11 +1827,6 @@ https://github.com/wyuenho/emacs-pet
 #+begin_src emacs-lisp
   (use-package json-mode)
 #+end_src
-
-#+BEGIN_SRC emacs-lisp
-  ;;(use-package json-navigator)
-  ;;(use-package tree-mode)  ;; Does this work in the json-navigator hierarcy window??
-#+END_SRC
 
 ** YAML
 #+BEGIN_SRC emacs-lisp
