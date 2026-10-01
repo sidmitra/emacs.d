@@ -497,6 +497,44 @@ Load this after nlinum
     :config
     (mode-icons-mode))
 #+END_SRC
+*** Highlight linked git worktrees
+Show a conspicuous tag in the mode-line when the current buffer's file lives in a linked git worktree (i.e. anywhere other than the main checkout), so it's obvious you've wandered off the main worktree. Buffers in the main worktree show nothing extra.
+
+#+BEGIN_SRC emacs-lisp
+  (defvar-local my/git-worktree-linked-p 'unknown
+    "Cached: non-nil if this buffer's file is in a linked (non-main) git worktree.")
+
+  (defun my/git-rev-parse (arg)
+    "Run `git rev-parse ARG' in `default-directory', returning trimmed output or nil."
+    (with-temp-buffer
+      (when (zerop (call-process "git" nil t nil "rev-parse" arg))
+        (string-trim (buffer-string)))))
+
+  (defun my/git-linked-worktree-p ()
+    "Return non-nil if the current buffer's file lives in a linked git worktree."
+    (when (eq my/git-worktree-linked-p 'unknown)
+      (setq my/git-worktree-linked-p
+            (when buffer-file-name
+              (let* ((default-directory (file-name-directory buffer-file-name))
+                     (git-dir (my/git-rev-parse "--git-dir"))
+                     (common-dir (my/git-rev-parse "--git-common-dir")))
+                (and git-dir common-dir
+                     (not (string= (expand-file-name git-dir)
+                                   (expand-file-name common-dir))))))))
+    my/git-worktree-linked-p)
+
+  (defface my/mode-line-worktree-face
+    '((t :foreground "white" :background "red" :weight bold))
+    "Face used to highlight linked git worktree buffers in the mode-line.")
+
+  (defun my/mode-line-worktree-tag ()
+    (if (my/git-linked-worktree-p)
+        (propertize " WORKTREE " 'face 'my/mode-line-worktree-face)
+      ""))
+
+  (add-to-list 'mode-line-misc-info '(:eval (my/mode-line-worktree-tag)))
+#+END_SRC
+
 *** COMMENT Change modeline writeable/readonly to icons
 #+begin_src emacs-lisp
    ;; Define the writable and readonly icons
