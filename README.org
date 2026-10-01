@@ -1434,6 +1434,7 @@ https://github.com/raxod502/ctrlf
     (setq-default ag-arguments '(
                                  "--smart-case"
                                  "--stats"
+                                 "--hidden"
                                  "--ignore-dir" "migrations"
                                  "--ignore-dir" "node_modules"
                                  "--ignore-dir" "elpa"
