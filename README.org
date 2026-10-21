@@ -519,8 +519,7 @@ Show a conspicuous tag in the mode-line when the current buffer's file lives in 
                      (git-dir (my/git-rev-parse "--git-dir"))
                      (common-dir (my/git-rev-parse "--git-common-dir")))
                 (and git-dir common-dir
-                     (not (string= (expand-file-name git-dir)
-                                   (expand-file-name common-dir))))))))
+                     (not (file-equal-p git-dir common-dir)))))))
     my/git-worktree-linked-p)
 
   (defface my/mode-line-worktree-face
@@ -629,7 +628,7 @@ https://xenodium.com/emacs-zones-to-lift-you-up/
 #+BEGIN_SRC emacs-lisp
   (setq-default fill-column 88)
 #+END_SRC
-** Large file handlign
+** Large file handling
 #+begin_src emacs-lisp
   (global-so-long-mode 1)
 #+end_src
@@ -1434,7 +1433,8 @@ https://github.com/raxod502/ctrlf
     (setq-default ag-arguments '(
                                  "--smart-case"
                                  "--stats"
-                                 "--hidden"
+                                 ;; "--hidden"
+                                 "--ignore-dir" ".git"
                                  "--ignore-dir" "migrations"
                                  "--ignore-dir" "node_modules"
                                  "--ignore-dir" "elpa"
